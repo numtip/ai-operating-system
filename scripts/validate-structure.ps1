@@ -47,12 +47,15 @@ $requiredFolders = @(
     '09_SOP',
     '10_Releases',
     '11_Templates',
+    '12_Indexes',
     'Archive',
     'scripts'
 )
 
 $requiredFiles = @(
     'README.md',
+    'AI_OS_MANIFESTO.md',
+    'CHANGELOG.md',
     '07_Memory/OPERATING_RULES.md',
     '07_Memory/SYSTEM_MEMORY.md',
     '07_Memory/CURRENT_STATE.md',
@@ -60,16 +63,30 @@ $requiredFiles = @(
     '07_Memory/DECISION_MEMORY.md',
     '07_Memory/SESSION_BOOTSTRAP.md',
     '07_Memory/SESSION_CLOSE.md',
+    '07_Memory/compression/THRESHOLD.json',
     '04_ADR/ADR-TEMPLATE.md',
     '04_ADR/ADR-0001-local-first-development.md',
     '04_ADR/ADR-0002-github-source-of-truth.md',
     '04_ADR/ADR-0003-obsidian-knowledge-interface.md',
     '04_ADR/ADR-0004-hermes-deferred-phase-2.md',
+    '04_ADR/ADR-0005-context-engine-core-layer.md',
+    '04_ADR/ADR-0006-file-based-indexes-before-vector.md',
+    '04_ADR/ADR-0007-prompt-compiler-specification-first.md',
+    '04_ADR/ADR-0008-memory-compression-threshold.md',
+    '04_ADR/ADR-0009-agent-bootstrap-mandatory.md',
+    '03_Architecture/CONTEXT_ENGINE.md',
+    '03_Architecture/ROADMAP.md',
+    '09_SOP/AGENT_BOOTSTRAP.md',
+    '09_SOP/bootstrap-manifest.json',
     '11_Templates/PROJECT_TEMPLATE.md',
     '11_Templates/AGENT_TASK_TEMPLATE.md',
     '11_Templates/SOP_TEMPLATE.md',
     '11_Templates/SESSION_HANDOFF_TEMPLATE.md',
-    '11_Templates/RELEASE_TEMPLATE.md'
+    '11_Templates/RELEASE_TEMPLATE.md',
+    '12_Indexes/knowledge_index.json',
+    '12_Indexes/project_index.json',
+    '12_Indexes/adr_index.json',
+    '12_Indexes/skill_index.json'
 )
 
 Write-Host "Validating structure under: $Root"

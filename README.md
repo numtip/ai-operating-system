@@ -1,9 +1,10 @@
-# AI Operating System v1
+# AI Operating System
 
-Local-first knowledge and memory foundation for human + agent work.
+Local-first knowledge, memory, and context foundation for human + agent work.
 
 **Repo:** https://github.com/numtip/ai-operating-system  
-**Phase:** 1 — Obsidian + Git + Knowledge (execution/Hermes deferred)
+**Track:** v1.1 — Context Engine Foundation  
+**Manifesto:** [AI_OS_MANIFESTO.md](AI_OS_MANIFESTO.md)
 
 ## Vault tree
 
@@ -11,48 +12,43 @@ Local-first knowledge and memory foundation for human + agent work.
 00_Dashboard/     # entry + quickstart
 01_Projects/      # active work
 02_Knowledge/     # glossary, notes
-03_Architecture/  # system design
+03_Architecture/  # design, context engine, prompt-compiler, roadmap
 04_ADR/           # architecture decisions
 05_Meetings/
 06_Research/
-07_Memory/        # operating rules, state, sessions
+07_Memory/        # rules, state, sessions, compression
 08_Skills/
-09_SOP/
+09_SOP/           # bootstrap + operating procedures
 10_Releases/
-11_Templates/     # reusable templates
+11_Templates/     # reusable templates (+ context/)
+12_Indexes/       # lightweight JSON indexes
 Archive/
 scripts/          # validation helpers
 ```
-
-## Phase 1 scope
-
-- Obsidian as the knowledge interface
-- Git/GitHub as source of truth
-- Persistent memory, ADRs, templates, session handoffs
 
 ## Canonical links
 
 | Topic | Path |
 |-------|------|
 | Dashboard | [00_Dashboard/HOME.md](00_Dashboard/HOME.md) |
-| Agent bootstrap | [00_Dashboard/QUICKSTART.md](00_Dashboard/QUICKSTART.md) |
+| Agent bootstrap | [09_SOP/AGENT_BOOTSTRAP.md](09_SOP/AGENT_BOOTSTRAP.md) |
+| Context Engine | [03_Architecture/CONTEXT_ENGINE.md](03_Architecture/CONTEXT_ENGINE.md) |
+| Prompt Compiler | [03_Architecture/prompt-compiler/](03_Architecture/prompt-compiler/) |
+| Indexes | [12_Indexes/](12_Indexes/) |
+| Roadmap | [03_Architecture/ROADMAP.md](03_Architecture/ROADMAP.md) |
 | Operating rules | [07_Memory/OPERATING_RULES.md](07_Memory/OPERATING_RULES.md) |
-| System memory | [07_Memory/SYSTEM_MEMORY.md](07_Memory/SYSTEM_MEMORY.md) |
 | Current state | [07_Memory/CURRENT_STATE.md](07_Memory/CURRENT_STATE.md) |
-| Sessions | [07_Memory/SESSION_INDEX.md](07_Memory/SESSION_INDEX.md) |
 | ADRs | [04_ADR/](04_ADR/) |
-| Templates | [11_Templates/](11_Templates/) |
-| Architecture | [03_Architecture/ARCHITECTURE_OVERVIEW.md](03_Architecture/ARCHITECTURE_OVERVIEW.md) |
-| Glossary | [02_Knowledge/GLOSSARY.md](02_Knowledge/GLOSSARY.md) |
+| Changelog | [CHANGELOG.md](CHANGELOG.md) |
 
-## Constraints (Phase 1)
+## Constraints
 
-- No Hermes install or orchestration runtime
-- No VPS / production deploy
-- No secrets, credentials, or `.env` in the vault
-- Do not modify other repositories
+- No Hermes install or orchestration runtime (until v1.5 / approval)
+- No VPS / production deploy without approval
+- No secrets in the vault; no vector DB in v1.1
+- Prompt Compiler is specification-only (no API calls yet)
 
 ## Agent bootstrap
 
-Follow [00_Dashboard/QUICKSTART.md](00_Dashboard/QUICKSTART.md).  
-Read memory and summaries before history. One Head Agent owns integration, validation, and commits.
+Mandatory: [09_SOP/AGENT_BOOTSTRAP.md](09_SOP/AGENT_BOOTSTRAP.md)  
+Quick entry: [00_Dashboard/QUICKSTART.md](00_Dashboard/QUICKSTART.md)

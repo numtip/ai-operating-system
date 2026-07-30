@@ -23,20 +23,18 @@ Execution  ← Hermes / runtime  [deferred]
 
 ## Phase boundary
 
-- **Now:** local-first vault, memory, ADRs, templates
-- **Later (Phase 2):** Hermes orchestration, Telegram, remote runtime
+- **v1.0:** local-first vault, memory, ADRs, templates
+- **v1.1:** Context Engine, bootstrap SOP, indexes, prompt-compiler spec, compression
+- **Later (v1.5 / Phase 2):** Hermes orchestration — see [ROADMAP.md](ROADMAP.md)
 
 ## Decision records
 
-Canonical ADRs live in [../04_ADR/](../04_ADR/). Expected Phase 1 decisions:
-
-- Local-first development
-- GitHub as source of truth
-- Obsidian as knowledge interface
-- Hermes deferred to Phase 2
+Canonical ADRs live in [../04_ADR/](../04_ADR/).
 
 ## Related
 
-- [../README.md](../README.md)
+- [CONTEXT_ENGINE.md](CONTEXT_ENGINE.md)
+- [prompt-compiler/README.md](prompt-compiler/README.md)
+- [ROADMAP.md](ROADMAP.md)
+- [../AI_OS_MANIFESTO.md](../AI_OS_MANIFESTO.md)
 - [../07_Memory/SYSTEM_MEMORY.md](../07_Memory/SYSTEM_MEMORY.md)
-- [../02_Knowledge/GLOSSARY.md](../02_Knowledge/GLOSSARY.md)

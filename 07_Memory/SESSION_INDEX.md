@@ -5,6 +5,7 @@ Chronological index of session handoffs. One row per closed (or draft) session.
 | Date | Topic | Path | Verdict |
 |------|-------|------|---------|
 | 2026-07-30 | Bootstrap Knowledge/Memory | [sessions/2026/2026-07-30-bootstrap-knowledge-memory.md](sessions/2026/2026-07-30-bootstrap-knowledge-memory.md) | done |
+| 2026-07-30 | v1.1 Context Engine Foundation | [sessions/2026/2026-07-30-v1.1-context-engine-foundation.md](sessions/2026/2026-07-30-v1.1-context-engine-foundation.md) | done |
 
 ## Format
 
@@ -20,3 +21,4 @@ Chronological index of session handoffs. One row per closed (or draft) session.
 - Add a row at session close ([SESSION_CLOSE](SESSION_CLOSE.md))
 - File name: `sessions/YYYY/YYYY-MM-DD-topic.md`
 - Status overview: [CURRENT_STATE](CURRENT_STATE.md)
+- Compression: [compression/COMPRESSION_POLICY.md](compression/COMPRESSION_POLICY.md) (threshold 25)
