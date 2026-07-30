@@ -79,3 +79,26 @@ pwsh -File scripts/check-session-threshold.ps1 -FailOnThreshold
 | PASS | count &lt; threshold | 0 |
 | WARN | count ≥ threshold (default) | 0 |
 | FAIL | count ≥ threshold with `-FailOnThreshold` | 1 |
+
+## simulate-bootstrap
+
+Dry-run of the project bootstrap runtime (indexes → locate → minimum context plan → summary). No LLM. Does not modify external trees.
+
+```powershell
+pwsh -File scripts/simulate-bootstrap.ps1 -ProjectName <name>
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/simulate-bootstrap.ps1 -ProjectName <name>
+```
+
+- Always prints a bootstrap summary to stdout.
+- If `01_Projects/<name>/ADAPTER.md` exists, also writes `01_Projects/<name>/last-bootstrap-simulation.md`.
+- Exit `0` for completed simulation (`ready` / `not_found` / `degraded`); `1` if `project_index.json` is missing or invalid.
+
+Spec: [../03_Architecture/bootstrap-runtime/SPEC.md](../03_Architecture/bootstrap-runtime/SPEC.md).
+
+## estimate-tokens
+
+Estimate tokens for listed files using Method A (`ceil(chars/4)`). See `03_Architecture/metrics/METRICS_SPEC.md`.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/estimate-tokens.ps1 -Paths README.md,AI_OS_MANIFESTO.md
+```
