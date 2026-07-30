@@ -1,0 +1,62 @@
+{
+  "id": "agent-bootstrap",
+  "version": "1.1",
+  "title": "Agent Bootstrap Protocol",
+  "canonical": "09_SOP/AGENT_BOOTSTRAP.md",
+  "required_reads": [
+    "07_Memory/SYSTEM_MEMORY.md",
+    "07_Memory/CURRENT_STATE.md"
+  ],
+  "conditional_reads": [
+    "07_Memory/PROJECT_MEMORY.md",
+    "07_Memory/projects/",
+    "07_Memory/DECISION_MEMORY.md",
+    "04_ADR/",
+    "07_Memory/OPERATING_RULES.md",
+    "11_Templates/context/"
+  ],
+  "git_inspect": [
+    "git status",
+    "git log -5 --oneline"
+  ],
+  "steps": [
+    {
+      "id": "read-memory",
+      "order": 1,
+      "action": "read",
+      "targets": ["07_Memory/SYSTEM_MEMORY.md"]
+    },
+    {
+      "id": "read-current-state",
+      "order": 2,
+      "action": "read",
+      "targets": ["07_Memory/CURRENT_STATE.md"]
+    },
+    {
+      "id": "inspect-git",
+      "order": 3,
+      "action": "git_inspect",
+      "commands": ["git status", "git log -5 --oneline"]
+    },
+    {
+      "id": "load-task-context",
+      "order": 4,
+      "action": "load_context",
+      "policy": "03_Architecture/PROJECT_CONTEXT_LOADING.md",
+      "templates": "11_Templates/context/"
+    },
+    {
+      "id": "execute",
+      "order": 5,
+      "action": "execute",
+      "constraints": [
+        "write_only_assigned_paths",
+        "no_secrets",
+        "no_hermes",
+        "no_unauthorized_commit_or_push"
+      ]
+    }
+  ],
+  "readiness": "09_SOP/SESSION_READINESS.md",
+  "checklist": "09_SOP/AGENT_BOOTSTRAP_CHECKLIST.md"
+}

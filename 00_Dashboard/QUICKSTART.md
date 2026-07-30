@@ -1,15 +1,9 @@
 # Agent Quickstart
 
-Bootstrap every session in this order. Do not load the whole vault.
+Canonical bootstrap: **[../09_SOP/AGENT_BOOTSTRAP.md](../09_SOP/AGENT_BOOTSTRAP.md)**  
+Checklist · manifest · readiness: [../09_SOP/](../09_SOP/)
 
-1. **Rules** — Read [../07_Memory/OPERATING_RULES.md](../07_Memory/OPERATING_RULES.md).
-2. **System facts** — Read [../07_Memory/SYSTEM_MEMORY.md](../07_Memory/SYSTEM_MEMORY.md).
-3. **Live state** — Read [../07_Memory/CURRENT_STATE.md](../07_Memory/CURRENT_STATE.md).
-4. **Scope** — Open only relevant project memory under `07_Memory/projects/` and active tasks under `01_Projects/`.
-5. **Decisions** — Read ADRs in [../04_ADR/](../04_ADR/) that match the task (prefer index/summary first).
-6. **Templates** — Use [../11_Templates/](../11_Templates/) when creating projects, SOPs, handoffs, or releases.
-7. **Work** — Inspect Git status, change only assigned paths, validate narrowly.
-8. **Close** — Update `CURRENT_STATE.md`, `SESSION_INDEX.md`, and a session note under `07_Memory/sessions/YYYY/`. Record major decisions as ADRs.
+Do not load the whole vault. Ordered load: [../03_Architecture/PROJECT_CONTEXT_LOADING.md](../03_Architecture/PROJECT_CONTEXT_LOADING.md).
 
 ## Defaults
 
