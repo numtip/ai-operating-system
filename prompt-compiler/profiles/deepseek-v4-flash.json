@@ -1,0 +1,14 @@
+{
+  "id": "deepseek-v4-flash",
+  "display_name": "DeepSeek V4 Flash",
+  "role_style": "fast-concise",
+  "context_limit_policy": {
+    "prefer": ["indexes", "adapter"],
+    "max_context_refs": 6,
+    "omit_bodies": true
+  },
+  "task_decomposition": "minimal-subagents; single-pass-when-possible",
+  "expected_output_format": "return-only-bullets",
+  "verbosity_limit": "minimal",
+  "tool_use_guidance": "fewest-reads; no-network; no-model-api; skip-optional-context"
+}

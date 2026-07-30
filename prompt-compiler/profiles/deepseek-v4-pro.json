@@ -1,0 +1,14 @@
+{
+  "id": "deepseek-v4-pro",
+  "display_name": "DeepSeek V4 Pro",
+  "role_style": "dense-reasoning",
+  "context_limit_policy": {
+    "prefer": ["indexes", "adapter", "memory"],
+    "max_context_refs": 12,
+    "omit_bodies": true
+  },
+  "task_decomposition": "prefer-parallel-bounded-subagents",
+  "expected_output_format": "return-only-structured",
+  "verbosity_limit": "short",
+  "tool_use_guidance": "maximize-constraint-density; read-only-first; no-network; no-model-api"
+}

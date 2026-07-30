@@ -1,0 +1,14 @@
+{
+  "id": "claude-coding",
+  "display_name": "Claude-style Coding Agent",
+  "role_style": "careful-coding",
+  "context_limit_policy": {
+    "prefer": ["indexes", "adapter", "memory", "adr"],
+    "max_context_refs": 14,
+    "omit_bodies": true
+  },
+  "task_decomposition": "explicit-file-owned-subagents; no-overlap",
+  "expected_output_format": "structured-sections-with-checklist",
+  "verbosity_limit": "short",
+  "tool_use_guidance": "plan-then-edit; explicit-write-scope; no-network; no-model-api; no-commit-unless-asked"
+}

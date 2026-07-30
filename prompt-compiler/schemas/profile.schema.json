@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-os://prompt-compiler/profile.schema.json",
+  "title": "ModelExecutionProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "display_name",
+    "role_style",
+    "context_limit_policy",
+    "task_decomposition",
+    "expected_output_format",
+    "verbosity_limit",
+    "tool_use_guidance"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "display_name": { "type": "string" },
+    "role_style": { "type": "string" },
+    "context_limit_policy": { "type": "object" },
+    "task_decomposition": { "type": "string" },
+    "expected_output_format": { "type": "string" },
+    "verbosity_limit": { "type": "string" },
+    "tool_use_guidance": { "type": "string" }
+  }
+}

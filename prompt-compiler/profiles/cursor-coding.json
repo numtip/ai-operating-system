@@ -1,0 +1,14 @@
+{
+  "id": "cursor-coding",
+  "display_name": "Cursor-style Coding Agent",
+  "role_style": "ide-agent-executable",
+  "context_limit_policy": {
+    "prefer": ["indexes", "adapter", "project-entry"],
+    "max_context_refs": 10,
+    "omit_bodies": true
+  },
+  "task_decomposition": "tool-path-bounded-subagents",
+  "expected_output_format": "return-only-files-and-blockers",
+  "verbosity_limit": "short",
+  "tool_use_guidance": "repo-relative-paths; targeted-reads; no-network; no-model-api; no-push"
+}

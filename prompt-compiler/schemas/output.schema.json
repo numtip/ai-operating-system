@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ai-os://prompt-compiler/output.schema.json",
+  "title": "PromptCompilerOutput",
+  "type": "object",
+  "required": [
+    "status",
+    "errors",
+    "warnings",
+    "head_agent_prompt",
+    "subagent_prompts",
+    "context_manifest",
+    "metrics",
+    "compiler_metadata"
+  ],
+  "properties": {
+    "status": { "type": "string", "enum": ["ok", "error"] },
+    "errors": { "type": "array", "items": { "type": "string" } },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "head_agent_prompt": { "type": "string" },
+    "subagent_prompts": { "type": "array" },
+    "context_manifest": { "type": "object" },
+    "metrics": { "type": "object" },
+    "compiler_metadata": { "type": "object" }
+  }
+}

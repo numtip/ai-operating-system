@@ -1,0 +1,14 @@
+{
+  "id": "generic-reasoning",
+  "display_name": "Generic Reasoning Model",
+  "role_style": "neutral-analytic",
+  "context_limit_policy": {
+    "prefer": ["indexes", "adapter", "memory"],
+    "max_context_refs": 10,
+    "omit_bodies": true
+  },
+  "task_decomposition": "sequential-when-dependent; parallel-when-independent",
+  "expected_output_format": "structured-sections",
+  "verbosity_limit": "medium",
+  "tool_use_guidance": "read-only-first; no-network; no-model-api; bound-writes"
+}
