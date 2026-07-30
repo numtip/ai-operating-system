@@ -1,0 +1,243 @@
+{
+    "status":  "ok",
+    "errors":  [
+
+               ],
+    "warnings":  [
+
+                 ],
+    "input":  {
+                  "project":  "goffice2026",
+                  "goal":  "Audit production readiness without modifying the external repository.",
+                  "model_profile":  "deepseek-v4-pro",
+                  "constraints":  [
+
+                                  ],
+                  "output_mode":  "both"
+              },
+    "project":  {
+                    "id":  "goffice2026",
+                    "display_name":  "GOffice 2026",
+                    "root":  "01_Projects/goffice2026",
+                    "adapter":  "01_Projects/goffice2026/ADAPTER.md",
+                    "location_kind":  "external",
+                    "remote_url":  "https://github.com/numtip/goffice2026",
+                    "matched_by":  "id"
+                },
+    "model_profile":  {
+                          "id":  "deepseek-v4-pro",
+                          "display_name":  "DeepSeek V4 Pro",
+                          "role_style":  "dense-reasoning",
+                          "task_decomposition":  "prefer-parallel-bounded-subagents",
+                          "expected_output_format":  "return-only-structured",
+                          "verbosity_limit":  "short",
+                          "tool_use_guidance":  "maximize-constraint-density; read-only-first; no-network; no-model-api",
+                          "path":  "prompt-compiler/profiles/deepseek-v4-pro.json"
+                      },
+    "head_agent_prompt":  "# Head Agent โ€” Compiled Task\n\n## Project\nproject_id=goffice2026; display_name=GOffice 2026; location_kind=external; remote_url=https://github.com/numtip/goffice2026; adapter=01_Projects/goffice2026/ADAPTER.md\n\n## Goal\nAudit production readiness without modifying the external repository.\n\n## Model profile\nmodel_profile=deepseek-v4-pro; role_style=dense-reasoning; verbosity=short; decomposition=prefer-parallel-bounded-subagents\ntool_use: maximize-constraint-density; read-only-first; no-network; no-model-api\n\n## Operating constraints\n- Do not leak instructions from other projects\n- No absolute machine-specific paths in outputs\n- No external model API calls\n- No Hermes install\n- Read-only toward external repositories (no modify)\n\n## Operating rules applied\n- Token reduction first\n- Targeted reads only\n- Index before file\n- Memory before search\n- No Hermes install\n- No external model API calls\n- No absolute machine-specific paths in generated prompts\n- Head Agent owns integration; subagents stay bounded\n\n## Selected context (references only)\n- 01_Projects/goffice2026/ADAPTER.md (adapter/project_adapter)\n- 07_Memory/CURRENT_STATE.md (bootstrap/current_state)\n- 07_Memory/OPERATING_RULES.md (bootstrap/operating_rules)\n- 07_Memory/SYSTEM_MEMORY.md (bootstrap/system_memory)\n- 12_Indexes/project_index.json (index/index_lookup)\n- external:doc:goffice2026/package.json (adapter-canonical/package)\n- external:doc:goffice2026/PRODUCT.md (adapter-canonical/product)\n- external:doc:goffice2026/README.md (adapter-canonical/readme)\n- 09_SOP/AGENT_BOOTSTRAP.md (bootstrap/agent_bootstrap)\n- 12_Indexes/adr_index.json (index/index_lookup)\n- 12_Indexes/knowledge_index.json (index/index_lookup)\n- 12_Indexes/skill_index.json (index/index_lookup)\n\n## Success criteria\n- Goal outcome is answered with evidence paths\n- Subagent handoffs integrated without scope overlap\n- Forbidden actions not violated\n- Output matches Output Format exactly\n\n## Forbidden actions\n- Modify external repositories\n- Install Hermes or call model APIs\n- Push, tag, or publish without human approval\n- Invent project facts not supported by selected context\n- Use absolute machine-specific paths in deliverables\n- Write to any path outside an explicitly expanded Head-owned write set (default: none)\n\n## Subagents (Head integrates; no overlap unless stated)\n- qa-structure\n- qa-docs-canonical\n- qa-risk-gates\nHead responsibility: assign, collect handoffs, resolve conflicts, produce final verdict.\n\n## Output format\nReturn ONLY:\n1. Verdict (PASS | PASS_WITH_NOTES | FAIL)\n2. Findings (bullets, severity-tagged)\n3. Blockers\n4. Evidence paths (repo-relative or external: refs)\n5. Subagent integration summary\n6. Residual risks\n",
+    "subagent_prompts":  [
+                             {
+                                 "id":  "qa-structure",
+                                 "objective":  "Audit structural readiness for project goffice2026 (layout, adapter, indexes).",
+                                 "scope_mode":  "read-only",
+                                 "allowed":  [
+                                                 "01_Projects/goffice2026",
+                                                 "12_Indexes/",
+                                                 "07_Memory/OPERATING_RULES.md",
+                                                 "07_Memory/SYSTEM_MEMORY.md",
+                                                 "07_Memory/CURRENT_STATE.md",
+                                                 "01_Projects/goffice2026/ADAPTER.md",
+                                                 "07_Memory/projects/goffice2026.md",
+                                                 "03_Architecture/project-adapter/SPEC.md",
+                                                 "scripts/"
+                                             ],
+                                 "forbidden":  [
+                                                   "Do not call external model APIs",
+                                                   "Do not copy foreign project instructions into this project context",
+                                                   "Do not install Hermes",
+                                                   "Do not modify external repositories",
+                                                   "Do not open unrelated project adapters",
+                                                   "Do not push or tag",
+                                                   "Do not write under 01_Projects/goffice2026 unless Head Agent expands scope",
+                                                   "Write scope: none (read-only audit)"
+                                               ],
+                                 "deliverable":  "Structure readiness findings with severity",
+                                 "prompt":  "## Subagent: qa-structure\n## Assigned objective\nAudit structural readiness for project goffice2026 (layout, adapter, indexes).\n\n## Scope mode\nread-only\n\n## Allowed files or indexes\n- 01_Projects/goffice2026\n- 12_Indexes/\n- 07_Memory/OPERATING_RULES.md\n- 07_Memory/SYSTEM_MEMORY.md\n- 07_Memory/CURRENT_STATE.md\n- 01_Projects/goffice2026/ADAPTER.md\n- 07_Memory/projects/goffice2026.md\n- 03_Architecture/project-adapter/SPEC.md\n- scripts/\n\n## Forbidden scope\n- Do not call external model APIs\n- Do not copy foreign project instructions into this project context\n- Do not install Hermes\n- Do not modify external repositories\n- Do not open unrelated project adapters\n- Do not push or tag\n- Do not write under 01_Projects/goffice2026 unless Head Agent expands scope\n- Write scope: none (read-only audit)\n\n## Expected deliverable\nStructure readiness findings with severity\n\n## Validation requirements\n- [ ] Only allowed paths read\n- [ ] No external write\n- [ ] Findings reference paths only\n\n## Output limit\n- Verbosity: short\n- Max words: 250\n- No nested lists\n\n## Handoff format\nReturn ONLY:\n- findings (bullets)\n- blockers\n- evidence paths (repo-relative or external: refs)\n- residual risks\n"
+                             },
+                             {
+                                 "id":  "qa-docs-canonical",
+                                 "objective":  "Verify required canonical document references for goffice2026 without modifying sources.",
+                                 "scope_mode":  "read-only",
+                                 "allowed":  [
+                                                 "01_Projects/goffice2026",
+                                                 "12_Indexes/",
+                                                 "07_Memory/OPERATING_RULES.md",
+                                                 "07_Memory/SYSTEM_MEMORY.md",
+                                                 "07_Memory/CURRENT_STATE.md",
+                                                 "01_Projects/goffice2026/ADAPTER.md",
+                                                 "07_Memory/projects/goffice2026.md",
+                                                 "03_Architecture/project-adapter/SPEC.md"
+                                             ],
+                                 "forbidden":  [
+                                                   "Do not audit scripts/ (owned by qa-structure)",
+                                                   "Do not call external model APIs",
+                                                   "Do not copy foreign project instructions into this project context",
+                                                   "Do not install Hermes",
+                                                   "Do not invent missing docs content",
+                                                   "Do not modify external repositories",
+                                                   "Do not push or tag",
+                                                   "Write scope: none (read-only audit)"
+                                               ],
+                                 "deliverable":  "Canonical doc presence matrix + gaps",
+                                 "prompt":  "## Subagent: qa-docs-canonical\n## Assigned objective\nVerify required canonical document references for goffice2026 without modifying sources.\n\n## Scope mode\nread-only\n\n## Allowed files or indexes\n- 01_Projects/goffice2026\n- 12_Indexes/\n- 07_Memory/OPERATING_RULES.md\n- 07_Memory/SYSTEM_MEMORY.md\n- 07_Memory/CURRENT_STATE.md\n- 01_Projects/goffice2026/ADAPTER.md\n- 07_Memory/projects/goffice2026.md\n- 03_Architecture/project-adapter/SPEC.md\n\n## Forbidden scope\n- Do not audit scripts/ (owned by qa-structure)\n- Do not call external model APIs\n- Do not copy foreign project instructions into this project context\n- Do not install Hermes\n- Do not invent missing docs content\n- Do not modify external repositories\n- Do not push or tag\n- Write scope: none (read-only audit)\n\n## Expected deliverable\nCanonical doc presence matrix + gaps\n\n## Validation requirements\n- [ ] Required vs optional distinguished\n- [ ] Broken refs listed\n- [ ] No absolute machine paths in handoff\n\n## Output limit\n- Verbosity: short\n- Max words: 250\n- No nested lists\n\n## Handoff format\nReturn ONLY:\n- findings (bullets)\n- blockers\n- evidence paths (repo-relative or external: refs)\n- residual risks\n"
+                             },
+                             {
+                                 "id":  "qa-risk-gates",
+                                 "objective":  "Identify production-readiness risk gates and forbidden-action coverage for goffice2026.",
+                                 "scope_mode":  "read-only",
+                                 "allowed":  [
+                                                 "01_Projects/goffice2026",
+                                                 "12_Indexes/",
+                                                 "07_Memory/OPERATING_RULES.md",
+                                                 "07_Memory/SYSTEM_MEMORY.md",
+                                                 "07_Memory/CURRENT_STATE.md",
+                                                 "01_Projects/goffice2026/ADAPTER.md",
+                                                 "07_Memory/projects/goffice2026.md",
+                                                 "04_ADR/",
+                                                 "07_Memory/DECISION_MEMORY.md",
+                                                 "03_Architecture/ROADMAP.md"
+                                             ],
+                                 "forbidden":  [
+                                                   "Do not call external model APIs",
+                                                   "Do not copy foreign project instructions into this project context",
+                                                   "Do not install Hermes",
+                                                   "Do not modify external repositories",
+                                                   "Do not push or tag",
+                                                   "Do not re-check structure already owned by qa-structure",
+                                                   "Do not re-validate doc matrix owned by qa-docs-canonical",
+                                                   "Write scope: none (read-only audit)"
+                                               ],
+                                 "deliverable":  "Risk gate list with pass/fail/unknown",
+                                 "prompt":  "## Subagent: qa-risk-gates\n## Assigned objective\nIdentify production-readiness risk gates and forbidden-action coverage for goffice2026.\n\n## Scope mode\nread-only\n\n## Allowed files or indexes\n- 01_Projects/goffice2026\n- 12_Indexes/\n- 07_Memory/OPERATING_RULES.md\n- 07_Memory/SYSTEM_MEMORY.md\n- 07_Memory/CURRENT_STATE.md\n- 01_Projects/goffice2026/ADAPTER.md\n- 07_Memory/projects/goffice2026.md\n- 04_ADR/\n- 07_Memory/DECISION_MEMORY.md\n- 03_Architecture/ROADMAP.md\n\n## Forbidden scope\n- Do not call external model APIs\n- Do not copy foreign project instructions into this project context\n- Do not install Hermes\n- Do not modify external repositories\n- Do not push or tag\n- Do not re-check structure already owned by qa-structure\n- Do not re-validate doc matrix owned by qa-docs-canonical\n- Write scope: none (read-only audit)\n\n## Expected deliverable\nRisk gate list with pass/fail/unknown\n\n## Validation requirements\n- [ ] No overlap findings recycled from other subagents\n- [ ] External write permission = denied\n- [ ] Handoff uses Output format\n\n## Output limit\n- Verbosity: short\n- Max words: 250\n- No nested lists\n\n## Handoff format\nReturn ONLY:\n- findings (bullets)\n- blockers\n- evidence paths (repo-relative or external: refs)\n- residual risks\n"
+                             }
+                         ],
+    "context_manifest":  {
+                             "selected":  [
+                                              {
+                                                  "path":  "01_Projects/goffice2026/ADAPTER.md",
+                                                  "source":  "adapter",
+                                                  "reason":  "project_adapter",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "07_Memory/CURRENT_STATE.md",
+                                                  "source":  "bootstrap",
+                                                  "reason":  "current_state",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "07_Memory/OPERATING_RULES.md",
+                                                  "source":  "bootstrap",
+                                                  "reason":  "operating_rules",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "07_Memory/SYSTEM_MEMORY.md",
+                                                  "source":  "bootstrap",
+                                                  "reason":  "system_memory",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "12_Indexes/project_index.json",
+                                                  "source":  "index",
+                                                  "reason":  "index_lookup",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "external:doc:goffice2026/package.json",
+                                                  "source":  "adapter-canonical",
+                                                  "reason":  "package",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "external:doc:goffice2026/PRODUCT.md",
+                                                  "source":  "adapter-canonical",
+                                                  "reason":  "product",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "external:doc:goffice2026/README.md",
+                                                  "source":  "adapter-canonical",
+                                                  "reason":  "readme",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "09_SOP/AGENT_BOOTSTRAP.md",
+                                                  "source":  "bootstrap",
+                                                  "reason":  "agent_bootstrap",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "12_Indexes/adr_index.json",
+                                                  "source":  "index",
+                                                  "reason":  "index_lookup",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "12_Indexes/knowledge_index.json",
+                                                  "source":  "index",
+                                                  "reason":  "index_lookup",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "12_Indexes/skill_index.json",
+                                                  "source":  "index",
+                                                  "reason":  "index_lookup",
+                                                  "required":  false
+                                              }
+                                          ],
+                             "operating_rules":  [
+                                                     "Token reduction first",
+                                                     "Targeted reads only",
+                                                     "Index before file",
+                                                     "Memory before search",
+                                                     "No Hermes install",
+                                                     "No external model API calls",
+                                                     "No absolute machine-specific paths in generated prompts",
+                                                     "Head Agent owns integration; subagents stay bounded"
+                                                 ],
+                             "context_files":  [
+                                                   "01_Projects/goffice2026/ADAPTER.md",
+                                                   "07_Memory/CURRENT_STATE.md",
+                                                   "07_Memory/OPERATING_RULES.md",
+                                                   "07_Memory/SYSTEM_MEMORY.md",
+                                                   "12_Indexes/project_index.json",
+                                                   "external:doc:goffice2026/package.json",
+                                                   "external:doc:goffice2026/PRODUCT.md",
+                                                   "external:doc:goffice2026/README.md",
+                                                   "09_SOP/AGENT_BOOTSTRAP.md",
+                                                   "12_Indexes/adr_index.json",
+                                                   "12_Indexes/knowledge_index.json",
+                                                   "12_Indexes/skill_index.json"
+                                               ],
+                             "index_hits":  5
+                         },
+    "metrics":  {
+                    "input_size_chars":  176,
+                    "compiled_prompt_size_chars":  6308,
+                    "estimated_tokens":  1577,
+                    "context_files_selected":  12,
+                    "index_hits":  5,
+                    "warnings":  0,
+                    "subagent_count":  3,
+                    "compilation_duration_ms":  346,
+                    "deterministic_hash":  "733d0d314e6e0d09ed9449012c098b6699c157aaf240cda56c2e986b4c7cfe6d"
+                },
+    "compiler_metadata":  {
+                              "version":  "1.3.0",
+                              "schema_version":  "1.0",
+                              "repo_root_mode":  "caller-relative",
+                              "output_mode":  "both",
+                              "read_only":  true
+                          }
+}

@@ -1,0 +1,232 @@
+{
+    "status":  "ok",
+    "errors":  [
+
+               ],
+    "warnings":  [
+                     "optional_missing_context: 01_Projects/document-center/PRODUCT.md",
+                     "optional_missing_context: 01_Projects/document-center/PIPELINE.md"
+                 ],
+    "input":  {
+                  "project":  "document-center",
+                  "goal":  "Inspect publication pipeline readiness and identify blocking issues.",
+                  "model_profile":  "claude-coding",
+                  "constraints":  [
+                                      "do not load goffice2026 instructions",
+                                      "read-only"
+                                  ],
+                  "output_mode":  "both"
+              },
+    "project":  {
+                    "id":  "document-center",
+                    "display_name":  "Document Center",
+                    "root":  "01_Projects/document-center",
+                    "adapter":  "01_Projects/document-center/ADAPTER.md",
+                    "location_kind":  "in_vault",
+                    "remote_url":  null,
+                    "matched_by":  "id"
+                },
+    "model_profile":  {
+                          "id":  "claude-coding",
+                          "display_name":  "Claude-style Coding Agent",
+                          "role_style":  "careful-coding",
+                          "task_decomposition":  "explicit-file-owned-subagents; no-overlap",
+                          "expected_output_format":  "structured-sections-with-checklist",
+                          "verbosity_limit":  "short",
+                          "tool_use_guidance":  "plan-then-edit; explicit-write-scope; no-network; no-model-api; no-commit-unless-asked",
+                          "path":  "prompt-compiler/profiles/claude-coding.json"
+                      },
+    "head_agent_prompt":  "# Head Agent โ€” Compiled Task\n\n## Project\nproject_id=document-center; display_name=Document Center; location_kind=in_vault; adapter=01_Projects/document-center/ADAPTER.md\n\n## Goal\nInspect publication pipeline readiness and identify blocking issues.\n\n## Model profile\nmodel_profile=claude-coding; role_style=careful-coding; verbosity=short; decomposition=explicit-file-owned-subagents; no-overlap\ntool_use: plan-then-edit; explicit-write-scope; no-network; no-model-api; no-commit-unless-asked\n\n## Operating constraints\n- Do not leak instructions from other projects\n- do not load goffice2026 instructions\n- No absolute machine-specific paths in outputs\n- No external model API calls\n- No Hermes install\n- read-only\n- Read-only toward external repositories (no modify)\n\n## Operating rules applied\n- Token reduction first\n- Targeted reads only\n- Index before file\n- Memory before search\n- No Hermes install\n- No external model API calls\n- No absolute machine-specific paths in generated prompts\n- Head Agent owns integration; subagents stay bounded\n\n## Selected context (references only)\n- 01_Projects/document-center/ADAPTER.md (adapter/project_adapter)\n- 07_Memory/CURRENT_STATE.md (bootstrap/current_state)\n- 07_Memory/OPERATING_RULES.md (bootstrap/operating_rules)\n- 07_Memory/SYSTEM_MEMORY.md (bootstrap/system_memory)\n- 12_Indexes/project_index.json (index/index_lookup)\n- 01_Projects/document-center/README.md (project/project_entry)\n- 03_Architecture/CONTEXT_ENGINE.md (knowledge_index/goal_match)\n- 04_ADR/ADR-0001-local-first-development.md (adr_index/goal_match)\n- 04_ADR/ADR-0007-prompt-compiler-specification-first.md (adr_index/goal_match)\n- 07_Memory/projects/document-center.md (memory/project_memory)\n- 09_SOP/AGENT_BOOTSTRAP.md (bootstrap/agent_bootstrap)\n- 12_Indexes/adr_index.json (index/index_lookup)\n- 12_Indexes/knowledge_index.json (index/index_lookup)\n- 12_Indexes/skill_index.json (index/index_lookup)\n\n## Success criteria\n- Goal outcome is answered with evidence paths\n- Subagent handoffs integrated without scope overlap\n- Forbidden actions not violated\n- Output matches Output Format exactly\n\n## Forbidden actions\n- Modify external repositories\n- Install Hermes or call model APIs\n- Push, tag, or publish without human approval\n- Invent project facts not supported by selected context\n- Use absolute machine-specific paths in deliverables\n- Write to any path outside an explicitly expanded Head-owned write set (default: none)\n\n## Subagents (Head integrates; no overlap unless stated)\n- inspect-pipeline\n- inspect-blockers\nHead responsibility: assign, collect handoffs, resolve conflicts, produce final verdict.\n\n## Output format\nReturn ONLY:\n1. Verdict (PASS | PASS_WITH_NOTES | FAIL)\n2. Findings (bullets, severity-tagged)\n3. Blockers\n4. Evidence paths (repo-relative or external: refs)\n5. Subagent integration summary\n6. Residual risks\n",
+    "subagent_prompts":  [
+                             {
+                                 "id":  "inspect-pipeline",
+                                 "objective":  "Inspect publication/pipeline readiness signals for document-center.",
+                                 "scope_mode":  "read-only",
+                                 "allowed":  [
+                                                 "01_Projects/document-center",
+                                                 "12_Indexes/",
+                                                 "07_Memory/OPERATING_RULES.md",
+                                                 "07_Memory/SYSTEM_MEMORY.md",
+                                                 "07_Memory/CURRENT_STATE.md",
+                                                 "01_Projects/document-center/ADAPTER.md",
+                                                 "07_Memory/projects/document-center.md",
+                                                 "03_Architecture/",
+                                                 "09_SOP/",
+                                                 "11_Templates/"
+                                             ],
+                                 "forbidden":  [
+                                                   "Do not call external model APIs",
+                                                   "Do not copy foreign project instructions into this project context",
+                                                   "Do not copy instructions from other projects",
+                                                   "Do not install Hermes",
+                                                   "Do not load goffice2026 adapter or memory",
+                                                   "Do not modify external repositories",
+                                                   "Do not push or tag",
+                                                   "Write scope: none (read-only audit)"
+                                               ],
+                                 "deliverable":  "Pipeline readiness notes + missing pieces",
+                                 "prompt":  "## Subagent: inspect-pipeline\n## Assigned objective\nInspect publication/pipeline readiness signals for document-center.\n\n## Scope mode\nread-only\n\n## Allowed files or indexes\n- 01_Projects/document-center\n- 12_Indexes/\n- 07_Memory/OPERATING_RULES.md\n- 07_Memory/SYSTEM_MEMORY.md\n- 07_Memory/CURRENT_STATE.md\n- 01_Projects/document-center/ADAPTER.md\n- 07_Memory/projects/document-center.md\n- 03_Architecture/\n- 09_SOP/\n- 11_Templates/\n\n## Forbidden scope\n- Do not call external model APIs\n- Do not copy foreign project instructions into this project context\n- Do not copy instructions from other projects\n- Do not install Hermes\n- Do not load goffice2026 adapter or memory\n- Do not modify external repositories\n- Do not push or tag\n- Write scope: none (read-only audit)\n\n## Expected deliverable\nPipeline readiness notes + missing pieces\n\n## Validation requirements\n- [ ] Only this project context\n- [ ] Blocking issues labeled\n- [ ] No cross-project instruction leak\n\n## Output limit\n- Verbosity: short\n- Max words: 250\n- No nested lists\n\n## Handoff format\nReturn ONLY:\n- findings (bullets)\n- blockers\n- evidence paths (repo-relative or external: refs)\n- residual risks\n"
+                             },
+                             {
+                                 "id":  "inspect-blockers",
+                                 "objective":  "List blocking issues preventing publication readiness for document-center.",
+                                 "scope_mode":  "read-only",
+                                 "allowed":  [
+                                                 "01_Projects/document-center",
+                                                 "12_Indexes/",
+                                                 "07_Memory/OPERATING_RULES.md",
+                                                 "07_Memory/SYSTEM_MEMORY.md",
+                                                 "07_Memory/CURRENT_STATE.md",
+                                                 "01_Projects/document-center/ADAPTER.md",
+                                                 "07_Memory/projects/document-center.md",
+                                                 "12_Indexes/",
+                                                 "07_Memory/CURRENT_STATE.md"
+                                             ],
+                                 "forbidden":  [
+                                                   "Do not call external model APIs",
+                                                   "Do not copy foreign project instructions into this project context",
+                                                   "Do not install Hermes",
+                                                   "Do not modify external repositories",
+                                                   "Do not overlap inspect-pipeline deep architecture scan",
+                                                   "Do not push or tag",
+                                                   "Do not redesign architecture",
+                                                   "Write scope: none (read-only audit)"
+                                               ],
+                                 "deliverable":  "Ordered blocker list (P0/P1/P2)",
+                                 "prompt":  "## Subagent: inspect-blockers\n## Assigned objective\nList blocking issues preventing publication readiness for document-center.\n\n## Scope mode\nread-only\n\n## Allowed files or indexes\n- 01_Projects/document-center\n- 12_Indexes/\n- 07_Memory/OPERATING_RULES.md\n- 07_Memory/SYSTEM_MEMORY.md\n- 07_Memory/CURRENT_STATE.md\n- 01_Projects/document-center/ADAPTER.md\n- 07_Memory/projects/document-center.md\n- 12_Indexes/\n- 07_Memory/CURRENT_STATE.md\n\n## Forbidden scope\n- Do not call external model APIs\n- Do not copy foreign project instructions into this project context\n- Do not install Hermes\n- Do not modify external repositories\n- Do not overlap inspect-pipeline deep architecture scan\n- Do not push or tag\n- Do not redesign architecture\n- Write scope: none (read-only audit)\n\n## Expected deliverable\nOrdered blocker list (P0/P1/P2)\n\n## Validation requirements\n- [ ] Each blocker has evidence path\n- [ ] No write actions proposed as completed\n- [ ] Handoff bounded\n\n## Output limit\n- Verbosity: short\n- Max words: 250\n- No nested lists\n\n## Handoff format\nReturn ONLY:\n- findings (bullets)\n- blockers\n- evidence paths (repo-relative or external: refs)\n- residual risks\n"
+                             }
+                         ],
+    "context_manifest":  {
+                             "selected":  [
+                                              {
+                                                  "path":  "01_Projects/document-center/ADAPTER.md",
+                                                  "source":  "adapter",
+                                                  "reason":  "project_adapter",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "07_Memory/CURRENT_STATE.md",
+                                                  "source":  "bootstrap",
+                                                  "reason":  "current_state",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "07_Memory/OPERATING_RULES.md",
+                                                  "source":  "bootstrap",
+                                                  "reason":  "operating_rules",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "07_Memory/SYSTEM_MEMORY.md",
+                                                  "source":  "bootstrap",
+                                                  "reason":  "system_memory",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "12_Indexes/project_index.json",
+                                                  "source":  "index",
+                                                  "reason":  "index_lookup",
+                                                  "required":  true
+                                              },
+                                              {
+                                                  "path":  "01_Projects/document-center/README.md",
+                                                  "source":  "project",
+                                                  "reason":  "project_entry",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "03_Architecture/CONTEXT_ENGINE.md",
+                                                  "source":  "knowledge_index",
+                                                  "reason":  "goal_match",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "04_ADR/ADR-0001-local-first-development.md",
+                                                  "source":  "adr_index",
+                                                  "reason":  "goal_match",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "04_ADR/ADR-0007-prompt-compiler-specification-first.md",
+                                                  "source":  "adr_index",
+                                                  "reason":  "goal_match",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "07_Memory/projects/document-center.md",
+                                                  "source":  "memory",
+                                                  "reason":  "project_memory",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "09_SOP/AGENT_BOOTSTRAP.md",
+                                                  "source":  "bootstrap",
+                                                  "reason":  "agent_bootstrap",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "12_Indexes/adr_index.json",
+                                                  "source":  "index",
+                                                  "reason":  "index_lookup",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "12_Indexes/knowledge_index.json",
+                                                  "source":  "index",
+                                                  "reason":  "index_lookup",
+                                                  "required":  false
+                                              },
+                                              {
+                                                  "path":  "12_Indexes/skill_index.json",
+                                                  "source":  "index",
+                                                  "reason":  "index_lookup",
+                                                  "required":  false
+                                              }
+                                          ],
+                             "operating_rules":  [
+                                                     "Token reduction first",
+                                                     "Targeted reads only",
+                                                     "Index before file",
+                                                     "Memory before search",
+                                                     "No Hermes install",
+                                                     "No external model API calls",
+                                                     "No absolute machine-specific paths in generated prompts",
+                                                     "Head Agent owns integration; subagents stay bounded"
+                                                 ],
+                             "context_files":  [
+                                                   "01_Projects/document-center/ADAPTER.md",
+                                                   "07_Memory/CURRENT_STATE.md",
+                                                   "07_Memory/OPERATING_RULES.md",
+                                                   "07_Memory/SYSTEM_MEMORY.md",
+                                                   "12_Indexes/project_index.json",
+                                                   "01_Projects/document-center/README.md",
+                                                   "03_Architecture/CONTEXT_ENGINE.md",
+                                                   "04_ADR/ADR-0001-local-first-development.md",
+                                                   "04_ADR/ADR-0007-prompt-compiler-specification-first.md",
+                                                   "07_Memory/projects/document-center.md",
+                                                   "09_SOP/AGENT_BOOTSTRAP.md",
+                                                   "12_Indexes/adr_index.json",
+                                                   "12_Indexes/knowledge_index.json",
+                                                   "12_Indexes/skill_index.json"
+                                               ],
+                             "index_hits":  10
+                         },
+    "metrics":  {
+                    "input_size_chars":  227,
+                    "compiled_prompt_size_chars":  5198,
+                    "estimated_tokens":  1300,
+                    "context_files_selected":  14,
+                    "index_hits":  10,
+                    "warnings":  2,
+                    "subagent_count":  2,
+                    "compilation_duration_ms":  333,
+                    "deterministic_hash":  "8e10defefc04262594603d8e1debaa7c0e3b784bf9b23b568122fec1df9914b3"
+                },
+    "compiler_metadata":  {
+                              "version":  "1.3.0",
+                              "schema_version":  "1.0",
+                              "repo_root_mode":  "caller-relative",
+                              "output_mode":  "both",
+                              "read_only":  true
+                          }
+}
