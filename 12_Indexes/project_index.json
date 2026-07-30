@@ -2,6 +2,14 @@
     "schema_version":  "1.0",
     "entries":  [
                     {
+                        "id":  "project-document-center",
+                        "title":  "document-center",
+                        "path":  "01_Projects/document-center/",
+                        "tags":  [
+                                     "project"
+                                 ]
+                    },
+                    {
                         "id":  "project-goffice2026",
                         "title":  "goffice2026 (AI-OS entry)",
                         "path":  "01_Projects/goffice2026/",

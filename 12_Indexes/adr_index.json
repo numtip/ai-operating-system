@@ -80,6 +80,14 @@
                         "tags":  [
                                      "adr"
                                  ]
+                    },
+                    {
+                        "id":  "adr-0011",
+                        "title":  "Prompt Compiler Runtime (No LLM)",
+                        "path":  "04_ADR/ADR-0011-prompt-compiler-runtime-no-llm.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
                     }
                 ]
 }
