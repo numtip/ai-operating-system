@@ -6,7 +6,7 @@
 - **adapter_present:** true
 - **files_would_read:** 5
 - **files_read:** 4
-- **generated_at:** 2026-07-30T14:39:46.0375154+07:00
+- **generated_at:** 2026-07-30T14:46:10.8598258+07:00
 - **schema_version:** 1.2
 
 ## Match

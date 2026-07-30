@@ -9,7 +9,7 @@ Durable facts for AI Operating System. Update only when the system itself change
 | Repo path | `F:\projectAi\ai-operating-system` |
 | GitHub | https://github.com/numtip/ai-operating-system |
 | Product | AI Operating System |
-| Current version track | v1.2 Knowledge Index Maturity (pilot-validated) |
+| Current version track | v1.2 Knowledge Index Maturity (Release Candidate) |
 
 ## Phase / version model
 
@@ -17,7 +17,7 @@ Durable facts for AI Operating System. Update only when the system itself change
 |---------|--------|--------|
 | **v1.0** | Complete | Knowledge/Memory foundation |
 | **v1.1** | Complete | Context Engine, bootstrap SOP, indexes, prompt-compiler spec, compression |
-| **v1.2** | Active | Project Adapter + bootstrap runtime sim + metrics; goffice2026 pilot |
+| **v1.2** | Complete (RC) | Project Adapter + bootstrap runtime sim + metrics; goffice2026 pilot |
 | **v1.5 / Phase 2** | Deferred | Hermes (not installed) |
 
 See [ROADMAP](../03_Architecture/ROADMAP.md).

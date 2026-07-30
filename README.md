@@ -3,8 +3,9 @@
 Local-first knowledge, memory, and context foundation for human + agent work.
 
 **Repo:** https://github.com/numtip/ai-operating-system  
-**Track:** v1.1 — Context Engine Foundation  
-**Manifesto:** [AI_OS_MANIFESTO.md](AI_OS_MANIFESTO.md)
+**Track:** v1.2 — Knowledge Index Maturity (Release Candidate)  
+**Manifesto:** [AI_OS_MANIFESTO.md](AI_OS_MANIFESTO.md)  
+**Release:** [10_Releases/v1.2.0-rc.1/](10_Releases/v1.2.0-rc.1/)
 
 ## Vault tree
 
