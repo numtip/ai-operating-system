@@ -1,0 +1,42 @@
+# Secrets & credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials
+credentials.*
+**/secrets/
+**/secret/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# OS junk
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# Editors / IDE
+.idea/
+*.swp
+*.swo
+
+# Obsidian — keep core config; ignore workspace cache
+.obsidian/workspace
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/workspaces.json
+.obsidian/cache
+.trash/
+
+# Logs & temp
+*.log
+tmp/
+temp/
+*.tmp
