@@ -4,6 +4,24 @@ All notable changes to AI Operating System are documented here.
 
 ## [Unreleased]
 
+## [v1.3.0-alpha.1] — 2026-07-30
+
+### Added
+
+- Prompt Compiler **runtime** (`prompt-compiler/`, `scripts/compile-prompt.ps1`) — no LLM/API
+- Model execution profiles: generic-reasoning, deepseek-v4-pro/flash, claude-coding, cursor-coding
+- Bounded subagent prompt generation + context selection via indexes/adapters/bootstrap
+- Deterministic metrics (incl. SHA-256) and automated compiler tests
+- Minimum `document-center` project adapter for pilot isolation
+- Pilot results under `06_Research/pilots/v1.3-prompt-compiler/`
+- ADR-0011 Prompt Compiler Runtime (No LLM)
+
+### Changed
+
+- Roadmap v1.3 marked Complete (MVP)
+- Prompt compiler architecture README points at executable runtime
+- System/current memory aligned to v1.3
+
 ## [v1.2.0-rc.1] — 2026-07-30
 
 ### Added

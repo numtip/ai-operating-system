@@ -1,7 +1,8 @@
 # Prompt Compiler
 
-**Status:** Spec-only (Phase 1)  
+**Status:** Spec + runtime (v1.3)  
 **Scope:** Compile structured task inputs into short, routable prompts.  
+**Runtime:** [`prompt-compiler/`](../../prompt-compiler/) + [`scripts/compile-prompt.ps1`](../../scripts/compile-prompt.ps1) (no API).  
 **Out of scope:** API calls, SDK clients, live model invocations, credential handling.
 
 ## Purpose
@@ -12,7 +13,7 @@ Define the canonical contract for turning Head→subagent (or Head→model) task
 2. A **routing decision** (profile + model class fields only)
 3. A **validation checklist** against `OUTPUT_CONTRACT.md`
 
-No runtime integration in this package.
+Contract docs live in this package; the executable runtime lives under repo-root `prompt-compiler/` (ADR-0011).
 
 ## Spec index
 

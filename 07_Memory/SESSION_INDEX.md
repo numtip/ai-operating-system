@@ -7,6 +7,7 @@ Chronological index of session handoffs. One row per closed (or draft) session.
 | 2026-07-30 | Bootstrap Knowledge/Memory | [sessions/2026/2026-07-30-bootstrap-knowledge-memory.md](sessions/2026/2026-07-30-bootstrap-knowledge-memory.md) | done |
 | 2026-07-30 | v1.1 Context Engine Foundation | [sessions/2026/2026-07-30-v1.1-context-engine-foundation.md](sessions/2026/2026-07-30-v1.1-context-engine-foundation.md) | done |
 | 2026-07-30 | v1.2 goffice2026 pilot | [sessions/2026/2026-07-30-v1.2-goffice2026-pilot.md](sessions/2026/2026-07-30-v1.2-goffice2026-pilot.md) | done |
+| 2026-07-30 | v1.3 Prompt Compiler Runtime | [sessions/2026/2026-07-30-v1.3-prompt-compiler-runtime.md](sessions/2026/2026-07-30-v1.3-prompt-compiler-runtime.md) | done |
 
 ## Format
 

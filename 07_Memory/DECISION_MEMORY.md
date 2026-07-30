@@ -14,6 +14,7 @@ Index of Architecture Decision Records. Canonical ADR text lives in `04_ADR/`; t
 | ADR-0008 | Memory compression threshold | [ADR-0008](../04_ADR/ADR-0008-memory-compression-threshold.md) |
 | ADR-0009 | Agent bootstrap mandatory | [ADR-0009](../04_ADR/ADR-0009-agent-bootstrap-mandatory.md) |
 | ADR-0010 | Project Adapter for external pilots | [ADR-0010](../04_ADR/ADR-0010-project-adapter-external-pilots.md) |
+| ADR-0011 | Prompt Compiler runtime (no LLM) | [ADR-0011](../04_ADR/ADR-0011-prompt-compiler-runtime-no-llm.md) |
 
 ## Rules
 

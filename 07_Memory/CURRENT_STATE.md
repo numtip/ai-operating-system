@@ -4,31 +4,33 @@ Living status. Update every session close ([SESSION_CLOSE](SESSION_CLOSE.md)).
 
 ## Phase
 
-**v1.2 — Knowledge Index Maturity** — Release Candidate (`v1.2.0-rc.1`)
+**v1.3 — Prompt Compiler Runtime** — MVP complete (local, no LLM)
 
-Prior: v1.1 Context Engine Foundation tagged `v1.1.0-alpha.1`.
+Prior: v1.2 Knowledge Index Maturity RC (`v1.2.0-rc.1` audits still under `10_Releases/`).
 
 ## Last session
 
-2026-07-30 — goffice2026 pilot / v1.2 — **done**
+2026-07-30 — v1.3 Prompt Compiler Runtime MVP — **done**
 
-Handoff: [sessions/2026/2026-07-30-v1.2-goffice2026-pilot.md](sessions/2026/2026-07-30-v1.2-goffice2026-pilot.md)
+Handoff: [sessions/2026/2026-07-30-v1.3-prompt-compiler-runtime.md](sessions/2026/2026-07-30-v1.3-prompt-compiler-runtime.md)
 
 ## Open items
 
-- Publish five v1.2 commits when authorized (`git push origin main`)
-- Tag `v1.2.0-rc.1` after push approval
-- Optional: deepen project memory after real goffice task sessions (no vault duplication)
+- Publish commits when authorized (`git push origin main`) — do not push without approval
+- Optional tag `v1.3.0-alpha.1` after push approval
+- v1.2 RC push/tag still pending human approval if not yet published
+- Optional: deepen document-center when external repo is linked
 
 ## Blockers / notes
 
-- External `F:\projectAi\goffice2026` is read-only from AI-OS unless human approves edits
-- Do not default-bootstrap large `docs/GOFFICE2026_NEW_PROJECT_MASTER_REFERENCE.md`
-- `last-bootstrap-simulation.md` may refresh on each sim run (generated evidence)
+- Compiler does not call model APIs; profiles are execution style only
+- External `goffice2026` remains read-only from AI-OS unless human approves edits
+- Generated pilot artifacts under `06_Research/pilots/v1.3-prompt-compiler/`
 
 ## Quick links
 
-- Pilot: [06_Research/pilots/goffice2026/](../06_Research/pilots/goffice2026/)
-- Adapter: [01_Projects/goffice2026/ADAPTER.md](../01_Projects/goffice2026/ADAPTER.md)
-- RC audits: [10_Releases/v1.2.0-rc.1/](../10_Releases/v1.2.0-rc.1/)
-- Bootstrap sim: `scripts/simulate-bootstrap.ps1 -ProjectName goffice2026`
+- Runtime: [prompt-compiler/README.md](../prompt-compiler/README.md)
+- CLI: `scripts/compile-prompt.ps1`
+- Pilots: [06_Research/pilots/v1.3-prompt-compiler/PILOT_RESULTS.md](../06_Research/pilots/v1.3-prompt-compiler/PILOT_RESULTS.md)
+- Tests: `prompt-compiler/tests/run-tests.ps1`
+- ADR-0011: [04_ADR/ADR-0011-prompt-compiler-runtime-no-llm.md](../04_ADR/ADR-0011-prompt-compiler-runtime-no-llm.md)

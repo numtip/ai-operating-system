@@ -9,7 +9,7 @@ Durable facts for AI Operating System. Update only when the system itself change
 | Repo path | `F:\projectAi\ai-operating-system` |
 | GitHub | https://github.com/numtip/ai-operating-system |
 | Product | AI Operating System |
-| Current version track | v1.2 Knowledge Index Maturity (Release Candidate) |
+| Current version track | v1.3 Prompt Compiler Runtime (MVP) |
 
 ## Phase / version model
 
@@ -18,6 +18,7 @@ Durable facts for AI Operating System. Update only when the system itself change
 | **v1.0** | Complete | Knowledge/Memory foundation |
 | **v1.1** | Complete | Context Engine, bootstrap SOP, indexes, prompt-compiler spec, compression |
 | **v1.2** | Complete (RC) | Project Adapter + bootstrap runtime sim + metrics; goffice2026 pilot |
+| **v1.3** | Complete (MVP) | Prompt Compiler runtime (no LLM); model profiles; dual pilots |
 | **v1.5 / Phase 2** | Deferred | Hermes (not installed) |
 
 See [ROADMAP](../03_Architecture/ROADMAP.md).
@@ -28,7 +29,7 @@ See [ROADMAP](../03_Architecture/ROADMAP.md).
 - Git / GitHub as source of truth
 - File-based indexes (no vector DB)
 - Project Adapters link external repos; do not duplicate docs
-- Prompt Compiler specification-only
+- Prompt Compiler runtime is local/file-based (no model API)
 - No Hermes / VPS without approval
 - Session compression threshold default: 25
 

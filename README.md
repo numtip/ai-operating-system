@@ -3,9 +3,9 @@
 Local-first knowledge, memory, and context foundation for human + agent work.
 
 **Repo:** https://github.com/numtip/ai-operating-system  
-**Track:** v1.2 — Knowledge Index Maturity (Release Candidate)  
+**Track:** v1.3 — Prompt Compiler Runtime (MVP)  
 **Manifesto:** [AI_OS_MANIFESTO.md](AI_OS_MANIFESTO.md)  
-**Release:** [10_Releases/v1.2.0-rc.1/](10_Releases/v1.2.0-rc.1/)
+**Release (prior RC):** [10_Releases/v1.2.0-rc.1/](10_Releases/v1.2.0-rc.1/)
 
 ## Vault tree
 
@@ -34,7 +34,8 @@ scripts/          # validation helpers
 | Dashboard | [00_Dashboard/HOME.md](00_Dashboard/HOME.md) |
 | Agent bootstrap | [09_SOP/AGENT_BOOTSTRAP.md](09_SOP/AGENT_BOOTSTRAP.md) |
 | Context Engine | [03_Architecture/CONTEXT_ENGINE.md](03_Architecture/CONTEXT_ENGINE.md) |
-| Prompt Compiler | [03_Architecture/prompt-compiler/](03_Architecture/prompt-compiler/) |
+| Prompt Compiler (spec) | [03_Architecture/prompt-compiler/](03_Architecture/prompt-compiler/) |
+| Prompt Compiler (runtime) | [prompt-compiler/](prompt-compiler/) · `scripts/compile-prompt.ps1` |
 | Indexes | [12_Indexes/](12_Indexes/) |
 | Roadmap | [03_Architecture/ROADMAP.md](03_Architecture/ROADMAP.md) |
 | Operating rules | [07_Memory/OPERATING_RULES.md](07_Memory/OPERATING_RULES.md) |
@@ -47,7 +48,7 @@ scripts/          # validation helpers
 - No Hermes install or orchestration runtime (until v1.5 / approval)
 - No VPS / production deploy without approval
 - No secrets in the vault; no vector DB in v1.1
-- Prompt Compiler is specification-only (no API calls yet)
+- Prompt Compiler runtime is local/file-based (no model API calls)
 
 ## Agent bootstrap
 
