@@ -1,0 +1,10 @@
+{
+  "project": "goffice2026",
+  "goal": "Audit production readiness without modifying the external repository.",
+  "model_profile": "deepseek-v4-pro",
+  "constraints": [
+    "read-only",
+    "no external repository write permission"
+  ],
+  "output_mode": "both"
+}

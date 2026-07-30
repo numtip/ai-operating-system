@@ -65,6 +65,34 @@ pwsh -File scripts/validate-v1.1.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-v1.1.ps1
 ```
 
+## compile-prompt
+
+Prompt Compiler Runtime (v1.3). Compiles Project + Goal + Model Profile + Constraints into Head/Subagent prompts, context manifest, and metrics. **No LLM / no network.**
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/compile-prompt.ps1 `
+  -Project goffice2026 `
+  -Goal "Audit production readiness without modifying the external repository." `
+  -ModelProfile deepseek-v4-pro `
+  -OutputMode both `
+  -OutDir out/compile
+```
+
+| Param | Required | Notes |
+|-------|----------|-------|
+| `-Project` | yes | Project id / `01_Projects/` folder |
+| `-Goal` | yes | Non-empty outcome |
+| `-ModelProfile` / `-Model` | yes | Profile id under `prompt-compiler/profiles/` |
+| `-Constraints` | no | String array; conflicting read-only/write fails |
+| `-OutputMode` | no | `json` \| `markdown` \| `both` |
+| `-OutDir` | no | Write `compile-result.json` / `.md` |
+| `-RepoRoot` | no | Defaults to AI-OS root |
+
+Exit `0` on compile ok, `1` on validation/compile error, `2` if runtime missing.
+
+Tests: `prompt-compiler/tests/run-tests.ps1`  
+Docs: `prompt-compiler/README.md`
+
 ## check-session-threshold
 
 Counts `*.md` session files under `07_Memory/sessions` (excludes `archive/`) and compares to `07_Memory/compression/THRESHOLD.json`.

@@ -1,0 +1,10 @@
+{
+  "project": "document-center",
+  "goal": "Inspect publication pipeline readiness and identify blocking issues.",
+  "model_profile": "claude-coding",
+  "constraints": [
+    "do not load goffice2026 instructions",
+    "read-only"
+  ],
+  "output_mode": "both"
+}
