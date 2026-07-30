@@ -1,0 +1,77 @@
+{
+    "schema_version":  "1.0",
+    "entries":  [
+                    {
+                        "id":  "adr-0001",
+                        "title":  "Local-First Development",
+                        "path":  "04_ADR/ADR-0001-local-first-development.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
+                    },
+                    {
+                        "id":  "adr-0002",
+                        "title":  "GitHub as Source of Truth",
+                        "path":  "04_ADR/ADR-0002-github-source-of-truth.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
+                    },
+                    {
+                        "id":  "adr-0003",
+                        "title":  "Obsidian as Knowledge Interface",
+                        "path":  "04_ADR/ADR-0003-obsidian-knowledge-interface.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
+                    },
+                    {
+                        "id":  "adr-0004",
+                        "title":  "Hermes Deferred to Phase 2",
+                        "path":  "04_ADR/ADR-0004-hermes-deferred-phase-2.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
+                    },
+                    {
+                        "id":  "adr-0005",
+                        "title":  "Context Engine as a Core Architecture Layer",
+                        "path":  "04_ADR/ADR-0005-context-engine-core-layer.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
+                    },
+                    {
+                        "id":  "adr-0006",
+                        "title":  "File-Based Indexes Before Vector Search",
+                        "path":  "04_ADR/ADR-0006-file-based-indexes-before-vector.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
+                    },
+                    {
+                        "id":  "adr-0007",
+                        "title":  "Prompt Compiler as Specification-First",
+                        "path":  "04_ADR/ADR-0007-prompt-compiler-specification-first.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
+                    },
+                    {
+                        "id":  "adr-0008",
+                        "title":  "Memory Compression Threshold",
+                        "path":  "04_ADR/ADR-0008-memory-compression-threshold.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
+                    },
+                    {
+                        "id":  "adr-0009",
+                        "title":  "Agent Bootstrap as Mandatory Session Protocol",
+                        "path":  "04_ADR/ADR-0009-agent-bootstrap-mandatory.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
+                    }
+                ]
+}

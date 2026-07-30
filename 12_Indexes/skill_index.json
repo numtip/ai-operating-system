@@ -1,0 +1,15 @@
+{
+    "schema_version":  "1.0",
+    "entries":  [
+                    {
+                        "id":  "skills-root",
+                        "title":  "Skills (placeholder)",
+                        "path":  "08_Skills/",
+                        "tags":  [
+                                     "skills",
+                                     "placeholder"
+                                 ]
+                    }
+                ],
+    "note":  "Placeholder until skills are authored under 08_Skills/. Points at skills root only."
+}

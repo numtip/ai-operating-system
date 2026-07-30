@@ -1,0 +1,99 @@
+{
+    "schema_version":  "1.0",
+    "entries":  [
+                    {
+                        "id":  "readme",
+                        "title":  "AI Operating System",
+                        "path":  "README.md",
+                        "tags":  [
+                                     "canonical",
+                                     "entrypoint"
+                                 ]
+                    },
+                    {
+                        "id":  "manifesto",
+                        "title":  "AI Operating System Manifesto",
+                        "path":  "AI_OS_MANIFESTO.md",
+                        "tags":  [
+                                     "canonical",
+                                     "manifesto"
+                                 ]
+                    },
+                    {
+                        "id":  "context-engine",
+                        "title":  "Context Engine",
+                        "path":  "03_Architecture/CONTEXT_ENGINE.md",
+                        "tags":  [
+                                     "canonical",
+                                     "architecture",
+                                     "context"
+                                 ]
+                    },
+                    {
+                        "id":  "architecture-overview",
+                        "title":  "Architecture Overview",
+                        "path":  "03_Architecture/ARCHITECTURE_OVERVIEW.md",
+                        "tags":  [
+                                     "canonical",
+                                     "architecture"
+                                 ]
+                    },
+                    {
+                        "id":  "glossary",
+                        "title":  "Glossary",
+                        "path":  "02_Knowledge/GLOSSARY.md",
+                        "tags":  [
+                                     "canonical",
+                                     "knowledge"
+                                 ]
+                    },
+                    {
+                        "id":  "operating-rules",
+                        "title":  "Operating Rules",
+                        "path":  "07_Memory/OPERATING_RULES.md",
+                        "tags":  [
+                                     "canonical",
+                                     "memory",
+                                     "governance"
+                                 ]
+                    },
+                    {
+                        "id":  "system-memory",
+                        "title":  "System Memory",
+                        "path":  "07_Memory/SYSTEM_MEMORY.md",
+                        "tags":  [
+                                     "canonical",
+                                     "memory"
+                                 ]
+                    },
+                    {
+                        "id":  "current-state",
+                        "title":  "Current State",
+                        "path":  "07_Memory/CURRENT_STATE.md",
+                        "tags":  [
+                                     "canonical",
+                                     "memory",
+                                     "state"
+                                 ]
+                    },
+                    {
+                        "id":  "home",
+                        "title":  "AI-OS Dashboard",
+                        "path":  "00_Dashboard/HOME.md",
+                        "tags":  [
+                                     "canonical",
+                                     "dashboard"
+                                 ]
+                    },
+                    {
+                        "id":  "quickstart",
+                        "title":  "Agent Quickstart",
+                        "path":  "00_Dashboard/QUICKSTART.md",
+                        "tags":  [
+                                     "canonical",
+                                     "dashboard",
+                                     "onboarding"
+                                 ]
+                    }
+                ]
+}
