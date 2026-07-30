@@ -9,15 +9,16 @@ Durable facts for AI Operating System. Update only when the system itself change
 | Repo path | `F:\projectAi\ai-operating-system` |
 | GitHub | https://github.com/numtip/ai-operating-system |
 | Product | AI Operating System |
-| Current version track | v1.1 Context Engine Foundation |
+| Current version track | v1.2 Knowledge Index Maturity (pilot-validated) |
 
 ## Phase / version model
 
 | Version | Status | Scope |
 |---------|--------|--------|
-| **v1.0** | Complete | Knowledge/Memory foundation (Obsidian + Git) |
-| **v1.1** | Active | Context Engine, bootstrap, indexes, prompt-compiler spec, compression |
-| **v1.5 / Phase 2** | Deferred | Hermes agent runtime (not installed) |
+| **v1.0** | Complete | Knowledge/Memory foundation |
+| **v1.1** | Complete | Context Engine, bootstrap SOP, indexes, prompt-compiler spec, compression |
+| **v1.2** | Active | Project Adapter + bootstrap runtime sim + metrics; goffice2026 pilot |
+| **v1.5 / Phase 2** | Deferred | Hermes (not installed) |
 
 See [ROADMAP](../03_Architecture/ROADMAP.md).
 
@@ -25,14 +26,23 @@ See [ROADMAP](../03_Architecture/ROADMAP.md).
 
 - Local-first; Obsidian as primary interface
 - Git / GitHub as source of truth
-- File-based indexes (no vector DB yet)
-- Prompt Compiler is specification-only (no API calls)
-- No VPS; no Hermes install until approved
+- File-based indexes (no vector DB)
+- Project Adapters link external repos; do not duplicate docs
+- Prompt Compiler specification-only
+- No Hermes / VPS without approval
 - Session compression threshold default: 25
+
+## First pilot
+
+| Fact | Value |
+|------|--------|
+| Project | goffice2026 |
+| Adapter | `01_Projects/goffice2026/ADAPTER.md` |
+| External path | `F:\projectAi\goffice2026` |
+| Remote | https://github.com/numtip/goffice2026 |
 
 ## Related
 
 - Status: [CURRENT_STATE](CURRENT_STATE.md)
 - Decisions: [DECISION_MEMORY](DECISION_MEMORY.md)
 - Rules: [OPERATING_RULES](OPERATING_RULES.md)
-- Manifesto: [AI_OS_MANIFESTO.md](../AI_OS_MANIFESTO.md)

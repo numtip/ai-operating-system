@@ -14,6 +14,7 @@ Index of accepted decisions for AI Operating System v1.
 | [ADR-0007](ADR-0007-prompt-compiler-specification-first.md) | Prompt Compiler Specification-First | Accepted |
 | [ADR-0008](ADR-0008-memory-compression-threshold.md) | Memory Compression Threshold | Accepted |
 | [ADR-0009](ADR-0009-agent-bootstrap-mandatory.md) | Agent Bootstrap Mandatory | Accepted |
+| [ADR-0010](ADR-0010-project-adapter-external-pilots.md) | Project Adapter for External Pilots | Accepted |
 
-Use [ADR-TEMPLATE.md](ADR-TEMPLATE.md) for new records. Number sequentially (`ADR-0010-...`).
+Use [ADR-TEMPLATE.md](ADR-TEMPLATE.md) for new records. Number sequentially (`ADR-0011-...`).
 See also [ROADMAP.md](../03_Architecture/ROADMAP.md).

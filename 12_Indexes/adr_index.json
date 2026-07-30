@@ -72,6 +72,14 @@
                         "tags":  [
                                      "adr"
                                  ]
+                    },
+                    {
+                        "id":  "adr-0010",
+                        "title":  "Project Adapter for External Pilots",
+                        "path":  "04_ADR/ADR-0010-project-adapter-external-pilots.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
                     }
                 ]
 }

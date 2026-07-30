@@ -4,6 +4,21 @@ All notable changes to AI Operating System are documented here.
 
 ## [Unreleased]
 
+## [v1.2.0-alpha.1] — 2026-07-30
+
+### Added
+
+- Project Adapter specification + goffice2026 adapter (link-don't-copy)
+- Bootstrap runtime specification + `scripts/simulate-bootstrap.ps1`
+- Context efficiency metrics + benchmark templates + `scripts/estimate-tokens.ps1`
+- goffice2026 pilot validation under `06_Research/pilots/goffice2026/`
+- ADR-0010 Project Adapter for external pilots
+
+### Changed
+
+- `project_index.json` now lists goffice2026
+- System/current memory aligned to v1.2 pilot
+
 ## [v1.1.0-alpha.1] — 2026-07-30
 
 ### Added

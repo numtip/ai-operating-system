@@ -1,7 +1,13 @@
 {
     "schema_version":  "1.0",
     "entries":  [
-
-                ],
-    "note":  "No project folders under 01_Projects yet (placeholder .gitkeep only). Entries populate when projects are added."
+                    {
+                        "id":  "project-goffice2026",
+                        "title":  "goffice2026 (AI-OS entry)",
+                        "path":  "01_Projects/goffice2026/",
+                        "tags":  [
+                                     "project"
+                                 ]
+                    }
+                ]
 }
