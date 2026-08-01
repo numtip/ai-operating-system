@@ -3,9 +3,9 @@
 Local-first knowledge, memory, and context foundation for human + agent work.
 
 **Repo:** https://github.com/numtip/ai-operating-system  
-**Track:** v1.3 — Prompt Compiler Runtime (MVP)  
+**Track:** v1.4 — Context Optimizer + Prompt Quality Gate (alpha)  
 **Manifesto:** [AI_OS_MANIFESTO.md](AI_OS_MANIFESTO.md)  
-**Release (prior RC):** [10_Releases/v1.2.0-rc.1/](10_Releases/v1.2.0-rc.1/)
+**Release:** [10_Releases/v1.4.0-alpha.1/](10_Releases/v1.4.0-alpha.1/)
 
 ## Vault tree
 
@@ -23,6 +23,7 @@ Local-first knowledge, memory, and context foundation for human + agent work.
 10_Releases/
 11_Templates/     # reusable templates (+ context/)
 12_Indexes/       # lightweight JSON indexes
+prompt-compiler/  # compiler runtime: profiles, schemas, tests (v1.3+)
 Archive/
 scripts/          # validation helpers
 ```
@@ -45,10 +46,11 @@ scripts/          # validation helpers
 
 ## Constraints
 
-- No Hermes install or orchestration runtime (until v1.5 / approval)
+- No Hermes install or orchestration runtime (until v1.6 / approval)
 - No VPS / production deploy without approval
-- No secrets in the vault; no vector DB in v1.1
+- No secrets in the vault; no vector DB
 - Prompt Compiler runtime is local/file-based (no model API calls)
+- Compiler runtime lives at repo-root `prompt-compiler/`; spec/contracts at `03_Architecture/prompt-compiler/` (ADR-0011)
 
 ## Agent bootstrap
 
