@@ -4,33 +4,32 @@ Living status. Update every session close ([SESSION_CLOSE](SESSION_CLOSE.md)).
 
 ## Phase
 
-**v1.3 — Prompt Compiler Runtime** — MVP complete (local, no LLM)
+**v1.4 — Context Optimizer + Prompt Quality Gate** — complete (alpha)
 
-Prior: v1.2 Knowledge Index Maturity RC (`v1.2.0-rc.1` audits still under `10_Releases/`).
+Prior: v1.3 Prompt Compiler Runtime MVP (`v1.3.0-alpha.1`).
 
 ## Last session
 
-2026-07-30 — v1.3 Prompt Compiler Runtime MVP — **done**
+2026-08-01 — v1.4 Context Optimizer + Prompt Quality Gate — **done**
 
-Handoff: [sessions/2026/2026-07-30-v1.3-prompt-compiler-runtime.md](sessions/2026/2026-07-30-v1.3-prompt-compiler-runtime.md)
+Handoff: [sessions/2026/2026-08-01-v1.4-context-optimizer-quality-gate.md](sessions/2026/2026-08-01-v1.4-context-optimizer-quality-gate.md)
 
 ## Open items
 
-- Publish commits when authorized (`git push origin main`) — do not push without approval
-- Optional tag `v1.3.0-alpha.1` after push approval
-- v1.2 RC push/tag still pending human approval if not yet published
-- Optional: deepen document-center when external repo is linked
+- Publish v1.4 commits when authorized (`git push origin main`) — do not push without approval
+- Tag `v1.4.0-alpha.1` exists locally; push when authorized
+- Roadmap next: v1.5 Agent Bootstrap Automation
 
 ## Blockers / notes
 
 - Compiler does not call model APIs; profiles are execution style only
-- External `goffice2026` remains read-only from AI-OS unless human approves edits
-- Generated pilot artifacts under `06_Research/pilots/v1.3-prompt-compiler/`
+- External `goffice2026` / `document-center` remain read-only from AI-OS unless approved
+- Compiler runtime at root `prompt-compiler/`; spec at `03_Architecture/prompt-compiler/` (ADR-0011)
+- Known note: selector cap (12) vs optimizer cap (10) documented in v1.4 release readiness
 
 ## Quick links
 
 - Runtime: [prompt-compiler/README.md](../prompt-compiler/README.md)
 - CLI: `scripts/compile-prompt.ps1`
-- Pilots: [06_Research/pilots/v1.3-prompt-compiler/PILOT_RESULTS.md](../06_Research/pilots/v1.3-prompt-compiler/PILOT_RESULTS.md)
-- Tests: `prompt-compiler/tests/run-tests.ps1`
-- ADR-0011: [04_ADR/ADR-0011-prompt-compiler-runtime-no-llm.md](../04_ADR/ADR-0011-prompt-compiler-runtime-no-llm.md)
+- Release: [10_Releases/v1.4.0-alpha.1/](../10_Releases/v1.4.0-alpha.1/)
+- Tests: `prompt-compiler/tests/run-tests.ps1` (46/46)
