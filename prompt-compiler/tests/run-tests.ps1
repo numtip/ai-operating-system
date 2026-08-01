@@ -308,6 +308,26 @@ foreach ($mp in $mandatoryPaths) {
 }
 Assert-True '17.pilot_mandatory_preserved' $mandatoryOk17
 
+# --- 18. required entry preserved on normalized-path collision (defect fix) ---
+# Optional (kept, path contains goal token 'audit') seen first, then a required
+# entry with the same normalized path collides -> required must win.
+$collContext = [ordered]@{
+    selected = @(
+        [ordered]@{ path = '02_Knowledge/audit-operating-rules.md'; source = 'knowledge_index'; reason = 'goal_match'; required = $false },
+        [ordered]@{ path = '02_Knowledge/AUDIT-Operating-Rules.md'; source = 'bootstrap'; reason = 'operating_rules'; required = $true }
+    )
+    operating_rules = @()
+    index_hits = 0
+    warnings = @()
+    errors = @()
+}
+$mockNorm18 = [ordered]@{ goal = 'Audit production readiness without modifying the external repository.'; constraints = @(); inferred_read_only = $true }
+$mockProf18 = [ordered]@{ profile = [pscustomobject]@{ context_limit_policy = [pscustomobject]@{ max_context_refs = 10 } } }
+$opt18 = Optimize-CompilerContext -Context $collContext -Normalized $mockNorm18 -ProfileInfo $mockProf18
+$reqKept18 = @($opt18.selected | Where-Object { $_.required -and $_.path -eq '02_Knowledge/AUDIT-Operating-Rules.md' }).Count
+Assert-True '18.required_kept_on_collision' ($reqKept18 -eq 1) ("selected=$(@($opt18.selected | ForEach-Object { $_.path }) -join '; ')")
+Assert-True '18.optional_duplicate_rejected' (@($opt18.rejected | Where-Object { $_.reason -eq 'duplicate_path' }).Count -eq 1) (@($opt18.rejected | ForEach-Object { "$($_.path):$($_.reason)" }) -join '; ')
+
 Write-Host ''
 Write-Host ("SUMMARY passed={0} failed={1} warnings_logged={2}" -f $passed, $failed, $warnings)
 if ($failed -gt 0) { exit 1 } else { exit 0 }

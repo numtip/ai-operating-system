@@ -661,7 +661,7 @@ function Optimize-CompilerContext {
 
     # --- a. Duplicate / low-value elimination (defensive; does not mutate input) ---
     $goalTokens = @($Normalized.goal.ToLowerInvariant() -split '\W+' | Where-Object { $_.Length -ge 4 } | Sort-Object -Unique)
-    $seen = @{}
+    $seen = @{}          # normalized path -> index into $survivors
     $survivors = New-Object System.Collections.Generic.List[object]
     # NB: iterate via foreach statement; @($list) over List[object] of
     # OrderedDictionary items throws 'Argument types do not match' on PS 5.1.
@@ -669,10 +669,20 @@ function Optimize-CompilerContext {
         if ($null -eq $entry) { continue }
         $normPath = ([string]$entry.path).ToLowerInvariant() -replace '\\', '/'
         if ($seen.ContainsKey($normPath)) {
-            $rejected.Add([ordered]@{ path = [string]$entry.path; reason = 'duplicate_path' }) | Out-Null
+            # Prefer the required entry on a normalized-path collision so the
+            # "required never dropped" invariant holds even if an optional
+            # entry with the same path was seen first.
+            $prevIdx = [int]$seen[$normPath]
+            $prev = $survivors[$prevIdx]
+            if ([bool]$entry.required -and -not [bool]$prev.required) {
+                $rejected.Add([ordered]@{ path = [string]$prev.path; reason = 'duplicate_path' }) | Out-Null
+                $survivors.set_Item($prevIdx, $entry)
+            }
+            else {
+                $rejected.Add([ordered]@{ path = [string]$entry.path; reason = 'duplicate_path' }) | Out-Null
+            }
             continue
         }
-        $seen[$normPath] = $true
         # Low-value: optional goal_match entry whose own path bears no goal token
         if (-not [bool]$entry.required -and [string]$entry.reason -eq 'goal_match') {
             $pathLower = $normPath
@@ -685,6 +695,9 @@ function Optimize-CompilerContext {
                 continue
             }
         }
+        # Record index only once the entry is actually kept (low-value rejections
+        # must not leave a stale index pointing past the end of $survivors).
+        $seen[$normPath] = $survivors.Count
         $survivors.Add($entry) | Out-Null
     }
 
@@ -722,14 +735,19 @@ function Optimize-CompilerContext {
     }
     $maxFiles = 10
     if ($profile -and $profile.context_limit_policy -and $profile.context_limit_policy.max_context_refs) {
-        $maxFiles = [Math]::Min([int]$profile.context_limit_policy.max_context_refs, 10)
+        $parsed = 0
+        if ([int]::TryParse([string]$profile.context_limit_policy.max_context_refs, [ref]$parsed)) {
+            $maxFiles = [Math]::Min($parsed, 10)
+        }
     }
     if ($budgetCfg -and ($budgetCfg.PSObject.Properties.Name -contains 'max_files') -and $null -ne $budgetCfg.max_files) {
-        $maxFiles = [int]$budgetCfg.max_files
+        $parsed = 0
+        if ([int]::TryParse([string]$budgetCfg.max_files, [ref]$parsed)) { $maxFiles = $parsed }
     }
     $maxTokens = 0
     if ($budgetCfg -and ($budgetCfg.PSObject.Properties.Name -contains 'max_tokens') -and $null -ne $budgetCfg.max_tokens) {
-        $maxTokens = [int]$budgetCfg.max_tokens
+        $parsed = 0
+        if ([int]::TryParse([string]$budgetCfg.max_tokens, [ref]$parsed)) { $maxTokens = $parsed }
     }
     $budgetChars = 0
     if ($maxTokens -gt 0) { $budgetChars = $maxTokens * 4 }
