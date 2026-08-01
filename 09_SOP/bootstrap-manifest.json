@@ -1,6 +1,6 @@
 {
   "id": "agent-bootstrap",
-  "version": "1.1",
+  "version": "1.2",
   "title": "Agent Bootstrap Protocol",
   "canonical": "09_SOP/AGENT_BOOTSTRAP.md",
   "required_reads": [
@@ -57,6 +57,19 @@
       ]
     }
   ],
-  "readiness": "09_SOP/SESSION_READINESS.md",
+  "readiness": {
+    "artifact": "09_SOP/SESSION_READINESS.md",
+    "required_gates": [
+      "required_reads_present",
+      "git_inspected",
+      "scope_bounds_clear",
+      "validation_planned"
+    ]
+  },
+  "enforcement": {
+    "checker": "scripts/check-bootstrap.ps1",
+    "min_version": "1.0",
+    "strict_mode": false
+  },
   "checklist": "09_SOP/AGENT_BOOTSTRAP_CHECKLIST.md"
 }
