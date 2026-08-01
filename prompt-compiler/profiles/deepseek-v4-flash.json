@@ -7,6 +7,10 @@
     "max_context_refs": 6,
     "omit_bodies": true
   },
+  "context_budget": {
+    "max_files": 6,
+    "max_tokens": 0
+  },
   "task_decomposition": "minimal-subagents; single-pass-when-possible",
   "expected_output_format": "return-only-bullets",
   "verbosity_limit": "minimal",

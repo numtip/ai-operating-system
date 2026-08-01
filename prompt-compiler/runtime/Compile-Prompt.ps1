@@ -1204,9 +1204,12 @@ function Assert-PromptQualityGate {
         return ($out -join "`n")
     }
 
-    $secretPattern = '(?i)(api[_-]?key|secret|password)\s*[:=]\s*[''"][^''"]{8,}[''"]'
+    $secretPattern = '(?i)(api[_-]?key|secret|password|token)\s*[:=]\s*(?:[''"][^''"]{8,}[''"]|[A-Za-z0-9_\-]{12,})'
     $networkPattern = '(?i)\bcurl\s+https?://|Invoke-WebRequest|Invoke-RestMethod'
     $dangerousPattern = '(?i)\bgit\s+push\b|\bgit\s+tag\b|\bdeploy\b|rm\s+-rf\s+/'
+    # Negation guard: a line that explicitly forbids an action ("do not push",
+    # "never deploy", "no network calls") is a prohibition, not an instruction.
+    $negationPattern = '(?i)\b(do not|don''t|never|no|must not|should not|avoid)\b'
 
     # --- a. Subagent required sections ---
     $subList = @($Subagents)
@@ -1238,20 +1241,28 @@ function Assert-PromptQualityGate {
     }
     foreach ($t in $scanTargets) {
         if ([string]::IsNullOrEmpty($t.text)) { continue }
-        if ($t.text -match $dangerousPattern) {
-            $errors.Add("quality_gate: $($t.label) instructs a prohibited action ('$($Matches[0])'); remove it or move it into a Forbidden actions section") | Out-Null
-        }
-        if ($t.text -match $secretPattern) {
-            $errors.Add("quality_gate: $($t.label) contains a hardcoded secret pattern; remove the literal credential and reference a secret store instead") | Out-Null
-        }
-        if ($noNetwork -and $t.text -match $networkPattern) {
-            $errors.Add("quality_gate: $($t.label) instructs network use ('$($Matches[0])') but the model profile requires no-network; remove the network call") | Out-Null
+        # Line-aware scan: skip lines that negate the action (prohibitions).
+        foreach ($line in ($t.text -split "`r?`n")) {
+            if ([string]::IsNullOrWhiteSpace($line)) { continue }
+            $isNegation = ($line -match $negationPattern)
+            if (-not $isNegation -and $line -match $dangerousPattern) {
+                $errors.Add("quality_gate: $($t.label) instructs a prohibited action ('$($Matches[0])'); remove it or move it into a Forbidden actions section") | Out-Null
+            }
+            if (-not $isNegation -and $line -match $secretPattern) {
+                $errors.Add("quality_gate: $($t.label) contains a hardcoded secret pattern; remove the literal credential and reference a secret store instead") | Out-Null
+            }
+            if ($noNetwork -and -not $isNegation -and $line -match $networkPattern) {
+                $errors.Add("quality_gate: $($t.label) instructs network use ('$($Matches[0])') but the model profile requires no-network; remove the network call") | Out-Null
+            }
         }
     }
 
     # --- c2. read-only-first tool policy ---
     if ($toolGuidance -match 'read[- ]only[- ]first') {
-        $roImplied = [bool]$Normalized.inferred_read_only
+        $roImplied = $false
+        if ($Normalized -and ($Normalized.PSObject.Properties.Name -contains 'inferred_read_only')) {
+            $roImplied = [bool]$Normalized.inferred_read_only
+        }
         if (-not $roImplied) {
             foreach ($c in @($Normalized.constraints)) {
                 if (([string]$c).ToLowerInvariant() -match 'read[- ]?only|no[- ]write|without modifying|do not modify') { $roImplied = $true }

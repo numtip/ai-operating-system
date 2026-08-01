@@ -7,6 +7,10 @@
     "max_context_refs": 10,
     "omit_bodies": true
   },
+  "context_budget": {
+    "max_files": 10,
+    "max_tokens": 0
+  },
   "task_decomposition": "sequential-when-dependent; parallel-when-independent",
   "expected_output_format": "structured-sections",
   "verbosity_limit": "medium",

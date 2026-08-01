@@ -7,6 +7,10 @@
     "max_context_refs": 12,
     "omit_bodies": true
   },
+  "context_budget": {
+    "max_files": 10,
+    "max_tokens": 0
+  },
   "task_decomposition": "prefer-parallel-bounded-subagents",
   "expected_output_format": "return-only-structured",
   "verbosity_limit": "short",

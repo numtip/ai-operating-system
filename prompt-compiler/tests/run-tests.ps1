@@ -328,6 +328,19 @@ $reqKept18 = @($opt18.selected | Where-Object { $_.required -and $_.path -eq '02
 Assert-True '18.required_kept_on_collision' ($reqKept18 -eq 1) ("selected=$(@($opt18.selected | ForEach-Object { $_.path }) -join '; ')")
 Assert-True '18.optional_duplicate_rejected' (@($opt18.rejected | Where-Object { $_.reason -eq 'duplicate_path' }).Count -eq 1) (@($opt18.rejected | ForEach-Object { "$($_.path):$($_.reason)" }) -join '; ')
 
+# --- 19. quality gate negation + unquoted secret (defect fixes) ---
+$mockProf19 = [ordered]@{ profile = [pscustomobject]@{ tool_use_guidance = 'no-network' } }
+$mockNorm19 = [ordered]@{ goal = 'Audit production readiness without modifying the external repository.'; constraints = @(); inferred_read_only = $true }
+$goodSub19 = @([pscustomobject]@{ id = 'sg1'; prompt = "## Subagent: sg1`n## Assigned objective`nx`n## Forbidden scope`nx`n## Output limit`nx`n## Handoff format`nx" })
+# Negated prohibition must NOT trigger the gate
+$negHead = "# Head`n## Goal`nx`nDo not git push or deploy anything. Never call Invoke-WebRequest."
+$g19a = Assert-PromptQualityGate -HeadPrompt $negHead -Subagents $goodSub19 -Normalized $mockNorm19 -ProfileInfo $mockProf19
+Assert-True '19.negated_prohibition_no_error' (@($g19a.errors).Count -eq 0) ($g19a.errors -join '; ')
+# Unquoted secret must trigger the gate
+$unqHead = "# Head`n## Goal`nx`nUse api_key = abcdef1234567890 for the service call."
+$g19b = Assert-PromptQualityGate -HeadPrompt $unqHead -Subagents $goodSub19 -Normalized $mockNorm19 -ProfileInfo $mockProf19
+Assert-True '19.unquoted_secret_error' (@($g19b.errors | Where-Object { $_ -match 'quality_gate' -and $_ -match 'secret' }).Count -ge 1) ($g19b.errors -join '; ')
+
 Write-Host ''
 Write-Host ("SUMMARY passed={0} failed={1} warnings_logged={2}" -f $passed, $failed, $warnings)
 if ($failed -gt 0) { exit 1 } else { exit 0 }

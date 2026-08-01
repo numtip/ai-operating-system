@@ -7,6 +7,10 @@
     "max_context_refs": 14,
     "omit_bodies": true
   },
+  "context_budget": {
+    "max_files": 10,
+    "max_tokens": 0
+  },
   "task_decomposition": "explicit-file-owned-subagents; no-overlap",
   "expected_output_format": "structured-sections-with-checklist",
   "verbosity_limit": "short",

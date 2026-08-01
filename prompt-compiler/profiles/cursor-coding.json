@@ -7,6 +7,10 @@
     "max_context_refs": 10,
     "omit_bodies": true
   },
+  "context_budget": {
+    "max_files": 10,
+    "max_tokens": 0
+  },
   "task_decomposition": "tool-path-bounded-subagents",
   "expected_output_format": "return-only-files-and-blockers",
   "verbosity_limit": "short",

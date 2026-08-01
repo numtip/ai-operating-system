@@ -19,6 +19,15 @@
     "display_name": { "type": "string" },
     "role_style": { "type": "string" },
     "context_limit_policy": { "type": "object" },
+    "context_budget": {
+      "type": "object",
+      "description": "Optional V1.4 context optimizer budget. Overrides defaults.",
+      "properties": {
+        "max_files": { "type": "integer", "minimum": 1 },
+        "max_tokens": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
     "task_decomposition": { "type": "string" },
     "expected_output_format": { "type": "string" },
     "verbosity_limit": { "type": "string" },

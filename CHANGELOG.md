@@ -4,6 +4,29 @@ All notable changes to AI Operating System are documented here.
 
 ## [Unreleased]
 
+## [v1.4.0-alpha.1] — 2026-08-01
+
+### Added
+
+- **Context Optimizer** — deterministic ranking/selection of context references; duplicate + low-value elimination; file/token budget enforcement (default `max_files = min(profile max_context_refs, 10)`, overridable via profile `context_budget`); mandatory (required) context never dropped
+- **Prompt Quality Gate** — validates subagent required sections, prohibited actions, tool policy (no-network / read-only-first), and bounded output; returns actionable `quality_gate:` errors (no silent failure)
+- Structured metrics: `metrics.optimization` (files_selected/rejected, budget, required_count) and `metrics.quality_gate` (errors/warnings); `compiler_metadata.optimizer_version`
+- `context_budget` field to all model profiles + profile schema
+- Release pack under `10_Releases/v1.4.0-alpha.1/`
+
+### Changed
+
+- goffice2026 pilot context reduced **12 → 10 files** (8 required preserved), tokens ~1577 → 1551
+- document-center pilot context = 10 files (5 required preserved)
+- Roadmap v1.4 re-scoped to Context Optimizer + Prompt Quality Gate (was "Agent Bootstrap Automation")
+
+### Fixed
+
+- Required context refs preserved on normalized-path collision (mandatory-context invariant)
+- Profile budget values parsed via `[int]::TryParse` (malformed values no longer crash compile)
+- Quality gate negation handling (prohibitions like "do not push" no longer false-positive)
+- Unquoted hardcoded secret detection
+
 ## [v1.3.0-alpha.1] — 2026-07-30
 
 ### Added
