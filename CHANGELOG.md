@@ -4,6 +4,22 @@ All notable changes to AI Operating System are documented here.
 
 ## [Unreleased]
 
+## [v1.5.0-alpha.1] — 2026-08-01
+
+### Added
+
+- **Bootstrap Gate** — [`scripts/check-bootstrap.ps1`](scripts/check-bootstrap.ps1) enforces manifest v1.2 (required reads, git inspect, readiness/adapter/index); text + JSON; exit 0/1; `-Strict` fails on WARN
+- **Tests** — [`scripts/tests/test-check-bootstrap.ps1`](scripts/tests/test-check-bootstrap.ps1) (33 assertions)
+- **[ADR-0012](04_ADR/ADR-0012-automated-bootstrap-gate.md)** — Automated Bootstrap Gate (extends ADR-0009)
+- Manifest v1.2 fields: `readiness.required_gates`, `enforcement` — [`09_SOP/bootstrap-manifest.json`](09_SOP/bootstrap-manifest.json)
+- Session readiness standard — [`09_SOP/SESSION_READINESS.md`](09_SOP/SESSION_READINESS.md)
+- Release pack — [`10_Releases/v1.5.0-alpha.1/`](10_Releases/v1.5.0-alpha.1/)
+
+### Changed
+
+- Agent bootstrap SOP/checklist — Step 0 automated gate before work ([`09_SOP/AGENT_BOOTSTRAP.md`](09_SOP/AGENT_BOOTSTRAP.md))
+- Roadmap v1.5 marked In progress (alpha)
+
 ## [v1.4.0-alpha.1] — 2026-08-01
 
 ### Added

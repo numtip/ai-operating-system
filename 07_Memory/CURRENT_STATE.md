@@ -4,32 +4,34 @@ Living status. Update every session close ([SESSION_CLOSE](SESSION_CLOSE.md)).
 
 ## Phase
 
-**v1.4 — Context Optimizer + Prompt Quality Gate** — complete (alpha)
+**v1.5 — Agent Bootstrap Automation** — in progress (alpha)
 
-Prior: v1.3 Prompt Compiler Runtime MVP (`v1.3.0-alpha.1`).
+Prior: v1.4 Context Optimizer + Prompt Quality Gate (`v1.4.0-alpha.1`).
 
 ## Last session
 
-2026-08-01 — v1.4 Context Optimizer + Prompt Quality Gate — **done**
+2026-08-01 — v1.5 Agent Bootstrap Automation — **in progress** (gate + ADR + SOP integrated; commit/push pending approval)
 
-Handoff: [sessions/2026/2026-08-01-v1.4-context-optimizer-quality-gate.md](sessions/2026/2026-08-01-v1.4-context-optimizer-quality-gate.md)
+Handoff: [sessions/2026/2026-08-01-v1.5-agent-bootstrap-automation.md](sessions/2026/2026-08-01-v1.5-agent-bootstrap-automation.md)
 
 ## Open items
 
-- Publish v1.4 commits when authorized (`git push origin main`) — do not push without approval
-- Tag `v1.4.0-alpha.1` exists locally; push when authorized
-- Roadmap next: v1.5 Agent Bootstrap Automation
+- Commit + push v1.5 alpha when authorized (do not push without approval)
+- Tag `v1.5.0-alpha.1` when release approved
+- Optional: wire gate into CI / session-close SOP more tightly
+- Roadmap next after v1.5: v1.6 Hermes Integration (deferred; approval required)
 
 ## Blockers / notes
 
-- Compiler does not call model APIs; profiles are execution style only
+- Gate is local PowerShell only (no LLM / Hermes / network)
 - External `goffice2026` / `document-center` remain read-only from AI-OS unless approved
 - Compiler runtime at root `prompt-compiler/`; spec at `03_Architecture/prompt-compiler/` (ADR-0011)
-- Known note: selector cap (12) vs optimizer cap (10) documented in v1.4 release readiness
+- Bootstrap checker: `scripts/check-bootstrap.ps1` (ADR-0012)
 
 ## Quick links
 
-- Runtime: [prompt-compiler/README.md](../prompt-compiler/README.md)
-- CLI: `scripts/compile-prompt.ps1`
-- Release: [10_Releases/v1.4.0-alpha.1/](../10_Releases/v1.4.0-alpha.1/)
-- Tests: `prompt-compiler/tests/run-tests.ps1` (46/46)
+- Gate: `scripts/check-bootstrap.ps1`
+- Tests: `scripts/tests/test-check-bootstrap.ps1`
+- Manifest: [09_SOP/bootstrap-manifest.json](../09_SOP/bootstrap-manifest.json)
+- ADR: [ADR-0012](../04_ADR/ADR-0012-automated-bootstrap-gate.md)
+- Release: [10_Releases/v1.5.0-alpha.1/](../10_Releases/v1.5.0-alpha.1/)

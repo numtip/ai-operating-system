@@ -16,6 +16,7 @@ Index of accepted decisions for AI Operating System v1.
 | [ADR-0009](ADR-0009-agent-bootstrap-mandatory.md) | Agent Bootstrap Mandatory | Accepted |
 | [ADR-0010](ADR-0010-project-adapter-external-pilots.md) | Project Adapter for External Pilots | Accepted |
 | [ADR-0011](ADR-0011-prompt-compiler-runtime-no-llm.md) | Prompt Compiler Runtime (No LLM) | Accepted |
+| [ADR-0012](ADR-0012-automated-bootstrap-gate.md) | Automated Bootstrap Gate | Accepted |
 
-Use [ADR-TEMPLATE.md](ADR-TEMPLATE.md) for new records. Number sequentially (`ADR-0012-...`).
+Use [ADR-TEMPLATE.md](ADR-TEMPLATE.md) for new records. Number sequentially (`ADR-0013-...`).
 See also [ROADMAP.md](../03_Architecture/ROADMAP.md).

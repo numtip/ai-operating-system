@@ -1,7 +1,7 @@
 # AI-OS Dashboard
 
-**Current phase:** v1.2 — Knowledge Index Maturity (Release Candidate)  
-**Status:** Pilot-validated; RC audits under `10_Releases/v1.2.0-rc.1/`
+**Current phase:** v1.5 — Agent Bootstrap Automation (alpha)  
+**Status:** Bootstrap gate + ADR-0012; pack under `10_Releases/v1.5.0-alpha.1/`
 
 ## Start here
 

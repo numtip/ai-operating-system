@@ -3,9 +3,9 @@
 Local-first knowledge, memory, and context foundation for human + agent work.
 
 **Repo:** https://github.com/numtip/ai-operating-system  
-**Track:** v1.4 — Context Optimizer + Prompt Quality Gate (alpha)  
+**Track:** v1.5 — Agent Bootstrap Automation (alpha)  
 **Manifesto:** [AI_OS_MANIFESTO.md](AI_OS_MANIFESTO.md)  
-**Release:** [10_Releases/v1.4.0-alpha.1/](10_Releases/v1.4.0-alpha.1/)
+**Release:** [10_Releases/v1.5.0-alpha.1/](10_Releases/v1.5.0-alpha.1/)
 
 ## Vault tree
 

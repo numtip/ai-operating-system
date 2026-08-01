@@ -88,6 +88,14 @@
                         "tags":  [
                                      "adr"
                                  ]
+                    },
+                    {
+                        "id":  "adr-0012",
+                        "title":  "Automated Bootstrap Gate (v1.5)",
+                        "path":  "04_ADR/ADR-0012-automated-bootstrap-gate.md",
+                        "tags":  [
+                                     "adr"
+                                 ]
                     }
                 ]
 }

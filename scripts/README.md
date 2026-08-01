@@ -130,3 +130,48 @@ Estimate tokens for listed files using Method A (`ceil(chars/4)`). See `03_Archi
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/estimate-tokens.ps1 -Paths README.md,AI_OS_MANIFESTO.md
 ```
+
+## check-bootstrap
+
+AI-OS v1.5 Bootstrap Gate checker. Validates the pre-session gate before major work. Stdlib PowerShell only (no LLM / Hermes / DB).
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-bootstrap.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-bootstrap.ps1 -ProjectName goffice2026
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-bootstrap.ps1 -ProjectName goffice2026 -Json -Strict
+```
+
+| Param | Notes |
+|-------|-------|
+| `-Manifest` | Path to bootstrap manifest (default `09_SOP/bootstrap-manifest.json`; relative paths resolve against the repo root) |
+| `-ProjectName` | Optional project; adds `adapter` + `index_resolution` checks |
+| `-Json` | Emit a single JSON object instead of human text |
+| `-Strict` | Exit `1` if any WARN (otherwise WARN never fails) |
+
+Checks (each printed `PASS` / `WARN` / `FAIL`):
+
+1. `manifest` — manifest exists, parses as JSON, declares a `required_reads` array
+2. `required_read:<path>` — one check per required read; path exists on disk
+3. `git_head` — repo has HEAD; reports `branch` + dirty count (`git status --porcelain`)
+4. `readiness_artifact` — `09_SOP/SESSION_READINESS.md` exists
+5. `adapter` (with `-ProjectName`) — `01_Projects/<name>/ADAPTER.md` exists
+6. `index_resolution` (with `-ProjectName`) — `12_Indexes/project_index.json` resolves the project (mirrors `simulate-bootstrap.ps1` matching: id / path segment / title)
+
+JSON output schema:
+
+```json
+{ "manifest_version": "1.2", "checks": [{"name": "...", "status": "PASS", "detail": "..."}],
+  "branch": "main", "dirty_count": 8,
+  "gates_passed": 5, "gates_failed": 0, "gates_warn": 0, "verdict": "PASS" }
+```
+
+Exit codes: `0` when no FAIL (WARN ok unless `-Strict`); `1` when any FAIL or (`-Strict` and any WARN).
+
+Tests:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tests/test-check-bootstrap.ps1
+```
+
+Runs the checker as a child process and asserts exit codes, verdicts, JSON parseability, per-gate statuses, branch/dirty reporting, and WARN vs `-Strict` behavior. Prints `PASS`/`FAIL` per assertion and a final `SUMMARY passed=n failed=n`; exits `1` on any failure.
+
