@@ -15,11 +15,12 @@ All notable changes to AI Operating System are documented here.
 - Session readiness standard — [`09_SOP/SESSION_READINESS.md`](09_SOP/SESSION_READINESS.md)
 - Release pack — [`10_Releases/v1.5.0-alpha.1/`](10_Releases/v1.5.0-alpha.1/)
 - **CI hook** — [`.github/workflows/bootstrap-gate.yml`](.github/workflows/bootstrap-gate.yml) runs gate + unit tests on push/PR to `main`
+- Tag **`v1.5.0-alpha.1`** @ `b995f19`; CI run [#1](https://github.com/numtip/ai-operating-system/actions/runs/30707493725) **success** (recorded in release readiness)
 
 ### Changed
 
 - Agent bootstrap SOP/checklist — Step 0 automated gate before work ([`09_SOP/AGENT_BOOTSTRAP.md`](09_SOP/AGENT_BOOTSTRAP.md))
-- Roadmap v1.5 marked In progress (alpha)
+- Roadmap v1.5 marked Complete (alpha)
 
 ## [v1.4.0-alpha.1] — 2026-08-01
 

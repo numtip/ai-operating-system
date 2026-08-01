@@ -12,13 +12,15 @@
 4. **Readiness standard** — [`09_SOP/SESSION_READINESS.md`](../../09_SOP/SESSION_READINESS.md).
 5. **Tests** — [`scripts/tests/test-check-bootstrap.ps1`](../../scripts/tests/test-check-bootstrap.ps1) (33 assertions: PASS / FAIL / WARN / `-Strict`).
 6. **CI hook** — [`.github/workflows/bootstrap-gate.yml`](../../.github/workflows/bootstrap-gate.yml) on push/PR to `main`.
+7. **Verified CI** — run [#1](https://github.com/numtip/ai-operating-system/actions/runs/30707493725) on `b995f19` → **success** (see [RELEASE_READINESS.md](RELEASE_READINESS.md)).
+8. **Tag** — `v1.5.0-alpha.1` points at `b995f19` on `origin`.
 
 ## Upgrade notes
 
 - Run the gate at session start ([AGENT_BOOTSTRAP](../../09_SOP/AGENT_BOOTSTRAP.md) Step 0) before assigned work.
 - WARN does not fail the process unless `-Strict` is set.
 - Existing v1.4 compiler / optimizer tooling is unchanged.
-- After push, confirm the **Bootstrap Gate** workflow is green on GitHub Actions.
+- Checkout tag: `git fetch --tags && git checkout v1.5.0-alpha.1`
 
 ## Related
 

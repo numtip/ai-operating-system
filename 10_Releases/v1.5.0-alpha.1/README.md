@@ -14,6 +14,8 @@ Agent Bootstrap Automation — alpha.
 | ADR | [`04_ADR/ADR-0012-automated-bootstrap-gate.md`](../../04_ADR/ADR-0012-automated-bootstrap-gate.md) |
 | Changelog | [`CHANGELOG.md`](../../CHANGELOG.md) (`[v1.5.0-alpha.1]`) |
 | CI workflow | [`.github/workflows/bootstrap-gate.yml`](../../.github/workflows/bootstrap-gate.yml) |
+| Tag | `v1.5.0-alpha.1` @ `b995f19` |
+| Verified CI | [run #1 success](https://github.com/numtip/ai-operating-system/actions/runs/30707493725) — detail in [RELEASE_READINESS.md](RELEASE_READINESS.md) |
 | Notes | [RELEASE_NOTES.md](RELEASE_NOTES.md) · [RELEASE_READINESS.md](RELEASE_READINESS.md) |
 
 ## Verify
@@ -26,4 +28,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tests/test-check-boo
 ## Constraints
 
 - Local PowerShell gate only — no LLM, Hermes, or network
-- Commit / push / tag require human approval
+- Further tags / GitHub Release assets still need human approval when changing history
