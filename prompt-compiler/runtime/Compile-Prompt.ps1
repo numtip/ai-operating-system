@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  AI-OS Prompt Compiler Runtime (v1.3) — no LLM, no network.
+  AI-OS Prompt Compiler Runtime (v1.4) — no LLM, no network.
 .DESCRIPTION
   Compiles Project + Goal + Model Profile + Constraints into:
     Head Agent prompt, Subagent task prompts, Context Manifest, Metrics.
@@ -12,7 +12,7 @@ param()
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$script:CompilerVersion = '1.3.0'
+$script:CompilerVersion = '1.4.0'
 $script:CompilerSchemaVersion = '1.0'
 
 # ---------------------------------------------------------------------------
@@ -637,6 +637,173 @@ function Select-CompilerContext {
 }
 
 # ---------------------------------------------------------------------------
+# Context optimizer (v1.4) — deterministic, pure: no timestamps, no random.
+# Ranking scores (constant, documented):
+#   required = 1000 | bootstrap = 800 | adapter / adapter-canonical = 700
+#   project / memory = 600 | index = 500
+#   knowledge_index / adr_index = 400 + 10 per goal-token hit in path
+#   everything else = 300
+# Budgets: read from profile.context_budget (optional).
+#   max_files  : default = min(profile.context_limit_policy.max_context_refs, 10) else 10
+#   max_tokens : default 0 = off; when > 0, budget_chars = max_tokens * 4 and
+#                optional entries cost (path.Length + source.Length + reason.Length + 16)
+# Required entries are NEVER dropped, regardless of budget.
+# ---------------------------------------------------------------------------
+
+function Optimize-CompilerContext {
+    param(
+        [Parameter(Mandatory)]$Context,
+        [Parameter(Mandatory)]$Normalized,
+        [Parameter(Mandatory)]$ProfileInfo
+    )
+    $rejected = New-Object System.Collections.Generic.List[object]
+    $warnings = New-Object System.Collections.Generic.List[string]
+
+    # --- a. Duplicate / low-value elimination (defensive; does not mutate input) ---
+    $goalTokens = @($Normalized.goal.ToLowerInvariant() -split '\W+' | Where-Object { $_.Length -ge 4 } | Sort-Object -Unique)
+    $seen = @{}
+    $survivors = New-Object System.Collections.Generic.List[object]
+    # NB: iterate via foreach statement; @($list) over List[object] of
+    # OrderedDictionary items throws 'Argument types do not match' on PS 5.1.
+    foreach ($entry in $Context.selected) {
+        if ($null -eq $entry) { continue }
+        $normPath = ([string]$entry.path).ToLowerInvariant() -replace '\\', '/'
+        if ($seen.ContainsKey($normPath)) {
+            $rejected.Add([ordered]@{ path = [string]$entry.path; reason = 'duplicate_path' }) | Out-Null
+            continue
+        }
+        $seen[$normPath] = $true
+        # Low-value: optional goal_match entry whose own path bears no goal token
+        if (-not [bool]$entry.required -and [string]$entry.reason -eq 'goal_match') {
+            $pathLower = $normPath
+            $anyHit = $false
+            foreach ($tok in $goalTokens) {
+                if ($pathLower.Contains($tok)) { $anyHit = $true; break }
+            }
+            if (-not $anyHit) {
+                $rejected.Add([ordered]@{ path = [string]$entry.path; reason = 'low_value_goal_match' }) | Out-Null
+                continue
+            }
+        }
+        $survivors.Add($entry) | Out-Null
+    }
+
+    # --- b. Deterministic ranking ---
+    function Get-EntryScore {
+        param($Entry)
+        if ([bool]$Entry.required) { return 1000 }
+        $src = ([string]$Entry.source).ToLowerInvariant()
+        switch ($src) {
+            'bootstrap' { return 800 }
+            'adapter' { return 700 }
+            'adapter-canonical' { return 700 }
+            'project' { return 600 }
+            'memory' { return 600 }
+            'index' { return 500 }
+            default { }
+        }
+        if ($src -eq 'knowledge_index' -or $src -eq 'adr_index') {
+            $score = 400
+            $pathLower = ([string]$Entry.path).ToLowerInvariant()
+            foreach ($tok in $goalTokens) {
+                if ($pathLower.Contains($tok)) { $score += 10 }
+            }
+            return $score
+        }
+        return 300
+    }
+
+    # --- c. Budget config ---
+    $profile = $null
+    if ($ProfileInfo -and $ProfileInfo.profile) { $profile = $ProfileInfo.profile }
+    $budgetCfg = $null
+    if ($profile -and ($profile.PSObject.Properties.Name -contains 'context_budget') -and $profile.context_budget) {
+        $budgetCfg = $profile.context_budget
+    }
+    $maxFiles = 10
+    if ($profile -and $profile.context_limit_policy -and $profile.context_limit_policy.max_context_refs) {
+        $maxFiles = [Math]::Min([int]$profile.context_limit_policy.max_context_refs, 10)
+    }
+    if ($budgetCfg -and ($budgetCfg.PSObject.Properties.Name -contains 'max_files') -and $null -ne $budgetCfg.max_files) {
+        $maxFiles = [int]$budgetCfg.max_files
+    }
+    $maxTokens = 0
+    if ($budgetCfg -and ($budgetCfg.PSObject.Properties.Name -contains 'max_tokens') -and $null -ne $budgetCfg.max_tokens) {
+        $maxTokens = [int]$budgetCfg.max_tokens
+    }
+    $budgetChars = 0
+    if ($maxTokens -gt 0) { $budgetChars = $maxTokens * 4 }
+
+    # NB: pipelines (@($list | ...)) over List[object] of OrderedDictionary
+    # items throw 'Argument types do not match' on PS 5.1 — use foreach loops.
+    $requiredEntries = New-Object System.Collections.Generic.List[object]
+    $optionalEntries = New-Object System.Collections.Generic.List[object]
+    foreach ($sv in $survivors) {
+        if ($null -eq $sv) { continue }
+        if ([bool]$sv.required) { $requiredEntries.Add($sv) | Out-Null } else { $optionalEntries.Add($sv) | Out-Null }
+    }
+
+    # Optional kept in descending score order; tie-break: path ordinal ascending
+    $rankedOptional = New-Object System.Collections.Generic.List[object]
+    foreach ($oe in ($optionalEntries.ToArray() | Sort-Object @{ Expression = { - (Get-EntryScore $_) } }, @{ Expression = { [string]$_.path } })) {
+        $rankedOptional.Add($oe) | Out-Null
+    }
+
+    # Required contribute to the file-side character budget first (reference-only manifest)
+    $usedChars = 0
+    foreach ($r in $requiredEntries) {
+        if ($null -eq $r) { continue }
+        $usedChars += ([string]$r.path).Length + ([string]$r.source).Length + ([string]$r.reason).Length + 16
+    }
+
+    $keptOptional = New-Object System.Collections.Generic.List[object]
+    $slotsLeft = $maxFiles - $requiredEntries.Count
+    if ($slotsLeft -lt 0) { $slotsLeft = 0 }  # required overflow allowed; optional slots clamp to 0
+    foreach ($o in $rankedOptional) {
+        if ($null -eq $o) { continue }
+        if ($keptOptional.Count -ge $slotsLeft) {
+            $rejected.Add([ordered]@{ path = [string]$o.path; reason = 'file_budget' }) | Out-Null
+            continue
+        }
+        if ($budgetChars -gt 0) {
+            $cost = ([string]$o.path).Length + ([string]$o.source).Length + ([string]$o.reason).Length + 16
+            if (($usedChars + $cost) -gt $budgetChars) {
+                $rejected.Add([ordered]@{ path = [string]$o.path; reason = 'token_budget' }) | Out-Null
+                continue
+            }
+            $usedChars += $cost
+        }
+        $keptOptional.Add($o) | Out-Null
+    }
+
+    # --- e. Final ordering: required first (path-sorted), then optional score desc / path asc ---
+    $final = New-Object System.Collections.Generic.List[object]
+    foreach ($fr in ($requiredEntries.ToArray() | Sort-Object { [string]$_.path })) {
+        $final.Add($fr) | Out-Null
+    }
+    foreach ($ko in $keptOptional) {
+        $final.Add($ko) | Out-Null
+    }
+
+    $budget = [ordered]@{
+        max_files       = $maxFiles
+        max_tokens      = $maxTokens
+        files_used      = $final.Count
+        files_rejected  = $rejected.Count
+        required_count  = $requiredEntries.Count
+        optional_kept   = $keptOptional.Count
+    }
+
+    return [ordered]@{
+        selected = $final.ToArray()
+        rejected = $rejected.ToArray()
+        budget   = $budget
+        metrics  = $budget
+        warnings = $warnings.ToArray()
+    }
+}
+
+# ---------------------------------------------------------------------------
 # Subagent compiler
 # ---------------------------------------------------------------------------
 
@@ -984,6 +1151,116 @@ function Assert-CompiledPrompt {
 }
 
 # ---------------------------------------------------------------------------
+# Prompt quality gate (v1.4)
+# Heuristic note: prohibited-action patterns are only flagged when they appear
+# as instructions to perform. Lines inside 'Forbidden actions' / 'Forbidden
+# scope' sections are stripped before scanning, so documented prohibitions
+# (e.g. "- Do not push or tag") never trigger the gate.
+# ---------------------------------------------------------------------------
+
+function Assert-PromptQualityGate {
+    param(
+        [Parameter(Mandatory)][AllowEmptyString()][string]$HeadPrompt,
+        [Parameter(Mandatory)][AllowNull()]$Subagents,
+        [Parameter(Mandatory)]$Normalized,
+        [Parameter(Mandatory)]$ProfileInfo
+    )
+    $errors = New-Object System.Collections.Generic.List[string]
+    $warnings = New-Object System.Collections.Generic.List[string]
+
+    # Strip forbidden-section lines so prohibitions are not mistaken for instructions
+    function Remove-ForbiddenSections {
+        param([AllowEmptyString()][string]$Text)
+        if ([string]::IsNullOrEmpty($Text)) { return '' }
+        $out = New-Object System.Collections.Generic.List[string]
+        $inForbidden = $false
+        foreach ($line in ($Text -split "`r?`n")) {
+            if ($line -match '^\s{0,3}#{1,6}\s*(.+?)\s*:?\s*$') {
+                $hdr = $Matches[1]
+                if ($hdr -match '(?i)forbidden') { $inForbidden = $true; continue }
+                $inForbidden = $false
+            }
+            if ($inForbidden) { continue }
+            $out.Add($line) | Out-Null
+        }
+        return ($out -join "`n")
+    }
+
+    $secretPattern = '(?i)(api[_-]?key|secret|password)\s*[:=]\s*[''"][^''"]{8,}[''"]'
+    $networkPattern = '(?i)\bcurl\s+https?://|Invoke-WebRequest|Invoke-RestMethod'
+    $dangerousPattern = '(?i)\bgit\s+push\b|\bgit\s+tag\b|\bdeploy\b|rm\s+-rf\s+/'
+
+    # --- a. Subagent required sections ---
+    $subList = @($Subagents)
+    foreach ($s in $subList) {
+        if ($null -eq $s) { continue }
+        $sid = [string]$s.id
+        $sp = [string]$s.prompt
+        foreach ($sec in @('Assigned objective', 'Forbidden scope', 'Handoff format', 'Output limit')) {
+            if ($sp -notmatch [regex]::Escape($sec)) {
+                $errors.Add("quality_gate: subagent '$sid' missing section '$sec'; add the '$sec' block to the subagent prompt template") | Out-Null
+            }
+        }
+    }
+
+    # --- b/c. Prohibited-action + network scan (outside forbidden sections) ---
+    $profile = $null
+    if ($ProfileInfo -and $ProfileInfo.profile) { $profile = $ProfileInfo.profile }
+    $toolGuidance = ''
+    if ($profile -and ($profile.PSObject.Properties.Name -contains 'tool_use_guidance')) {
+        $toolGuidance = ([string]$profile.tool_use_guidance).ToLowerInvariant()
+    }
+    $noNetwork = ($toolGuidance -match 'no[- ]network')
+
+    $scanTargets = New-Object System.Collections.Generic.List[object]
+    $scanTargets.Add([ordered]@{ label = 'head prompt'; text = (Remove-ForbiddenSections -Text $HeadPrompt) }) | Out-Null
+    foreach ($s in $subList) {
+        if ($null -eq $s) { continue }
+        $scanTargets.Add([ordered]@{ label = "subagent '$([string]$s.id)'"; text = (Remove-ForbiddenSections -Text ([string]$s.prompt)) }) | Out-Null
+    }
+    foreach ($t in $scanTargets) {
+        if ([string]::IsNullOrEmpty($t.text)) { continue }
+        if ($t.text -match $dangerousPattern) {
+            $errors.Add("quality_gate: $($t.label) instructs a prohibited action ('$($Matches[0])'); remove it or move it into a Forbidden actions section") | Out-Null
+        }
+        if ($t.text -match $secretPattern) {
+            $errors.Add("quality_gate: $($t.label) contains a hardcoded secret pattern; remove the literal credential and reference a secret store instead") | Out-Null
+        }
+        if ($noNetwork -and $t.text -match $networkPattern) {
+            $errors.Add("quality_gate: $($t.label) instructs network use ('$($Matches[0])') but the model profile requires no-network; remove the network call") | Out-Null
+        }
+    }
+
+    # --- c2. read-only-first tool policy ---
+    if ($toolGuidance -match 'read[- ]only[- ]first') {
+        $roImplied = [bool]$Normalized.inferred_read_only
+        if (-not $roImplied) {
+            foreach ($c in @($Normalized.constraints)) {
+                if (([string]$c).ToLowerInvariant() -match 'read[- ]?only|no[- ]write|without modifying|do not modify') { $roImplied = $true }
+            }
+        }
+        if ($roImplied -and $HeadPrompt -notmatch '(?i)\bread[- ]only\b') {
+            $warnings.Add("quality_gate_warn: profile requires read-only-first but head prompt does not mention read-only; add an explicit read-only constraint line") | Out-Null
+        }
+    }
+
+    # --- d. Bounded output (hard thresholds; 800-word soft warning stays in Assert-CompiledPrompt) ---
+    $headWords = @($HeadPrompt -split '\s+' | Where-Object { $_ }).Count
+    if ($headWords -gt 1200) {
+        $errors.Add("quality_gate: head prompt exceeds 1200 words ($headWords); tighten context or constraints") | Out-Null
+    }
+    foreach ($s in $subList) {
+        if ($null -eq $s) { continue }
+        $subWords = @(([string]$s.prompt) -split '\s+' | Where-Object { $_ }).Count
+        if ($subWords -gt 400) {
+            $errors.Add("quality_gate: subagent '$([string]$s.id)' prompt exceeds 400 words ($subWords); shorten objective, allowed list, or validation items") | Out-Null
+        }
+    }
+
+    return [ordered]@{ errors = @($errors); warnings = @($warnings) }
+}
+
+# ---------------------------------------------------------------------------
 # Metrics + main entry
 # ---------------------------------------------------------------------------
 
@@ -1022,6 +1299,10 @@ function Invoke-PromptCompile {
     $subagents = @()
     $headPrompt = ''
     $readOnly = $true
+    $optRejected = @()
+    $optBudget = $null
+    $gateErrorCount = 0
+    $gateWarningCount = 0
 
     if ($allErrors.Count -eq 0) {
         $projectInfo = Get-ProjectAdapter -ProjectName $normalized.project -RepoRoot $root
@@ -1046,6 +1327,13 @@ function Invoke-PromptCompile {
         $context = Select-CompilerContext -RepoRoot $root -Normalized $normalized -ProjectInfo $projectInfo -ProfileInfo $profileInfo
         foreach ($e in $context.errors) { $allErrors.Add($e) | Out-Null }
         foreach ($w in $context.warnings) { $allWarnings.Add($w) | Out-Null }
+        if ($allErrors.Count -eq 0 -and $context) {
+            $opt = Optimize-CompilerContext -Context $context -Normalized $normalized -ProfileInfo $profileInfo
+            $context.selected = @($opt.selected)
+            $optRejected = @($opt.rejected)
+            $optBudget = $opt.budget
+            foreach ($w in $opt.warnings) { $allWarnings.Add($w) | Out-Null }
+        }
     }
 
     if ($allErrors.Count -eq 0) {
@@ -1054,6 +1342,11 @@ function Invoke-PromptCompile {
         $val = Assert-CompiledPrompt -Prompt $headPrompt -Normalized $normalized -ProjectInfo $projectInfo
         foreach ($e in $val.errors) { $allErrors.Add($e) | Out-Null }
         foreach ($w in $val.warnings) { $allWarnings.Add($w) | Out-Null }
+        $gate = Assert-PromptQualityGate -HeadPrompt $headPrompt -Subagents $subagents -Normalized $normalized -ProfileInfo $profileInfo
+        $gateErrorCount = @($gate.errors).Count
+        $gateWarningCount = @($gate.warnings).Count
+        foreach ($e in $gate.errors) { $allErrors.Add($e) | Out-Null }
+        foreach ($w in $gate.warnings) { $allWarnings.Add($w) | Out-Null }
     }
 
     $sw.Stop()
@@ -1152,13 +1445,28 @@ function Invoke-PromptCompile {
             subagent_count           = @($subagents).Count
             compilation_duration_ms  = [int]$sw.ElapsedMilliseconds
             deterministic_hash       = $deterministicHash
+            context_files_rejected   = $optRejected.Count
+            optimization             = [ordered]@{
+                files_selected    = $contextPaths.Count
+                files_rejected    = $optRejected.Count
+                rejected          = @($optRejected)
+                budget_max_files  = $(if ($optBudget) { [int]$optBudget.max_files } else { 0 })
+                budget_max_tokens = $(if ($optBudget) { [int]$optBudget.max_tokens } else { 0 })
+                budget_files_used = $(if ($optBudget) { [int]$optBudget.files_used } else { 0 })
+                required_count    = $(if ($optBudget) { [int]$optBudget.required_count } else { 0 })
+            }
+            quality_gate             = [ordered]@{
+                errors   = $gateErrorCount
+                warnings = $gateWarningCount
+            }
         }
         compiler_metadata   = [ordered]@{
-            version         = $script:CompilerVersion
-            schema_version  = $script:CompilerSchemaVersion
-            repo_root_mode  = 'caller-relative'
-            output_mode     = $normalized.output_mode
-            read_only       = $readOnly
+            version           = $script:CompilerVersion
+            schema_version    = $script:CompilerSchemaVersion
+            optimizer_version = '1.4.0'
+            repo_root_mode    = 'caller-relative'
+            output_mode       = $normalized.output_mode
+            read_only         = $readOnly
         }
     }
 

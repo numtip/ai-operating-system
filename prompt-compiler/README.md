@@ -1,4 +1,4 @@
-# Prompt Compiler Runtime (v1.3)
+# Prompt Compiler Runtime (v1.4)
 
 Executable MVP: compile **Project + Goal + Model Profile + Constraints** into Head Agent / Subagent prompts, a context manifest, and metrics — **without** LLM or network calls.
 
@@ -75,6 +75,15 @@ User Intent → Task Normalization → Project Adapter Lookup
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File prompt-compiler/tests/run-tests.ps1
 ```
+
+## V1.4 — Context Optimizer + Prompt Quality Gate
+
+- **Deterministic ranking** — after selection, `Optimize-CompilerContext` scores every ref with constant weights (required 1000, bootstrap 800, adapter 700, project/memory 600, index 500, knowledge/ADR index 400 + 10 per goal-token hit, other 300). Same inputs → identical selection and hash.
+- **Budget enforcement** — optional refs are kept in score order up to `max_files` (default: `min(profile.context_limit_policy.max_context_refs, 10)`; `max_tokens` default 0 = off). Both are overridable via an optional `context_budget` block in a model profile. Over-budget refs are reported in `metrics.optimization.rejected`.
+- **Duplicate / low-value elimination** — paths that collide after case/slash normalization are rejected (`duplicate_path`), and optional `goal_match` refs whose own path contains no goal token are rejected (`low_value_goal_match`).
+- **Mandatory-context preservation** — required refs are never dropped; if required refs alone exceed the budget, the overflow is allowed and only optional refs are trimmed.
+- **Prompt quality gate** — `Assert-PromptQualityGate` runs after validation and fails the compile with actionable `quality_gate:` errors for: missing subagent sections (`Assigned objective`, `Forbidden scope`, `Handoff format`, `Output limit`), prohibited-action or hardcoded-secret instructions outside Forbidden sections, network instructions under a `no-network` tool policy, head prompt > 1200 words, or subagent prompt > 400 words. `read-only-first` profiles get a soft `quality_gate_warn:` check.
+- **New metrics** — `metrics.optimization` (files selected/rejected, rejected list, budgets, required count), `metrics.quality_gate` (error/warning counts), `metrics.context_files_rejected`, and `compiler_metadata.optimizer_version`.
 
 ## Non-goals
 

@@ -211,6 +211,103 @@ if ($r1.status -eq 'ok' -and $r9.status -eq 'ok') {
     Assert-True '10.document_center_forbids_goffice_instructions' ($dcBlob -match 'Do not load goffice2026|other projects|Do not leak|no cross-project' -or $dcBlob -notmatch 'GOffice 2026') 
 }
 
+# --- 11. deterministic optimizer ---
+$r11a = Invoke-PromptCompile -Project 'goffice2026' -Goal 'Audit production readiness without modifying the external repository.' -ModelProfile 'deepseek-v4-pro' -RepoRoot $Root -OutputMode both
+$r11b = Invoke-PromptCompile -Project 'goffice2026' -Goal 'Audit production readiness without modifying the external repository.' -ModelProfile 'deepseek-v4-pro' -RepoRoot $Root -OutputMode both
+Assert-True '11.optimizer_deterministic_hash' ($r11a.metrics.deterministic_hash -eq $r11b.metrics.deterministic_hash) ("a=$($r11a.metrics.deterministic_hash) b=$($r11b.metrics.deterministic_hash)")
+Assert-True '11.optimizer_deterministic_file_list' ((@($r11a.context_manifest.context_files) -join '|') -eq (@($r11b.context_manifest.context_files) -join '|'))
+Assert-True '11.optimization_metrics_present' ($null -ne $r11a.metrics.optimization -and $null -ne $r11a.metrics.quality_gate)
+
+# --- 12. mandatory context preserved ---
+$mandatoryPaths = @(
+    '07_Memory/OPERATING_RULES.md',
+    '07_Memory/SYSTEM_MEMORY.md',
+    '07_Memory/CURRENT_STATE.md',
+    '12_Indexes/project_index.json',
+    '01_Projects/goffice2026/ADAPTER.md'
+)
+$allMandatory = $true
+$missingMandatory = @()
+foreach ($mp in $mandatoryPaths) {
+    if (-not (@($r11a.context_manifest.context_files) -contains $mp)) { $allMandatory = $false; $missingMandatory += $mp }
+}
+Assert-True '12.mandatory_paths_present' $allMandatory ("missing: $($missingMandatory -join ', ')")
+$requiredOk = $true
+foreach ($e in @($r11a.context_manifest.selected)) {
+    if ($e.required -and -not (@($r11a.context_manifest.context_files) -contains $e.path)) { $requiredOk = $false }
+}
+Assert-True '12.required_entries_in_selection' $requiredOk
+
+# --- 13. duplicate elimination ---
+$dupContext = [ordered]@{
+    selected = @(
+        [ordered]@{ path = '07_Memory/OPERATING_RULES.md'; source = 'bootstrap'; reason = 'operating_rules'; required = $true },
+        [ordered]@{ path = '07_memory/operating_rules.md'; source = 'bootstrap'; reason = 'operating_rules'; required = $true },
+        [ordered]@{ path = '07_Memory\OPERATING_RULES.md'; source = 'bootstrap'; reason = 'operating_rules'; required = $false },
+        [ordered]@{ path = '02_Knowledge/audit-readiness-notes.md'; source = 'knowledge_index'; reason = 'goal_match'; required = $false }
+    )
+    operating_rules = @()
+    index_hits = 0
+    warnings = @()
+    errors = @()
+}
+$mockNorm13 = [ordered]@{ goal = 'Audit production readiness without modifying the external repository.'; constraints = @(); inferred_read_only = $true }
+$mockProf13 = [ordered]@{ profile = [pscustomobject]@{ context_limit_policy = [pscustomobject]@{ max_context_refs = 10 } } }
+$opt13a = Optimize-CompilerContext -Context $dupContext -Normalized $mockNorm13 -ProfileInfo $mockProf13
+Assert-True '13.duplicates_removed' (@($opt13a.selected).Count -eq 2) ("selected=$(@($opt13a.selected).Count)")
+Assert-True '13.duplicate_path_rejected' (@($opt13a.rejected | Where-Object { $_.reason -eq 'duplicate_path' }).Count -eq 2) (@($opt13a.rejected | ForEach-Object { "$($_.path):$($_.reason)" }) -join '; ')
+
+# --- 14. budget enforcement ---
+$budEntries = @()
+foreach ($p in @('07_Memory/OPERATING_RULES.md', '07_Memory/SYSTEM_MEMORY.md', '12_Indexes/project_index.json')) {
+    $budEntries += [ordered]@{ path = $p; source = 'bootstrap'; reason = 'required_doc'; required = $true }
+}
+for ($i = 1; $i -le 8; $i++) {
+    $budEntries += [ordered]@{ path = ("02_Knowledge/audit-note-{0:D2}.md" -f $i); source = 'knowledge_index'; reason = 'goal_match'; required = $false }
+}
+$budContext = [ordered]@{ selected = @($budEntries); operating_rules = @(); index_hits = 0; warnings = @(); errors = @() }
+$mockNorm14 = [ordered]@{ goal = 'audit note readiness review'; constraints = @(); inferred_read_only = $true }
+$mockProf14 = [ordered]@{ profile = [pscustomobject]@{
+        context_limit_policy = [pscustomobject]@{ max_context_refs = 9 }
+        context_budget       = [pscustomobject]@{ max_files = 9; max_tokens = 0 }
+    } }
+$opt14a = Optimize-CompilerContext -Context $budContext -Normalized $mockNorm14 -ProfileInfo $mockProf14
+$opt14b = Optimize-CompilerContext -Context $budContext -Normalized $mockNorm14 -ProfileInfo $mockProf14
+Assert-True '14.budget_total_within_limit' (@($opt14a.selected).Count -le 9) ("selected=$(@($opt14a.selected).Count)")
+Assert-True '14.budget_required_all_kept' ((@($opt14a.selected | Where-Object { $_.required }).Count) -eq 3)
+Assert-True '14.budget_rejected_count' (@($opt14a.rejected).Count -eq 2) ("rejected=$(@($opt14a.rejected).Count)")
+Assert-True '14.budget_deterministic' ((@($opt14a.selected | ForEach-Object { $_.path }) -join '|') -eq (@($opt14b.selected | ForEach-Object { $_.path }) -join '|'))
+
+# --- 15. prompt quality gate valid case ---
+Assert-True '15.quality_gate_zero_errors_valid' ($r1.status -eq 'ok' -and $r1.metrics.quality_gate.errors -eq 0) ("errors=$($r1.metrics.quality_gate.errors) $($r1.errors -join '; ')")
+
+# --- 16. prompt quality gate invalid cases ---
+$mockProf16 = [ordered]@{ profile = [pscustomobject]@{ tool_use_guidance = 'no-network' } }
+$mockNorm16 = [ordered]@{ goal = 'Audit production readiness without modifying the external repository.'; constraints = @(); inferred_read_only = $true }
+$goodSub = @([pscustomobject]@{ id = 'sg1'; prompt = "## Subagent: sg1`n## Assigned objective`nx`n## Forbidden scope`nx`n## Output limit`nx`n## Handoff format`nx" })
+$badHead = "# Head`n## Goal`nx`nRun git push origin main to publish the results now."
+$g16a = Assert-PromptQualityGate -HeadPrompt $badHead -Subagents $goodSub -Normalized $mockNorm16 -ProfileInfo $mockProf16
+Assert-True '16a.prohibited_action_error' (@($g16a.errors | Where-Object { $_ -match 'quality_gate' }).Count -ge 1) ($g16a.errors -join '; ')
+$badSub = @([pscustomobject]@{ id = 'sg2'; prompt = "## Subagent: sg2`n## Assigned objective`nx`n## Forbidden scope`nx`n## Output limit`nx" })
+$g16b = Assert-PromptQualityGate -HeadPrompt '# Head prompt' -Subagents $badSub -Normalized $mockNorm16 -ProfileInfo $mockProf16
+Assert-True '16b.subagent_missing_handoff_error' (@($g16b.errors | Where-Object { $_ -match 'quality_gate' -and $_ -match 'Handoff format' }).Count -ge 1) ($g16b.errors -join '; ')
+$longHead = ('word ' * 1250).Trim()
+$g16c = Assert-PromptQualityGate -HeadPrompt $longHead -Subagents $goodSub -Normalized $mockNorm16 -ProfileInfo $mockProf16
+Assert-True '16c.head_over_1200_words_error' (@($g16c.errors | Where-Object { $_ -match 'quality_gate' -and $_ -match '1200' }).Count -ge 1) ($g16c.errors -join '; ')
+$secretHead = "# Head`nUse credential api_key = `"abcdef123456`" for the service call."
+$g16d = Assert-PromptQualityGate -HeadPrompt $secretHead -Subagents $goodSub -Normalized $mockNorm16 -ProfileInfo $mockProf16
+Assert-True '16d.hardcoded_secret_error' (@($g16d.errors | Where-Object { $_ -match 'quality_gate' -and $_ -match 'secret' }).Count -ge 1) ($g16d.errors -join '; ')
+
+# --- 17. pilot budget acceptance ---
+$r17 = Invoke-PromptCompile -Project 'goffice2026' -Goal 'Audit production readiness without modifying the external repository.' -ModelProfile 'deepseek-v4-pro' -RepoRoot $Root -OutputMode both
+Assert-True '17.pilot_status_ok' ($r17.status -eq 'ok') ($r17.errors -join '; ')
+Assert-True '17.pilot_files_within_budget' ($r17.metrics.context_files_selected -le 10) ("selected=$($r17.metrics.context_files_selected)")
+$mandatoryOk17 = $true
+foreach ($mp in $mandatoryPaths) {
+    if (-not (@($r17.context_manifest.context_files) -contains $mp)) { $mandatoryOk17 = $false }
+}
+Assert-True '17.pilot_mandatory_preserved' $mandatoryOk17
+
 Write-Host ''
 Write-Host ("SUMMARY passed={0} failed={1} warnings_logged={2}" -f $passed, $failed, $warnings)
 if ($failed -gt 0) { exit 1 } else { exit 0 }
