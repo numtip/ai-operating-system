@@ -11,12 +11,14 @@
 3. **ADR-0012** — [Automated Bootstrap Gate](../../04_ADR/ADR-0012-automated-bootstrap-gate.md) extends ADR-0009 (mandatory bootstrap).
 4. **Readiness standard** — [`09_SOP/SESSION_READINESS.md`](../../09_SOP/SESSION_READINESS.md).
 5. **Tests** — [`scripts/tests/test-check-bootstrap.ps1`](../../scripts/tests/test-check-bootstrap.ps1) (33 assertions: PASS / FAIL / WARN / `-Strict`).
+6. **CI hook** — [`.github/workflows/bootstrap-gate.yml`](../../.github/workflows/bootstrap-gate.yml) on push/PR to `main`.
 
 ## Upgrade notes
 
 - Run the gate at session start ([AGENT_BOOTSTRAP](../../09_SOP/AGENT_BOOTSTRAP.md) Step 0) before assigned work.
 - WARN does not fail the process unless `-Strict` is set.
 - Existing v1.4 compiler / optimizer tooling is unchanged.
+- After push, confirm the **Bootstrap Gate** workflow is green on GitHub Actions.
 
 ## Related
 

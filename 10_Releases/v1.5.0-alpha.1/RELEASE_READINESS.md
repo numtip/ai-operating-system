@@ -10,12 +10,13 @@
 | Readiness standard | PASS | [`09_SOP/SESSION_READINESS.md`](../../09_SOP/SESSION_READINESS.md) |
 | SOP Step 0 documents gate | PASS | [`09_SOP/AGENT_BOOTSTRAP.md`](../../09_SOP/AGENT_BOOTSTRAP.md) |
 | Changelog entry | PASS | [CHANGELOG.md](../../CHANGELOG.md) (`[v1.5.0-alpha.1]`) |
+| CI hook | PASS | [`.github/workflows/bootstrap-gate.yml`](../../.github/workflows/bootstrap-gate.yml) |
 | No Hermes / secrets | PASS | scope of this pack |
 
 ## Residual risk
 
-- Gate is not yet a CI-required hook; enforcement is SOP + local script.
 - Tag / push deferred until human approval.
+- CI runs after push/PR; local SOP Step 0 remains required before agent work.
 
 ## Related
 

@@ -1,0 +1,36 @@
+# AI-OS v1.5 — enforce bootstrap gate on push/PR (ADR-0012)
+name: Bootstrap Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: bootstrap-gate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bootstrap-gate:
+    name: check-bootstrap + tests
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Bootstrap gate (default)
+        run: |
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-bootstrap.ps1
+
+      - name: Bootstrap gate (goffice2026 pilot)
+        run: |
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check-bootstrap.ps1 -ProjectName goffice2026 -Json
+
+      - name: Bootstrap gate unit tests
+        run: |
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tests/test-check-bootstrap.ps1

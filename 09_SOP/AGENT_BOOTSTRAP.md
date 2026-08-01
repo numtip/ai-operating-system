@@ -19,5 +19,6 @@ Canonical session-start protocol for AI-OS v1.1. Spec only — no runtime servic
 - ADR: [ADR-0012](../04_ADR/ADR-0012-automated-bootstrap-gate.md)
 - Release: [10_Releases/v1.5.0-alpha.1/](../10_Releases/v1.5.0-alpha.1/)
 - Changelog: [CHANGELOG.md](../CHANGELOG.md) (`[v1.5.0-alpha.1]`)
+- CI: [../.github/workflows/bootstrap-gate.yml](../.github/workflows/bootstrap-gate.yml)
 - Context Engine: [../03_Architecture/CONTEXT_ENGINE.md](../03_Architecture/CONTEXT_ENGINE.md)
 - Memory bootstrap (detail): [../07_Memory/SESSION_BOOTSTRAP.md](../07_Memory/SESSION_BOOTSTRAP.md)

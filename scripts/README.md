@@ -175,3 +175,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tests/test-check-boo
 
 Runs the checker as a child process and asserts exit codes, verdicts, JSON parseability, per-gate statuses, branch/dirty reporting, and WARN vs `-Strict` behavior. Prints `PASS`/`FAIL` per assertion and a final `SUMMARY passed=n failed=n`; exits `1` on any failure.
 
+CI (GitHub Actions): [`.github/workflows/bootstrap-gate.yml`](../.github/workflows/bootstrap-gate.yml) runs the default gate, the `goffice2026` gate, and these unit tests on every push/PR to `main`.
+

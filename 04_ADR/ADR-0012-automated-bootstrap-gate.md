@@ -18,12 +18,14 @@ ADR-0009 made bootstrap mandatory by convention. Sessions still drifted: memory 
    - Emits human text or JSON; exit code 0/1 (WARN never fails unless `-Strict`)
 2. **FAIL gates block execution**; WARN must be acknowledged.
 3. Manifest version bumped to `1.2` with `readiness.required_gates` and `enforcement` fields.
+4. CI runs the gate on `push`/`pull_request` to `main` via [`.github/workflows/bootstrap-gate.yml`](../.github/workflows/bootstrap-gate.yml) (local SOP Step 0 still required before agent work).
 
 ## Consequences
 
 - Bootstrap becomes deterministic and auditable (JSON evidence).
 - Agents may not begin work with unresolved required reads.
 - SOP/checklist reference the gate; README not duplicated.
+- Broken required reads / gate regressions fail PR checks on `main`.
 
 ## Alternatives
 
@@ -38,4 +40,5 @@ ADR-0009 made bootstrap mandatory by convention. Sessions still drifted: memory 
 - [AGENT_BOOTSTRAP.md](../09_SOP/AGENT_BOOTSTRAP.md)
 - [CHANGELOG.md](../CHANGELOG.md) (`[v1.5.0-alpha.1]`)
 - Release pack: [10_Releases/v1.5.0-alpha.1/](../10_Releases/v1.5.0-alpha.1/)
+- CI: [bootstrap-gate.yml](../.github/workflows/bootstrap-gate.yml)
 - [ADR-0009](ADR-0009-agent-bootstrap-mandatory.md)

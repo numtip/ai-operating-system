@@ -14,6 +14,7 @@ All notable changes to AI Operating System are documented here.
 - Manifest v1.2 fields: `readiness.required_gates`, `enforcement` — [`09_SOP/bootstrap-manifest.json`](09_SOP/bootstrap-manifest.json)
 - Session readiness standard — [`09_SOP/SESSION_READINESS.md`](09_SOP/SESSION_READINESS.md)
 - Release pack — [`10_Releases/v1.5.0-alpha.1/`](10_Releases/v1.5.0-alpha.1/)
+- **CI hook** — [`.github/workflows/bootstrap-gate.yml`](.github/workflows/bootstrap-gate.yml) runs gate + unit tests on push/PR to `main`
 
 ### Changed
 

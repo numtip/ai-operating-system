@@ -13,6 +13,7 @@ Agent Bootstrap Automation — alpha.
 | SOP / checklist | [`09_SOP/AGENT_BOOTSTRAP.md`](../../09_SOP/AGENT_BOOTSTRAP.md), [`09_SOP/AGENT_BOOTSTRAP_CHECKLIST.md`](../../09_SOP/AGENT_BOOTSTRAP_CHECKLIST.md) |
 | ADR | [`04_ADR/ADR-0012-automated-bootstrap-gate.md`](../../04_ADR/ADR-0012-automated-bootstrap-gate.md) |
 | Changelog | [`CHANGELOG.md`](../../CHANGELOG.md) (`[v1.5.0-alpha.1]`) |
+| CI workflow | [`.github/workflows/bootstrap-gate.yml`](../../.github/workflows/bootstrap-gate.yml) |
 | Notes | [RELEASE_NOTES.md](RELEASE_NOTES.md) · [RELEASE_READINESS.md](RELEASE_READINESS.md) |
 
 ## Verify
