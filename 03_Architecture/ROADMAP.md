@@ -30,7 +30,8 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 - [x] Local integration readiness validation (2026-08-09) — goffice2026 PASS; readiness 2.5/5 CONDITIONAL
 - [x] Hermes product pin (ADR-0014, 2026-08-09) — hermes-agent v2026.8.3 @ `3c27eb62…`; preflight READY_FOR_LIMITED_LOCAL_INSTALL (conditional)
 - [x] Local install + smoke (2026-08-09) — Hermes v0.20.0 sandbox SHA-verified, Obsidian 1.13.4 + AI-OS vault; rollback proven; **real task execution BLOCKED** (model API key required, forbidden) → LOCAL_PILOT_PARTIAL
-- [ ] Real execution spike — owner must decide model-provider path (scoped key / local endpoint / defer)
+- [x] **Real DeepSeek pilot (Gate C, 2026-08-09) — LOCAL_RUNTIME_PASS:** GOFFICE2026 read-only audit ×2 through Hermes→DeepSeek `deepseek-v4-flash`; ~$0.01/run estimated; guardrails + rollback proven; evidence `LOCAL_RUNTIME_REPORT.md`
+- [ ] Owner decision: continue pilot with bounded single-call mode / cost accounting; reconcile GOFFICE2026 README staleness (owner-side)
 - [ ] Human approval obtained before any Hermes installation (Gate B, separate).
 
 ## Rules
