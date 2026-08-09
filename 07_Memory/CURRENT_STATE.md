@@ -24,6 +24,7 @@ Handoff: [sessions/2026/2026-08-01-v1.5-agent-bootstrap-automation.md](sessions/
 - Next: owner approval for a real reversible compatibility spike (Gate A); Hermes install requires separate approval (Gate B)
 - **Gate B install STOPPED 2026-08-09:** "Hermes" ambiguous — no product/source/version pinned in repo (preflight AMBIGUOUS); record `06_Research/pilots/v1.6-hermes/HERMES_INSTALL_PREFLIGHT.md`; owner must pin product+version+source before any install
 - **Product pin 2026-08-09 (ADR-0014):** NousResearch/hermes-agent tag `v2026.8.3` → commit `3c27eb62…` (SSH-signed tag, MIT); preflight READY_FOR_LIMITED_LOCAL_INSTALL (conditional on install-gate P1-P8); sandbox design in `HERMES_PREFLIGHT_REPORT.md`; **nothing installed**
+- **Local pilot 2026-08-09:** Hermes v0.20.0 installed sandbox (SHA verified) + Obsidian 1.13.4 + AI-OS vault (repo as vault) — smoke PASS, rollback PASS; **real task execution BLOCKED** (model API key required; credentials/network forbidden) → LOCAL_PILOT_PARTIAL; evidence `06_Research/pilots/v1.6-hermes/LOCAL_PILOT_REPORT.md`
 - **Local integration validation 2026-08-09:** goffice2026 PASS · document-center PARTIAL (adapter stale) · RAE PARTIAL (no adapter) · attendance/Learning-Center NOT_AVAILABLE; readiness 2.5/5 CONDITIONAL_GO; production NO_GO; report `06_Research/pilots/v1.6-hermes/LOCAL_INTEGRATION_VALIDATION_REPORT.md`
 
 ## Blockers / notes

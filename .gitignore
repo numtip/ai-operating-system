@@ -35,6 +35,9 @@ ehthumbs.db
 .obsidian/cache
 .trash/
 
+# AI-OS local runtime cache (Obsidian vault side-effects)
+.runtime/
+
 # Logs & temp
 *.log
 tmp/

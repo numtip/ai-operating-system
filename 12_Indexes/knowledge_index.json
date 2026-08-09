@@ -109,6 +109,18 @@
                                  ]
                     },
                     {
+                        "id":  "v1.6-local-pilot-report",
+                        "title":  "Hermes Local Pilot Execution Report",
+                        "path":  "06_Research/pilots/v1.6-hermes/LOCAL_PILOT_REPORT.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "pilot",
+                                     "local",
+                                     "obsidian"
+                                 ]
+                    },
+                    {
                         "id":  "glossary",
                         "title":  "Glossary",
                         "path":  "02_Knowledge/GLOSSARY.md",
