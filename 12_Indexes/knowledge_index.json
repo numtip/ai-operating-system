@@ -87,6 +87,17 @@
                                  ]
                     },
                     {
+                        "id":  "v1.6-local-integration-validation",
+                        "title":  "Local Cross-Project Integration Validation Report",
+                        "path":  "06_Research/pilots/v1.6-hermes/LOCAL_INTEGRATION_VALIDATION_REPORT.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "integration",
+                                     "validation",
+                                     "readiness"
+                                 ]
+                    },
+                    {
                         "id":  "glossary",
                         "title":  "Glossary",
                         "path":  "02_Knowledge/GLOSSARY.md",
