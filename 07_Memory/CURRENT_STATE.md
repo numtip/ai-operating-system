@@ -22,6 +22,7 @@ Handoff: [sessions/2026/2026-08-01-v1.5-agent-bootstrap-automation.md](sessions/
 - Stage 0 blockers remediated 2026-08-09: canonical path `F:\projectAi\goffice2026` (G: excluded); adapter tip `7b44c5d`; compiler budget two-tier (preferred 6 / hard 8) — Gate-A prerequisites READY
 - **Stage 1 stub spike executed 2026-08-09 — 13/13 PASS (SIMULATED)**; contract surface validated; evidence `STAGE-1-*`; Gate-B rec = NOT_READY until a real spike
 - Next: owner approval for a real reversible compatibility spike (Gate A); Hermes install requires separate approval (Gate B)
+- **Gate B install STOPPED 2026-08-09:** "Hermes" ambiguous — no product/source/version pinned in repo (preflight AMBIGUOUS); record `06_Research/pilots/v1.6-hermes/HERMES_INSTALL_PREFLIGHT.md`; owner must pin product+version+source before any install
 
 ## Blockers / notes
 
