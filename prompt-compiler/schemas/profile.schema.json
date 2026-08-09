@@ -21,9 +21,11 @@
     "context_limit_policy": { "type": "object" },
     "context_budget": {
       "type": "object",
-      "description": "Optional V1.4 context optimizer budget. Overrides defaults.",
+      "description": "Optional V1.4 context optimizer budget. Overrides defaults. preferred_max_files = soft target for optional refs (required never dropped); hard_max_files = absolute cap on total selected refs (required kept even above it, with a warning).",
       "properties": {
         "max_files": { "type": "integer", "minimum": 1 },
+        "preferred_max_files": { "type": "integer", "minimum": 1 },
+        "hard_max_files": { "type": "integer", "minimum": 1 },
         "max_tokens": { "type": "integer", "minimum": 0 }
       },
       "additionalProperties": false

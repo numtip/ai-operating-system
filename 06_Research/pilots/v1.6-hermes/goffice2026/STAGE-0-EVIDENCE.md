@@ -3,7 +3,7 @@
 **Date:** 2026-08-09
 **Branch:** `integration/v1.6-hermes-first`
 **Authorization:** Stage 0 only — read-only. No Hermes, no install, no external repo mutation, no production action.
-**Canonical repo note:** Brief specifies `G:\ProjectAI\goffice2026` — path does not exist (drive G: contains `deer-flow`, `rae-nextjs`, `__OLD__rae-landing` only). Evidence obtained from the adapter-declared local path `F:\projectAi\goffice2026` (per `01_Projects/goffice2026/ADAPTER.md`, `local_path`), which exists with HEAD `7b44c5d`. **Blocker note: canonical location mismatch — see §8.**
+**Canonical repo note:** Brief specifies `G:\ProjectAI\goffice2026` — path does not exist (drive G: contains `deer-flow`, `rae-nextjs`, `__OLD__rae-landing` only). Evidence obtained from the adapter-declared local path `F:\projectAi\goffice2026` (per `01_Projects/goffice2026/ADAPTER.md`, `local_path`), which exists with HEAD `7b44c5d`. **Resolution 2026-08-09:** `F:\projectAi\goffice2026` established as canonical (ADAPTER.md §3.1); `G:\ProjectAI\goffice2026` recorded as non-canonical with evidence.
 
 ## 1. Read-only evidence sources inspected
 
@@ -107,10 +107,18 @@ Summary: 6 recovery designs exercised as simulated checks — each verified that
 
 ## 8. Findings and blockers
 
-1. **HIGH — Canonical repo location mismatch:** Brief names `G:\ProjectAI\goffice2026` (does not exist). Adapter declares `F:\projectAi\goffice2026`. Evidence used F: path. Owner must confirm the true canonical location before Stage 1.
-2. **MED — Adapter tip stale:** `ADAPTER.md` tip_commit `65360ea` ≠ actual HEAD `7b44c5d`. Adapter needs refresh (update-only, not history rewrite) before Stage 1.
-3. **MED — Compiler budget gap:** `budget_max_files=6` < required_count=8 for goffice2026; optimizer allows override but flag is surfaced. Decide: raise budget for pilot or accept documented overshoot before Stage 1.
+> Status 2026-08-09 (pre-Stage-1 remediation): blockers 1-3 below are **RESOLVED**; see §8.1 resolution record.
+
+1. ~~**HIGH — Canonical repo location mismatch:** Brief names `G:\ProjectAI\goffice2026` (does not exist). Adapter declares `F:\projectAi\goffice2026`. Evidence used F: path. Owner must confirm the true canonical location before Stage 1.~~ → **RESOLVED** — `F:\projectAi\goffice2026` established as canonical (ADAPTER.md §3.1, memory entry updated; G: recorded as non-canonical with evidence).
+2. ~~**MED — Adapter tip stale:** `ADAPTER.md` tip_commit `65360ea` ≠ actual HEAD `7b44c5d`. Adapter needs refresh (update-only, not history rewrite) before Stage 1.~~ → **RESOLVED** — tip refreshed to `7b44c5d` with verification date/method (ADAPTER.md §2).
+3. ~~**MED — Compiler budget gap:** `budget_max_files=6` < required_count=8 for goffice2026; optimizer allows override but flag is surfaced. Decide: raise budget for pilot or accept documented overshoot before Stage 1.~~ → **RESOLVED** — two-tier budget added: `preferred_max_files=6` / `hard_max_files=8` in `deepseek-v4-flash` profile; required refs admissible up to hard cap; `hard_cap_breached` warning if exceeded (bounded exception, see `prompt-compiler/README.md`).
 4. **LOW — Untracked files in canonical repo:** `.browser-profile/`, `.vscode/` at `F:\projectAi\goffice2026` — untouched; confirm they are expected (likely local dev artifacts).
+
+### 8.1 Resolution record (2026-08-09)
+
+- Canonical path decision: `01_Projects/goffice2026/ADAPTER.md` §3.1 + `07_Memory/projects/goffice2026.md`.
+- Adapter tip refresh: `01_Projects/goffice2026/ADAPTER.md` §2 (`7b44c5d`, verified 2026-08-09).
+- Compiler budget policy: `prompt-compiler/schemas/profile.schema.json`, `prompt-compiler/runtime/Compile-Prompt.ps1`, `prompt-compiler/profiles/deepseek-v4-flash.json`, tests `20.*` added (53/53 PASS).
 
 ## 9. No false claims
 

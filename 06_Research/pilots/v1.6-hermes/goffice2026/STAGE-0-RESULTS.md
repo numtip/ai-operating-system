@@ -49,9 +49,23 @@ S1-S6 documented in `STAGE-0-FAILURE-SIMULATIONS.md`. Result: 6/6 contract respo
 
 ## Blockers before Stage 1
 
-1. **HIGH — canonical repo location mismatch:** brief `G:\ProjectAI\goffice2026` does not exist; evidence used `F:\projectAi\goffice2026`. Owner confirmation required.
-2. **MED — adapter tip stale:** `ADAPTER.md` tip `65360ea` vs actual `7b44c5d`. Refresh adapter.
-3. **MED — compiler budget gap:** `budget_max_files=6` < required_count=8. Decide raise/accept.
+> Status 2026-08-09 (pre-Stage-1 remediation): **ALL RESOLVED** — Gate-A prerequisites READY (see below).
+
+1. ~~**HIGH — canonical repo location mismatch:** brief `G:\ProjectAI\goffice2026` does not exist; evidence used `F:\projectAi\goffice2026`. Owner confirmation required.~~ → **RESOLVED** — `F:\projectAi\goffice2026` canonical (ADAPTER.md §3.1 + memory entry).
+2. ~~**MED — adapter tip stale:** `ADAPTER.md` tip `65360ea` vs actual `7b44c5d`. Refresh adapter.~~ → **RESOLVED** — tip `7b44c5d` verified 2026-08-09 (ADAPTER.md §2).
+3. ~~**MED — compiler budget gap:** `budget_max_files=6` < required_count=8. Decide raise/accept.~~ → **RESOLVED** — `preferred_max_files=6` / `hard_max_files=8` two-tier budget; tests 53/53 PASS.
+
+## Gate-A prerequisites status
+
+| Prerequisite | Status |
+|---|---|
+| Canonical GOFFICE2026 local path established (F:) with G: exclusion recorded | **READY** |
+| Adapter tip refreshed to verified HEAD `7b44c5d` (date + method) | **READY** |
+| Compiler policy admits 8 mandatory pilot refs (preferred 6 / hard 8, bounded) | **READY** |
+| Rollback plan documented (v1.6 exit criterion) | READY (prior) |
+| No secrets/production/DNS/VPS mutation | READY (verified) |
+
+**All three Stage-0 blocker fixes are READY for Stage 1 entry.** This does NOT authorize Hermes installation — that remains a separate owner approval (Gate B).
 
 ## Stage 1 entry recommendation
 

@@ -25,6 +25,7 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 - [x] No secrets, production, DNS, or VPS mutation required for the architecture spike.
 - [ ] Human approval obtained before any Hermes installation.
 - [x] GOFFICE2026 pilot Stage 0 (read-only) executed — PASS_WITH_NOTES (evidence: `06_Research/pilots/v1.6-hermes/goffice2026/`)
+- [x] Stage 0 blockers remediated (2026-08-09): canonical path `F:\projectAi\goffice2026` established; adapter tip refreshed `7b44c5d`; compiler budget two-tier `preferred 6 / hard 8` (tests 53/53)
 - [ ] Stage 1 reversible compatibility spike (Gate A owner approval)
 - [ ] Human approval obtained before any Hermes installation (Gate B, separate).
 
