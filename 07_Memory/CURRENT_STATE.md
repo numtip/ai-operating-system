@@ -4,7 +4,9 @@ Living status. Update every session close ([SESSION_CLOSE](SESSION_CLOSE.md)).
 
 ## Phase
 
-**v1.6 — Integration-First Hermes Runtime** — in progress (design-only)
+**v1.6 — Integration-First Hermes Runtime** — Stage 1 (read-only ops) complete; Stage 2 (cost observability) next
+
+Operating baseline: [Blueprint V4.1 (validated operating baseline)](../AI_OPERATING_SYSTEM_BLUEPRINT_V4.1_VALIDATED_OPERATING_BASELINE.md) supersedes v4.0 operational sections; v4.0 remains architecture baseline.
 
 Prior: v1.5 Agent Bootstrap Automation (`v1.5.0-alpha.1`); v1.4 Context Optimizer + Prompt Quality Gate.
 

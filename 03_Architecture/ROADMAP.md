@@ -10,7 +10,7 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 | **v1.3** | Prompt Compiler Runtime | Complete (MVP) | Compile prompts from specs; no LLM; model profiles + pilots |
 | **v1.4** | Context Optimizer + Prompt Quality Gate | Complete (alpha) | Deterministic context ranking/budget, duplicate/low-value elimination, mandatory-context preservation, pre-execution prompt quality gate, structured metrics |
 | **v1.5** | Agent Bootstrap Automation | Complete (alpha) | Enforce bootstrap manifest + readiness gates in tooling + CI |
-| **v1.6** | Integration-First Hermes Runtime | In Progress | Blueprint V4 baseline accepted; adapter contract + capability matrix + rollback plan + GOFFICE2026 pilot design; Stage 0 read-only + Stage 1 stub spike executed (13/13 PASS, SIMULATED); Gate-B rec NOT_READY until real spike; no install/deploy without approval (ADR-0013) |
+| **v1.6** | Integration-First Hermes Runtime | In Progress | Blueprint V4.1 validated operating baseline (supersedes v4.0 operational sections); adapter contract + capability matrix + rollback plan + GOFFICE2026 pilot design; Stage 0 read-only + Stage 1 stub spike (13/13 SIMULATED) + **real DeepSeek pilot PASS (LOCAL_RUNTIME_PASS, 2026-08-09)** + 2 full read-only audits; Stage 1 complete, Stage 2 (cost observability) next; no install/deploy without approval (ADR-0013) |
 | **v1.7** | Governed Pilot Operations | Planned | One low-risk project through Hermes + bootstrap/context/quality gates; measure success, latency, cost, auditability, operator effort |
 | **v1.8** | Enterprise Connectors | Planned | Governed connectors: GitHub, Microsoft 365/SharePoint, PostgreSQL/SQL Server, Cloudflare, n8n, external APIs |
 | **v1.9** | Observability + Learning Loop Maturity | Planned | AI quality vs runtime health vs cost vs outcome signals; knowledge promotion loop |
@@ -47,6 +47,7 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 ## Related
 
 - [AI_OS_MANIFESTO.md](../AI_OS_MANIFESTO.md)
+- [AI_OPERATING_SYSTEM_BLUEPRINT_V4.1_VALIDATED_OPERATING_BASELINE.md](../AI_OPERATING_SYSTEM_BLUEPRINT_V4.1_VALIDATED_OPERATING_BASELINE.md)
 - [ARCHITECTURE_OVERVIEW.md](ARCHITECTURE_OVERVIEW.md)
 - [AI_OPERATING_SYSTEM_BLUEPRINT_V4.md](AI_OPERATING_SYSTEM_BLUEPRINT_V4.md)
 - [AI_OS_V4_ARCHITECTURE_REVIEW.md](AI_OS_V4_ARCHITECTURE_REVIEW.md)
