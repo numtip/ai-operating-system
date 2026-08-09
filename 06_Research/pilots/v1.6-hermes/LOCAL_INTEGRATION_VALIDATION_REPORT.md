@@ -14,6 +14,7 @@
 | Attendance Report Generator | `G:\ProjectAI\attendance-report-generator` | NOT FOUND anywhere | **NOT_AVAILABLE** | path absent; no adapter; compile → missing_project |
 | RAE Next.js | `G:\ProjectAI\rae-nextjs` | EXISTS (multi-project repo; app in `rae-landing/`) | **PARTIAL** | git CLEAN @ `9f97bce`; runnable (node_modules/.next present); no test script run (lint/build would write); NO AI-OS adapter |
 | Learning Center | — | NOT FOUND as local repo | **NOT_AVAILABLE** | no repo path evidence; not guessed |
+| **RAE-Document-Center (OneDrive)** | `G:\GreenData_Res\OneDrive - Maejo university\RAE-Document-Center` | EXISTS (OneDrive data source; not a git repo) | **PARTIAL** | 20 files: `07-GreenOffice\resource\` = 8 xlsx FY2569 raw data (Water/electric/gasoline/paper/waste/GHG, updated 2026-08-07); `01-…` = 11 RAE-DC-WTMS1920 docs; `99-Governance\storage-map.xlsx`; **links to GOFFICE2026 FY2569 pipeline** (kpi-summary cites `1.2electric.xlsx`; 5/7 metrics still "Waiting for Official FY2569 Data" per full audit) |
 
 ## 2. Test matrix
 
@@ -83,3 +84,18 @@ Allowed only if:
 - RAE lint/build not executed (read-only mandate); runnable status inferred from node_modules/.next presence.
 - document-center inspected at `F:\projectAi\document-center` (specified G: path absent) — canonical location should be confirmed by owner.
 - No production safety claimed.
+
+## 9. Addendum 2026-08-09 — RAE-Document-Center (OneDrive) evidence
+
+**Path added by owner:** `G:\GreenData_Res\OneDrive - Maejo university\RAE-Document-Center` (read-only inspected; not a git repo).
+
+**Findings:**
+- `07-GreenOffice\resource\` = **8 FY2569 raw data files (xlsx), updated 2026-08-07**: `1.1Water`, `1.2electric`, `1.3Gassolene`, `1.4paper`, `1.5waste2025/2026`, `1.6GreenHouseGas2025/2026`.
+- `01-…` (Thai-named) = 11 RAE-DC-WTMS1920-series official documents (.doc/.docx/.xls/.pdf).
+- `99-Governance\storage-map.xlsx` = storage mapping.
+- Total 20 files.
+
+**Implication for GOFFICE2026 FY2569 (from full read-only audit 2026-08-09):**
+- GOFFICE2026 kpi-summary cites `1.2electric.xlsx (energy-2569.csv) — partial, 7 of 12 months` and lists fuel/paper/waste/ghg as `CURRENT_DATA_PENDING` ("Waiting for Official FY2569 Data").
+- **The raw FY2569 source files for water/electric/gasoline/paper/waste/GHG exist here and are newer than the last GOFFICE2026 import (2026-08-07 vs in-progress 7/12 months).** This may resolve the FY2569 pending-data finding — owner-side decision to re-import into GOFFICE2026 (outside AI-OS, owner-initiated, not performed).
+- RAE-Document-Center remains **read-only** from AI-OS; no ingestion or mutation performed.
