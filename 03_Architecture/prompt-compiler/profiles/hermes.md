@@ -1,8 +1,8 @@
 # Profile: Hermes
 
-**profile_id:** `hermes`  
-**Status:** Deferred placeholder  
-**Phase:** 2
+**profile_id:** `hermes`
+**Status:** Deferred — v1.6 design-only (ADR-0013); not installed
+**Phase:** 2 (v1.6 integration-first)
 
 ## Fit
 

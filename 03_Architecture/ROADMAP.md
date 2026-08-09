@@ -12,6 +12,8 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 | **v1.5** | Agent Bootstrap Automation | Complete (alpha) | Enforce bootstrap manifest + readiness gates in tooling + CI |
 | **v1.6** | Integration-First Hermes Runtime | In Progress | Hermes adapter contract + reversible compatibility spike; retain AI-OS governance gates; no install/deploy without approval (ADR-0013) |
 | **v1.7** | Governed Pilot Operations | Planned | One low-risk project through Hermes + bootstrap/context/quality gates; measure success, latency, cost, auditability, operator effort |
+| **v1.8** | Enterprise Connectors | Planned | Governed connectors: GitHub, Microsoft 365/SharePoint, PostgreSQL/SQL Server, Cloudflare, n8n, external APIs |
+| **v1.9** | Observability + Learning Loop Maturity | Planned | AI quality vs runtime health vs cost vs outcome signals; knowledge promotion loop |
 | **v2.0** | Enterprise AI Operating System | Planned | Multi-project operations across GitHub, Obsidian, M365, n8n, Docker/VPS/Cloudflare with explicit ownership and approval gates |
 
 ## v1.6 Exit Criteria

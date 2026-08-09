@@ -2,8 +2,9 @@
 
 ## Integration-First Enterprise Architecture
 
-**Status:** Architecture Baseline Candidate  
-**Date:** 2026-08-09  
+**Status:** Architecture Baseline — Accepted for v1.6
+**Accepted:** 2026-08-09
+**Date:** 2026-08-09
 **Repository:** `numtip/ai-operating-system`  
 **Target:** AI-OS v1.6+  
 **Architecture direction:** Integration-first, vendor-neutral, governed digital workforce
@@ -703,7 +704,7 @@ The architecture should allow the organization to evolve from isolated AI tools 
 
 # 21. Architecture Baseline Rules
 
-1. This document is the v4.0 implementation architecture baseline candidate for AI-OS v1.6+.
+1. This document is the accepted v4.0 implementation architecture baseline for AI-OS v1.6 (accepted 2026-08-09; see `AI_OS_V4_ARCHITECTURE_REVIEW.md`).
 2. Historical Blueprints and ADRs are not rewritten to simulate agreement with v4.0.
 3. Architecture changes require a new ADR or an explicitly versioned superseding decision.
 4. Hermes installation is not implied by this document; installation remains approval-gated.

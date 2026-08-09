@@ -9,7 +9,7 @@ Durable facts for AI Operating System. Update only when the system itself change
 | Repo path | `F:\projectAi\ai-operating-system` |
 | GitHub | https://github.com/numtip/ai-operating-system |
 | Product | AI Operating System |
-| Current version track | v1.5 Agent Bootstrap Automation (alpha) |
+| Current version track | v1.6 Integration-First Hermes Runtime (design-only) |
 
 ## Phase / version model
 
@@ -21,7 +21,7 @@ Durable facts for AI Operating System. Update only when the system itself change
 | **v1.3** | Complete (MVP) | Prompt Compiler runtime (no LLM); model profiles; dual pilots |
 | **v1.4** | Complete (alpha) | Context Optimizer + Prompt Quality Gate; deterministic budget/ranking |
 | **v1.5** | Complete (alpha) | Agent Bootstrap Automation (`check-bootstrap.ps1` + ADR-0012 + CI); tag `v1.5.0-alpha.1` |
-| **v1.6 / Phase 2** | Deferred | Hermes (not installed) |
+| **v1.6** | In progress (design) | Integration-First Hermes Runtime: adapter contract + capability spike; Hermes NOT installed (ADR-0013) |
 
 See [ROADMAP](../03_Architecture/ROADMAP.md).
 
@@ -34,7 +34,7 @@ See [ROADMAP](../03_Architecture/ROADMAP.md).
 - Prompt Compiler runtime is local/file-based (no model API)
   - Spec/contracts: `03_Architecture/prompt-compiler/`
   - Runtime: repo-root `prompt-compiler/` (ADR-0011)
-- No Hermes / VPS without approval
+- No Hermes install / VPS without human approval (ADR-0013)
 - Session compression threshold default: 25
 
 ## First pilot

@@ -4,9 +4,9 @@ Living status. Update every session close ([SESSION_CLOSE](SESSION_CLOSE.md)).
 
 ## Phase
 
-**v1.5 — Agent Bootstrap Automation** — complete (alpha)
+**v1.6 — Integration-First Hermes Runtime** — in progress (design-only)
 
-Prior: v1.4 Context Optimizer + Prompt Quality Gate (`v1.4.0-alpha.1`).
+Prior: v1.5 Agent Bootstrap Automation (`v1.5.0-alpha.1`); v1.4 Context Optimizer + Prompt Quality Gate.
 
 ## Last session
 
@@ -17,7 +17,7 @@ Handoff: [sessions/2026/2026-08-01-v1.5-agent-bootstrap-automation.md](sessions/
 ## Open items
 
 - Optional: create GitHub Release UI for `v1.5.0-alpha.1` (tag already on origin)
-- Roadmap next: v1.6 Hermes Integration (deferred; approval required)
+- v1.6: Blueprint V4 baseline accepted + adapter contract + capability matrix (ADR-0013); Hermes install still approval-gated
 
 ## Blockers / notes
 
