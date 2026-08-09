@@ -17,6 +17,7 @@
 
 ## Research — Hermes Pilot (v1.6)
 
+- [GOFFICE2026_FULL_READONLY_AUDIT_2026-08-09.md](../06_Research/pilots/v1.6-hermes/GOFFICE2026_FULL_READONLY_AUDIT_2026-08-09.md) — full read-only audit (2026-08-09)
 - [LOCAL_RUNTIME_REPORT.md](../06_Research/pilots/v1.6-hermes/LOCAL_RUNTIME_REPORT.md) — real DeepSeek pilot result (2026-08-09)
 - [LOCAL_PILOT_REPORT.md](../06_Research/pilots/v1.6-hermes/LOCAL_PILOT_REPORT.md) — install/smoke/rollback record
 - [LOCAL_INTEGRATION_VALIDATION_REPORT.md](../06_Research/pilots/v1.6-hermes/LOCAL_INTEGRATION_VALIDATION_REPORT.md)

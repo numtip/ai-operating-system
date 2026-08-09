@@ -134,6 +134,18 @@
                                  ]
                     },
                     {
+                        "id":  "v1.6-full-audit-goffice2026",
+                        "title":  "GOFFICE2026 Full Read-Only Audit (2026-08-09)",
+                        "path":  "06_Research/pilots/v1.6-hermes/GOFFICE2026_FULL_READONLY_AUDIT_2026-08-09.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "goffice2026",
+                                     "audit",
+                                     "evidence"
+                                 ]
+                    },
+                    {
                         "id":  "glossary",
                         "title":  "Glossary",
                         "path":  "02_Knowledge/GLOSSARY.md",
