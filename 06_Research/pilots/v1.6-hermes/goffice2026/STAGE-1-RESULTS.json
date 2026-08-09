@@ -1,0 +1,144 @@
+﻿{
+    "evidence_type":  "SIMULATED compatibility evidence (stub adapter)",
+    "hermes_validation":  false,
+    "stub_version":  "stub-v0.1.0-simulated",
+    "date":  "2026-08-09",
+    "branch":  "integration/v1.6-hermes-first",
+    "stage0_context_hash":  "ad907c27495ab3b1e8720f286450c1e762166fd8d0542434ac4abe38e6635381",
+    "scenarios_total":  13,
+    "scenarios_passed":  13,
+    "scenarios_failed":  0,
+    "audit_complete_count":  12,
+    "results":  [
+                    {
+                        "scenario":  "T01 normal L0 read",
+                        "expected":  "success, 8 mandatory context files preserved",
+                        "actual_status":  "success",
+                        "actual_detail":  null,
+                        "pass":  "True",
+                        "note":  "files=8 (Stage 0 baseline=8); stub context_hash=a7f846e37a3ebed3a6e89c7cb5b796d55410e8d776b85cf8449b5af82afb8d7d differs from compiler deterministic hash ad907c27495ab3b1e8720f286450c1e762166fd8d0542434ac4abe38e6635381 by methodology (list hash vs full-output hash); file set parity holds",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "T02 normal L1 analyze",
+                        "expected":  "success",
+                        "actual_status":  "success",
+                        "actual_detail":  null,
+                        "pass":  "True",
+                        "note":  "L1 automatic per policy",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "S2a/T03 approval denied (L3 no approval)",
+                        "expected":  "needs_approval",
+                        "actual_status":  "needs_approval",
+                        "actual_detail":  "level L3 requires human approval; none attached",
+                        "pass":  "True",
+                        "note":  "level L3 requires human approval; none attached",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "S2b/T04 approval expired",
+                        "expected":  "expired/needs_approval",
+                        "actual_status":  "expired",
+                        "actual_detail":  "approval expired at 2020-01-01T00:00:00Z",
+                        "pass":  "True",
+                        "note":  "approval expired at 2020-01-01T00:00:00Z",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "T05 approval replay rejected",
+                        "expected":  "rejected (anti-replay)",
+                        "actual_status":  "rejected",
+                        "actual_detail":  "approval replay: record not bound to task_id goffice2026-s1-t05",
+                        "pass":  "True",
+                        "note":  "approval replay: record not bound to task_id goffice2026-s1-t05",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "S1b/T06 idempotent retry",
+                        "expected":  "first success; second idempotent echo, no duplicate",
+                        "actual_status":  "success",
+                        "actual_detail":  null,
+                        "pass":  "True",
+                        "note":  "first_payload=773a5441a9e44a5fd293147cc959eaf415b6f1f273b1c09bb71c49ec10e1d391 idem_echo=773a5441a9e44a5fd293147cc959eaf415b6f1f273b1c09bb71c49ec10e1d391 match=True",
+                        "audit_complete":  false,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "S4/T07 tool scope violation",
+                        "expected":  "aborted (hard stop)",
+                        "actual_status":  "aborted",
+                        "actual_detail":  "INJECTED: tool \u0027write-external\u0027 not in approved_tool_scope",
+                        "pass":  "True",
+                        "note":  "INJECTED: tool \u0027write-external\u0027 not in approved_tool_scope",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "T08 credential scope violation",
+                        "expected":  "aborted (no credential outside scope)",
+                        "actual_status":  "aborted",
+                        "actual_detail":  "credential \u0027cred-g26-WRITE\u0027 outside task credential_ref",
+                        "pass":  "True",
+                        "note":  "credential \u0027cred-g26-WRITE\u0027 outside task credential_ref",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "S3/T09 context deviation",
+                        "expected":  "aborted with deviation reported",
+                        "actual_status":  "aborted",
+                        "actual_detail":  "unapproved context used: 03_Architecture/ROADMAP.md",
+                        "pass":  "True",
+                        "note":  "deviations=03_Architecture/ROADMAP.md",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "S1a/T10 tool failure then retry",
+                        "expected":  "first failed(retryable); retry success",
+                        "actual_status":  "success",
+                        "actual_detail":  null,
+                        "pass":  "True",
+                        "note":  "first=failed/retryable=True retry=success",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "T11 non-retryable failure",
+                        "expected":  "failed(retryable=false) → human review",
+                        "actual_status":  "failed",
+                        "actual_detail":  "simulated non-retryable policy failure",
+                        "pass":  "True",
+                        "note":  "escalate to human per sec.7",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "S5/T12 runtime crash recovery",
+                        "expected":  "crash→failed(retryable); retry succeeds; no orphan",
+                        "actual_status":  "success",
+                        "actual_detail":  null,
+                        "pass":  "True",
+                        "note":  "no side effects applied before crash; retry reconciled via same key",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    },
+                    {
+                        "scenario":  "S6/T13 rollback/fallback",
+                        "expected":  "audit preserved before rollback; manual path = Stage 0 tools",
+                        "actual_status":  "success",
+                        "actual_detail":  null,
+                        "pass":  "True",
+                        "note":  "rollback per HERMES_ROLLBACK_PLAN.md sec.3-sec.7; fallback = existing check-bootstrap.ps1/compile-prompt.ps1 manual path",
+                        "audit_complete":  true,
+                        "simulated":  true
+                    }
+                ]
+}

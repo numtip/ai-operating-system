@@ -20,7 +20,8 @@ Handoff: [sessions/2026/2026-08-01-v1.5-agent-bootstrap-automation.md](sessions/
 - v1.6 design gates complete: Blueprint V4 baseline accepted, adapter contract, capability matrix, rollback plan, GOFFICE2026 pilot design (ADR-0013); Hermes install still approval-gated
 - GOFFICE2026 Pilot **Stage 0 (read-only)** executed 2026-08-09 — PASS_WITH_NOTES; evidence in `06_Research/pilots/v1.6-hermes/goffice2026/`
 - Stage 0 blockers remediated 2026-08-09: canonical path `F:\projectAi\goffice2026` (G: excluded); adapter tip `7b44c5d`; compiler budget two-tier (preferred 6 / hard 8) — Gate-A prerequisites READY
-- Next: Stage 1 spike requires owner approval (Gate A); Hermes install requires separate approval (Gate B)
+- **Stage 1 stub spike executed 2026-08-09 — 13/13 PASS (SIMULATED)**; contract surface validated; evidence `STAGE-1-*`; Gate-B rec = NOT_READY until a real spike
+- Next: owner approval for a real reversible compatibility spike (Gate A); Hermes install requires separate approval (Gate B)
 
 ## Blockers / notes
 

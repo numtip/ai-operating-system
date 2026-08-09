@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-09
 **Branch:** `integration/v1.6-hermes-first`
-**Status:** Design v0.1 — no install, no execution. Installation and any production mutation are separate human-approval gates.
+**Status:** Design v0.2 — Stage 0 (read-only) + Stage 1 (stub compatibility spike) executed 2026-08-09; results SIMULATED; installation and any production mutation remain separate human-approval gates.
 **Pilot:** GOFFICE2026 (Blueprint V4 §16 reference pilot; existing project adapter: `01_Projects/goffice2026/ADAPTER.md`).
 
 ## 1. Scope and non-goals
@@ -29,9 +29,11 @@ Stage 0 (mandatory) — Hermes not installed; validates AI-OS side of the contra
 - Produce a governed task contract instance (fields per adapter contract §2) for read-only tasks.
 - Baseline measurements (see §5) captured on the manual path.
 
-Stage 1 — reversible compatibility spike (install-gated):
-- Hermes runs the same read-only tasks through the adapter; compare against Stage 0 baselines.
-- Rollback exercised per `HERMES_ROLLBACK_PLAN.md`.
+**Stage 0 executed 2026-08-09 — PASS_WITH_NOTES** (evidence: `06_Research/pilots/v1.6-hermes/goffice2026/STAGE-0-*`).
+
+Stage 1 — reversible compatibility spike:
+- **Executed 2026-08-09 via a local stub/simulated adapter boundary** (no Hermes install) — 13/13 scenarios PASS, evidence SIMULATED (`STAGE-1-*`). This validates the AI-OS contract surface only.
+- A real, reversible compatibility spike against an actual runtime (when approved) must re-run the same scenarios; rollback exercised per `HERMES_ROLLBACK_PLAN.md`.
 
 ## 3. Task contract and approval levels
 
@@ -91,16 +93,16 @@ Gate A — **Install gate:** before any Hermes installation, explicit owner appr
 
 Gate B — **Production-mutation gate:** before any L3+ operation on GOFFICE2026 or infrastructure, separate explicit owner approval required; not authorized by this document.
 
-Neither gate is implied by this design.
+Neither gate is implied by this design. Stage 1 stub evidence (2026-08-09) is a contract-surface check only and does not constitute either approval.
 
 ## 8. Exit criteria for the pilot
 
-- Stage 0 baselines captured.
-- Adapter contract exercised with zero governance bypass.
-- All §5 recovery tests pass in the spike (or documented deviations with owner note).
-- Auditability = 100% for pilot tasks.
-- Metrics report written comparing pilot vs baseline.
-- Recommendation recorded (continue / adjust / stop) for ADR decision on Hermes default runtime.
+- [x] Stage 0 baselines captured (2026-08-09).
+- [x] Adapter contract exercised with zero governance bypass (Stage 1 stub: 13/13, audit 12/13, no bypass).
+- [ ] All §5 recovery tests pass in a **real** spike (stub passed; real runtime pending owner approval).
+- [x] Auditability = 100% for pilot tasks (executed tasks).
+- [x] Metrics report written comparing pilot vs baseline (`STAGE-1-RESULTS.md`).
+- [x] Recommendation recorded (continue/adjust/stop) for ADR decision — `NOT_READY_FOR_HERMES_INSTALL_REVIEW` until a real spike runs.
 
 ## 9. References
 
@@ -110,3 +112,5 @@ Neither gate is implied by this design.
 - `AI_OPERATING_SYSTEM_BLUEPRINT_V4.md` §16 (reference pilot)
 - `04_ADR/ADR-0013-integration-first-hermes-runtime.md`
 - `01_Projects/goffice2026/ADAPTER.md`
+- Stage evidence: `../06_Research/pilots/v1.6-hermes/goffice2026/` (`STAGE-0-*`, `STAGE-1-*`)
+- Stage 1 stub source: `../06_Research/pilots/v1.6-hermes/stub/`

@@ -10,7 +10,7 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 | **v1.3** | Prompt Compiler Runtime | Complete (MVP) | Compile prompts from specs; no LLM; model profiles + pilots |
 | **v1.4** | Context Optimizer + Prompt Quality Gate | Complete (alpha) | Deterministic context ranking/budget, duplicate/low-value elimination, mandatory-context preservation, pre-execution prompt quality gate, structured metrics |
 | **v1.5** | Agent Bootstrap Automation | Complete (alpha) | Enforce bootstrap manifest + readiness gates in tooling + CI |
-| **v1.6** | Integration-First Hermes Runtime | In Progress | Blueprint V4 baseline accepted; adapter contract + capability matrix + rollback plan + GOFFICE2026 pilot design; Stage 0 (read-only) executed PASS_WITH_NOTES; no install/deploy without approval (ADR-0013) |
+| **v1.6** | Integration-First Hermes Runtime | In Progress | Blueprint V4 baseline accepted; adapter contract + capability matrix + rollback plan + GOFFICE2026 pilot design; Stage 0 read-only + Stage 1 stub spike executed (13/13 PASS, SIMULATED); Gate-B rec NOT_READY until real spike; no install/deploy without approval (ADR-0013) |
 | **v1.7** | Governed Pilot Operations | Planned | One low-risk project through Hermes + bootstrap/context/quality gates; measure success, latency, cost, auditability, operator effort |
 | **v1.8** | Enterprise Connectors | Planned | Governed connectors: GitHub, Microsoft 365/SharePoint, PostgreSQL/SQL Server, Cloudflare, n8n, external APIs |
 | **v1.9** | Observability + Learning Loop Maturity | Planned | AI quality vs runtime health vs cost vs outcome signals; knowledge promotion loop |
@@ -26,7 +26,8 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 - [ ] Human approval obtained before any Hermes installation.
 - [x] GOFFICE2026 pilot Stage 0 (read-only) executed — PASS_WITH_NOTES (evidence: `06_Research/pilots/v1.6-hermes/goffice2026/`)
 - [x] Stage 0 blockers remediated (2026-08-09): canonical path `F:\projectAi\goffice2026` established; adapter tip refreshed `7b44c5d`; compiler budget two-tier `preferred 6 / hard 8` (tests 53/53)
-- [ ] Stage 1 reversible compatibility spike (Gate A owner approval)
+- [x] Stage 1 stub compatibility spike executed — 13/13 PASS (SIMULATED; contract surface validated; evidence `STAGE-1-*`)
+- [ ] Real reversible compatibility spike (Gate A owner approval; stub evidence = AI-OS-side baseline)
 - [ ] Human approval obtained before any Hermes installation (Gate B, separate).
 
 ## Rules

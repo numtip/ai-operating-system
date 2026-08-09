@@ -73,6 +73,20 @@
                                  ]
                     },
                     {
+                        "id":  "v1.6-stage1-evidence",
+                        "title":  "GOFFICE2026 Pilot Stage 1 Evidence (stub, simulated)",
+                        "path":  "06_Research/pilots/v1.6-hermes/goffice2026/STAGE-1-RESULTS.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "pilot",
+                                     "goffice2026",
+                                     "evidence",
+                                     "stage1",
+                                     "stub",
+                                     "simulated"
+                                 ]
+                    },
+                    {
                         "id":  "glossary",
                         "title":  "Glossary",
                         "path":  "02_Knowledge/GLOSSARY.md",
