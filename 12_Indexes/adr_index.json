@@ -96,6 +96,16 @@
                         "tags":  [
                                      "adr"
                                  ]
+                    },
+                    {
+                        "id":  "adr-0013",
+                        "title":  "Integration-First Hermes Runtime (v1.6)",
+                        "path":  "04_ADR/ADR-0013-integration-first-hermes-runtime.md",
+                        "tags":  [
+                                     "adr",
+                                     "v1.6",
+                                     "hermes"
+                                 ]
                     }
                 ]
 }

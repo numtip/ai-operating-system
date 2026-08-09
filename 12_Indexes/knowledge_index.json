@@ -39,6 +39,28 @@
                                  ]
                     },
                     {
+                        "id":  "blueprint-v4",
+                        "title":  "AI Operating System Blueprint v4.0 (accepted baseline)",
+                        "path":  "03_Architecture/AI_OPERATING_SYSTEM_BLUEPRINT_V4.md",
+                        "tags":  [
+                                     "canonical",
+                                     "architecture",
+                                     "v1.6",
+                                     "baseline"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-design",
+                        "title":  "v1.6 Hermes Integration Design",
+                        "path":  "03_Architecture/GOFFICE2026_PILOT_DESIGN.md",
+                        "tags":  [
+                                     "architecture",
+                                     "v1.6",
+                                     "hermes",
+                                     "pilot"
+                                 ]
+                    },
+                    {
                         "id":  "glossary",
                         "title":  "Glossary",
                         "path":  "02_Knowledge/GLOSSARY.md",

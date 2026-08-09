@@ -21,7 +21,7 @@ Durable facts for AI Operating System. Update only when the system itself change
 | **v1.3** | Complete (MVP) | Prompt Compiler runtime (no LLM); model profiles; dual pilots |
 | **v1.4** | Complete (alpha) | Context Optimizer + Prompt Quality Gate; deterministic budget/ranking |
 | **v1.5** | Complete (alpha) | Agent Bootstrap Automation (`check-bootstrap.ps1` + ADR-0012 + CI); tag `v1.5.0-alpha.1` |
-| **v1.6** | In progress (design) | Integration-First Hermes Runtime: adapter contract + capability spike; Hermes NOT installed (ADR-0013) |
+| **v1.6** | In progress (design complete) | Integration-First Hermes Runtime: Blueprint V4 baseline accepted; adapter contract + capability matrix + rollback plan + GOFFICE2026 pilot design; Hermes NOT installed (ADR-0013) |
 
 See [ROADMAP](../03_Architecture/ROADMAP.md).
 
