@@ -1,0 +1,73 @@
+{
+  "audit": "Document_Center_full_readonly_audit",
+  "date": "2026-08-09",
+  "branch": "integration/v1.6-hermes-first",
+  "target": {
+    "repo": "F:/projectAi/document-center",
+    "branch": "preview/pxp5-remediated",
+    "head": "9a8cde84630f2818827271efeb9df48ee8758ae2",
+    "origin_main": "3880651",
+    "tracked": 294,
+    "changes_made": false,
+    "untracked": [".cursor", "mcp-sharepoint"]
+  },
+  "local_validation": {
+    "npm_test": {"result": "FAIL - missing script test"},
+    "validate_all": {"result": "PASS"},
+    "validate_pages": {"result": "PASS (9 routes)"},
+    "validate_public_registry_p0": {"result": "FAIL - 126 errors: 1 checksum + 1 reconciliation + 124 URL leaks"},
+    "validate_pxp5_staging": {"result": "PASS (627 canonical)"},
+    "check_preview_safe": {"result": "PASS"}
+  },
+  "hermes": {
+    "version": "v0.20.0 (2026.8.3)",
+    "tag": "v2026.8.3",
+    "commit_sha": "3c27eb6234bf91b8ceee9e9071591b31e9b148cb",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash"
+  },
+  "run": {
+    "status": "completed",
+    "failed": false,
+    "api_calls": 14,
+    "input_tokens": 61076,
+    "output_tokens": 22582,
+    "total_tokens": 691658,
+    "estimated_cost_usd": 0.016576,
+    "latency_seconds": 197,
+    "verdict": "FAIL"
+  },
+  "severity_tally": {
+    "CRITICAL": 2,
+    "HIGH": 2,
+    "MEDIUM": 4,
+    "LOW": 2,
+    "findings": {
+      "F01_adapter_stale": "MEDIUM",
+      "F02_auth_url_leak_public_artifact": "CRITICAL",
+      "F03_invalid_checksum": "CRITICAL",
+      "F04_reconciliation_metadata": "HIGH",
+      "F05_contract_validator_drift": "MEDIUM",
+      "F06_date_format": "LOW",
+      "F07_category_naming_drift": "MEDIUM",
+      "F08_readme_stale": "MEDIUM",
+      "F09_public_export_drift": "HIGH",
+      "F10_info_disclosure": "LOW"
+    }
+  },
+  "baseline_counts": {
+    "627_total": "CONFIRMED (staging recordCount=627)",
+    "124_public": "CONFIRMED (publicCount=124)",
+    "503_internal": "CONFIRMED (nonPublicCount=503)"
+  },
+  "governance_decision": "REUSE_EXISTING_SITE_WITH_CONDITIONS",
+  "governance_conditions": [
+    "regenerate public registry with masked validated StorageURLs (124 public links human-blocked)",
+    "add excludedCount reconciliation metadata (recordCount+excludedCount==627)",
+    "regenerate .sha256 over canonical bytes",
+    "re-run validate-public-export.py --sha256-file --expected-total 627 to green; update registry-export.yml CI flags",
+    "update ADAPTER.md external fields, README, contract doc, category mapping"
+  ],
+  "production_recommendation": "NO_GO",
+  "note": "cost is estimated from official docs snapshot; no secrets or authenticated URLs included in this file."
+}

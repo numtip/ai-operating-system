@@ -146,6 +146,18 @@
                                  ]
                     },
                     {
+                        "id":  "v1.6-full-audit-document-center",
+                        "title":  "Document Center Full Read-Only Audit (2026-08-09)",
+                        "path":  "06_Research/pilots/v1.6-hermes/DOCUMENT_CENTER_FULL_READONLY_AUDIT_2026-08-09.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "document-center",
+                                     "audit",
+                                     "evidence"
+                                 ]
+                    },
+                    {
                         "id":  "glossary",
                         "title":  "Glossary",
                         "path":  "02_Knowledge/GLOSSARY.md",

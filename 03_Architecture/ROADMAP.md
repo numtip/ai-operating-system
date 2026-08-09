@@ -32,7 +32,8 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 - [x] Local install + smoke (2026-08-09) — Hermes v0.20.0 sandbox SHA-verified, Obsidian 1.13.4 + AI-OS vault; rollback proven; **real task execution BLOCKED** (model API key required, forbidden) → LOCAL_PILOT_PARTIAL
 - [x] **Real DeepSeek pilot (Gate C, 2026-08-09) — LOCAL_RUNTIME_PASS:** GOFFICE2026 read-only audit ×2 through Hermes→DeepSeek `deepseek-v4-flash`; ~$0.01/run estimated; guardrails + rollback proven; evidence `LOCAL_RUNTIME_REPORT.md`
 - [x] **GOFFICE2026 FULL READ-ONLY AUDIT (2026-08-09) — FULL_AUDIT_PASS:** 9 sections, PASS_WITH_NOTES (0 CRIT/0 HIGH); no GOFFICE2026 changes; evidence `GOFFICE2026_FULL_READONLY_AUDIT_2026-08-09.md`
-- [ ] Owner decision: reconcile GOFFICE2026 README staleness + evidence files (16/24) + FY2569 data/targets (owner-side, GOFFICE2026 repo)
+- [x] **DOCUMENT CENTER FULL READ-ONLY AUDIT (2026-08-09) — FAIL (CRIT 2/HIGH 2):** auth-URL leak 124/124 in public registry, invalid checksum, reconciliation missing; baseline 627/124/503 confirmed; decision REUSE_EXISTING_SITE_WITH_CONDITIONS; no DC changes; evidence `DOCUMENT_CENTER_FULL_READONLY_AUDIT_2026-08-09.md`
+- [ ] Owner decision: reconcile GOFFICE2026 README staleness + evidence files (16/24) + FY2569 data/targets (owner-side, GOFFICE2026 repo); Document Center public-export remediation (owner-side, 5 conditions)
 - [ ] Human approval obtained before any Hermes installation (Gate B, separate).
 
 ## Rules
