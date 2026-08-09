@@ -27,7 +27,9 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 - [x] GOFFICE2026 pilot Stage 0 (read-only) executed — PASS_WITH_NOTES (evidence: `06_Research/pilots/v1.6-hermes/goffice2026/`)
 - [x] Stage 0 blockers remediated (2026-08-09): canonical path `F:\projectAi\goffice2026` established; adapter tip refreshed `7b44c5d`; compiler budget two-tier `preferred 6 / hard 8` (tests 53/53)
 - [x] Stage 1 stub compatibility spike executed — 13/13 PASS (SIMULATED; contract surface validated; evidence `STAGE-1-*`)
-- [ ] Real reversible compatibility spike (Gate A owner approval; stub evidence = AI-OS-side baseline)
+- [x] Local integration readiness validation (2026-08-09) — goffice2026 PASS; readiness 2.5/5 CONDITIONAL
+- [x] Hermes product pin (ADR-0014, 2026-08-09) — hermes-agent v2026.8.3 @ `3c27eb62…`; preflight READY_FOR_LIMITED_LOCAL_INSTALL (conditional)
+- [ ] Real reversible compatibility spike (Gate A owner approval; install gate P1-P8 from preflight report)
 - [ ] Human approval obtained before any Hermes installation (Gate B, separate).
 
 ## Rules

@@ -98,6 +98,17 @@
                                  ]
                     },
                     {
+                        "id":  "v1.6-hermes-preflight",
+                        "title":  "Hermes Preflight Report and Sandbox Design",
+                        "path":  "06_Research/pilots/v1.6-hermes/HERMES_PREFLIGHT_REPORT.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "preflight",
+                                     "sandbox"
+                                 ]
+                    },
+                    {
                         "id":  "glossary",
                         "title":  "Glossary",
                         "path":  "02_Knowledge/GLOSSARY.md",
