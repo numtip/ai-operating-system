@@ -18,7 +18,8 @@ Handoff: [sessions/2026/2026-08-01-v1.5-agent-bootstrap-automation.md](sessions/
 
 - Optional: create GitHub Release UI for `v1.5.0-alpha.1` (tag already on origin)
 - v1.6 design gates complete: Blueprint V4 baseline accepted, adapter contract, capability matrix, rollback plan, GOFFICE2026 pilot design (ADR-0013); Hermes install still approval-gated
-- Next v1.6 step (owner approval required): Hermes installation gate → reversible compatibility spike (see `03_Architecture/GOFFICE2026_PILOT_DESIGN.md`)
+- GOFFICE2026 Pilot **Stage 0 (read-only)** executed 2026-08-09 — PASS_WITH_NOTES; evidence in `06_Research/pilots/v1.6-hermes/goffice2026/`
+- Next: Stage 1 spike requires owner approval (Gate A); Hermes install requires separate approval (Gate B)
 
 ## Blockers / notes
 

@@ -10,7 +10,7 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 | **v1.3** | Prompt Compiler Runtime | Complete (MVP) | Compile prompts from specs; no LLM; model profiles + pilots |
 | **v1.4** | Context Optimizer + Prompt Quality Gate | Complete (alpha) | Deterministic context ranking/budget, duplicate/low-value elimination, mandatory-context preservation, pre-execution prompt quality gate, structured metrics |
 | **v1.5** | Agent Bootstrap Automation | Complete (alpha) | Enforce bootstrap manifest + readiness gates in tooling + CI |
-| **v1.6** | Integration-First Hermes Runtime | In Progress | Blueprint V4 baseline accepted; adapter contract + capability matrix + rollback plan + GOFFICE2026 pilot design; retain AI-OS governance gates; no install/deploy without approval (ADR-0013) |
+| **v1.6** | Integration-First Hermes Runtime | In Progress | Blueprint V4 baseline accepted; adapter contract + capability matrix + rollback plan + GOFFICE2026 pilot design; Stage 0 (read-only) executed PASS_WITH_NOTES; no install/deploy without approval (ADR-0013) |
 | **v1.7** | Governed Pilot Operations | Planned | One low-risk project through Hermes + bootstrap/context/quality gates; measure success, latency, cost, auditability, operator effort |
 | **v1.8** | Enterprise Connectors | Planned | Governed connectors: GitHub, Microsoft 365/SharePoint, PostgreSQL/SQL Server, Cloudflare, n8n, external APIs |
 | **v1.9** | Observability + Learning Loop Maturity | Planned | AI quality vs runtime health vs cost vs outcome signals; knowledge promotion loop |
@@ -24,7 +24,9 @@ Versioned capability path for AI Operating System. Do not mark future items comp
 - [x] Local-first rollback plan documented.
 - [x] No secrets, production, DNS, or VPS mutation required for the architecture spike.
 - [ ] Human approval obtained before any Hermes installation.
-- [ ] GOFFICE2026 pilot design executed through stages (install-gated).
+- [x] GOFFICE2026 pilot Stage 0 (read-only) executed — PASS_WITH_NOTES (evidence: `06_Research/pilots/v1.6-hermes/goffice2026/`)
+- [ ] Stage 1 reversible compatibility spike (Gate A owner approval)
+- [ ] Human approval obtained before any Hermes installation (Gate B, separate).
 
 ## Rules
 
