@@ -57,6 +57,8 @@ $rateTable = Get-Content (Join-Path $Root 'prompt-compiler/runtime/rate-table.js
 Assert-True '0k.rate_table_unverified' ($rateTable.verification_status -eq 'UNVERIFIED' -and $rateTable.verified -eq $false -and $rateTable.rate_status -eq 'UNVERIFIED_RATE') "vs=$($rateTable.verification_status)"
 Assert-True '0l.rate_table_has_provenance_fields' ($rateTable.PSObject.Properties.Name.Contains('rate_source_url') -and $rateTable.PSObject.Properties.Name.Contains('retrieved_at_utc') -and $rateTable.PSObject.Properties.Name.Contains('currency') -and $rateTable.PSObject.Properties.Name.Contains('price_basis') -and $rateTable.PSObject.Properties.Name.Contains('effective_date'))
 Assert-True '0m.rate_table_no_fabricated_url' ($null -eq $rateTable.rate_source_url -and $null -eq $rateTable.effective_date)
+Assert-True '0n.schema_declares_billing_waiver' ($schema.properties.PSObject.Properties.Name -contains 'billing_waiver')
+Assert-True '0o.schema_waiver_requires_explicit_fields' ($null -ne $schema.properties.billing_waiver.required -and @($schema.properties.billing_waiver.required) -contains 'reason' -and @($schema.properties.billing_waiver.required) -contains 'scope' -and @($schema.properties.billing_waiver.required) -contains 'limitations')
 
 # --- LIVE evidence ---
 $live = Read-Evidence 'STAGE-2A-LIVE-EVIDENCE.json'
@@ -78,6 +80,7 @@ Assert-True '1h.live_run_required_fields' $liveRunReq
 Assert-True '1i.live_stop_metadata' ($live.PSObject.Properties.Name.Contains('stopped_early') -and $live.PSObject.Properties.Name.Contains('stop_reason') -and $live.PSObject.Properties.Name.Contains('redaction'))
 Assert-True '1j.live_billing_null' ($null -eq $live.billing_reconciliation.billed_usd)
 Assert-True '1k.live_no_raw_prompt' (-not (([System.IO.File]::ReadAllText((Join-Path $pilot 'STAGE-2A-LIVE-EVIDENCE.json'))) -match ($rawPromptPatterns -join '|')))
+Assert-True '1l.live_waiver_explicit' ($live.billing_waiver.waived -eq $true -and -not [string]::IsNullOrWhiteSpace([string]$live.billing_waiver.reason) -and -not [string]::IsNullOrWhiteSpace([string]$live.billing_waiver.scope) -and @($live.billing_waiver.limitations).Count -ge 1) "waived=$($live.billing_waiver.waived) limitations=$(@($live.billing_waiver.limitations).Count)"
 
 # --- MOCK evidence ---
 $mock = Read-Evidence 'STAGE-2A-MOCK-EVIDENCE.json'
@@ -95,6 +98,7 @@ foreach ($r in @($mock.runs)) {
 Assert-True '2f.mock_run_required_fields' $mockRunReq
 Assert-True '2g.mock_billing_null' ($null -eq $mock.billing_reconciliation.billed_usd)
 Assert-True '2h.mock_no_raw_prompt' (-not (([System.IO.File]::ReadAllText((Join-Path $pilot 'STAGE-2A-MOCK-EVIDENCE.json'))) -match ($rawPromptPatterns -join '|')))
+Assert-True '2i.mock_waiver_null' ($null -eq $mock.billing_waiver)
 
 # --- API-KEY-VALIDATION evidence (standalone schema) ---
 $akv = Read-Evidence 'STAGE-2A-API-KEY-VALIDATION.json'
@@ -103,6 +107,7 @@ Assert-True '3b.akv_check' ($akv.check -eq 'api_key_validation')
 Assert-True '3c.akv_has_required' ($akv.PSObject.Properties.Name.Contains('api_key_valid') -and $akv.PSObject.Properties.Name.Contains('http_outcome_class') -and $akv.PSObject.Properties.Name.Contains('provider') -and $akv.PSObject.Properties.Name.Contains('model'))
 Assert-True '3d.akv_model_flash' ($akv.model -eq 'deepseek-v4-flash')
 Assert-True '3e.akv_no_key_no_prompt' (-not (([System.IO.File]::ReadAllText((Join-Path $pilot 'STAGE-2A-API-KEY-VALIDATION.json'))) -match 'sk-[a-zA-Z0-9]{10,}|Reply with the single token|authorization|bearer'))
+Assert-True '3f.akv_waiver_explicit' ($akv.billing_waiver.waived -eq $true -and -not [string]::IsNullOrWhiteSpace([string]$akv.billing_waiver.reason) -and -not [string]::IsNullOrWhiteSpace([string]$akv.billing_waiver.scope) -and @($akv.billing_waiver.limitations).Count -ge 1) "waived=$($akv.billing_waiver.waived)"
 
 Write-Host ''
 Write-Host ("STAGE-2A-EVIDENCE-SCHEMA SUMMARY passed={0} failed={1}" -f $passed, $failed)

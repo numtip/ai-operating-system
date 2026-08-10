@@ -3,7 +3,7 @@
 **Date:** 2026-08-10
 **Branch:** `evidence/stage-2a-cost-controls`
 **Baseline:** `origin/main @ 7a05f709`
-**Verdict:** `STAGE_2A_DIRECT_API_PARTIAL` (direct DeepSeek API evidence complete; exit gate not met — billing reconciliation pending owner)
+**Verdict:** `STAGE_2A_DIRECT_API_PASS_WITH_BILLING_WAIVER` (direct DeepSeek API evidence complete; billing reconciliation waived by owner for this bounded pilot)
 
 ---
 
@@ -40,7 +40,7 @@ cap_total_tokens `500000`, max_output_tokens `2000`. Rate status `UNVERIFIED_RAT
 | `prompt-compiler/runtime/Invoke-Stage2aLiveRun.ps1` | 3-run orchestrator, cap-enforced, evidence writer |
 | `prompt-compiler/runtime/rate-table.json` | per-MTok rates marked `UNVERIFIED_RATE` |
 | `prompt-compiler/fixtures/mock-provider-response.json` | synthetic usage for tests |
-| `prompt-compiler/tests/run-tests-stage2a.ps1` | 32 deterministic tests |
+| `prompt-compiler/tests/run-tests-stage2a.ps1` | 37 deterministic tests |
 | `prompt-compiler/tests/run-tests-stage2a-hardening.ps1` | 16 hardening/preflight tests |
 | `06_Research/pilots/v1.6-hermes/STAGE-2A-RUNBOOK.md` | protocol + live-run gate + checklist |
 | `06_Research/pilots/v1.6-hermes/schemas/run-evidence.schema.json` | evidence JSON schema |
@@ -62,7 +62,7 @@ cap_total_tokens `500000`, max_output_tokens `2000`. Rate status `UNVERIFIED_RAT
 
 ## Test results
 
-- `run-tests-stage2a.ps1` — **32/32 PASS**
+- `run-tests-stage2a.ps1` — **37/37 PASS**
 - `run-tests-stage2a-hardening.ps1` — **16/16 PASS**
 - Cap boundary + `BUDGET_EXCEEDED` covered (tests 5–6; hardening 5a–5e).
 
@@ -74,26 +74,26 @@ cap_total_tokens `500000`, max_output_tokens `2000`. Rate status `UNVERIFIED_RAT
 | 2 | LIVE | DONE — ALLOW |
 | 3 | LIVE | DONE — ALLOW |
 
-## Billing reconciliation status — EXIT GATE NOT MET
+## Billing reconciliation — WAIVED (owner decision 2026-08-10)
 
-The following exit-gate items are still missing and are **owner-side only** (agent
-never accesses billing accounts and does not guess amounts):
+The owner has explicitly **waived billing reconciliation** for this limited Direct
+DeepSeek API pilot. No `billed_usd` will be filled, no rate will be set
+`verified:true`, and `Test-CostBillingVariance` will not be run for Stage 2A Direct
+API. Billing portal / API / key are not accessed.
 
-1. **Provider-authoritative rate source + effective date** — `rate-table.json` stays
-   `verified:false` (`UNVERIFIED_RATE`, `verification_status: UNVERIFIED`); the new
-   provenance fields (`rate_source_url`, `retrieved_at_utc`, `currency`, `price_basis`,
-   `effective_date`) are placeholders until the owner confirms an official pricing page.
-2. **Owner-entered actual billing amount for the 4 requests** — the 3 comparable live
-   runs (`03:24:59Z`, `03:25:00Z`, `03:25:02Z`) plus the API-key validation
-   (`03:31:50Z`), copied from DeepSeek billing as a total into
-   `billing_reconciliation.billed_usd` with the matched `billing_period`
-   (currently `null`).
-3. **`Test-CostBillingVariance` must pass within 20% tolerance** — variance between
-   local telemetry total and owner-entered billed amount must be ≤ 20% and recorded.
-   `Test-CostReconciliationReadiness` stays `BLOCKED` while the rate is unverified or
-   `billed_usd` is null, so a premature variance computation cannot run.
+- **Reason:** bounded low-cost pilot; cost caps and fail-closed preflight already verified.
+- **Scope:** Stage 2A Direct API only.
+- **Limitations:**
+  - This is **not** a provider-billed cost proof — estimates remain `UNVERIFIED_RATE`.
+  - Does **not** cover Hermes/VPS or any other runtime.
+- **Recorded in evidence:** `billing_waiver` object (`waived: true` + reason/scope/
+  limitations/approved_by/approved_at_utc) in `STAGE-2A-LIVE-EVIDENCE.json` and
+  `STAGE-2A-API-KEY-VALIDATION.json`; MOCK evidence explicitly `billing_waiver: null`.
+- **Default policy unchanged:** `Test-CostReconciliationReadiness` still `BLOCKED` while
+  the rate is unverified or `billed_usd` is null — the waiver is an explicit,
+  evidence-recorded owner decision, not a silent bypass.
 
-Until all three hold, verdict remains `STAGE_2A_DIRECT_API_PARTIAL`.
+**Next gate:** Hermes local integration is a separate workstream (not this pilot).
 
 ## Gates
 

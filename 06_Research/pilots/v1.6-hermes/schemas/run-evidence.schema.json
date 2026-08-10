@@ -89,6 +89,19 @@
                 "within_tolerance": { "type": ["boolean", "null"] },
                 "filled_by_human_at": { "type": ["string", "null"] }
             }
+        },
+        "billing_waiver": {
+            "type": ["object", "null"],
+            "description": "explicit owner-approved waiver of billing reconciliation for a bounded pilot; default policy remains: reconciliation required until rate verified and billed_usd entered (waiver is never a silent bypass)",
+            "properties": {
+                "waived": { "type": "boolean", "const": true },
+                "reason": { "type": "string" },
+                "scope": { "type": "string" },
+                "limitations": { "type": "array", "items": { "type": "string" } },
+                "approved_by": { "type": "string" },
+                "approved_at_utc": { "type": ["string", "null"], "format": "date-time" }
+            },
+            "required": ["waived", "reason", "scope", "limitations"]
         }
     }
 }

@@ -125,5 +125,16 @@
                                    "within_tolerance":  null,
                                    "filled_by_human_at":  null
                                },
-    "redaction":  "no key, no prompt content, no raw payload stored"
+    "redaction":  "no key, no prompt content, no raw payload stored",
+    "billing_waiver":  {
+                           "waived":  true,
+                           "reason":  "bounded low-cost pilot; cost caps and fail-closed preflight already verified",
+                           "scope":  "Stage 2A Direct API only",
+                           "limitations":  [
+                                               "not provider-billed cost proof (rates stay UNVERIFIED_RATE)",
+                                               "does not cover Hermes/VPS"
+                                           ],
+                           "approved_by":  "owner",
+                           "approved_at_utc":  "2026-08-10T03:58:00Z"
+                       }
 }

@@ -121,5 +121,6 @@
                                    "variance_pct":  null,
                                    "within_tolerance":  null,
                                    "filled_by_human_at":  null
-                               }
+                               },
+    "billing_waiver":  null
 }

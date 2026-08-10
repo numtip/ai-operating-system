@@ -1,6 +1,6 @@
 # STAGE 2A — Comparable-Run Protocol (Runbook)
 
-**Status:** LIVE evidence complete; verdict **STAGE_2A_DIRECT_API_PARTIAL** until billing reconciliation passes
+**Status:** LIVE evidence complete; verdict **STAGE_2A_DIRECT_API_PASS_WITH_BILLING_WAIVER** (billing reconciliation waived by owner for this bounded pilot)
 **Date:** 2026-08-10
 **Branch:** `evidence/stage-2a-cost-controls`
 **Schema:** `schemas/run-evidence.schema.json`
@@ -40,6 +40,10 @@ that is itself a valid stop-behavior evidence).
 
 ## 3. How to reconcile with provider billing
 
+> **2026-08-10 owner decision:** billing reconciliation is **waived** for this bounded
+> Direct DeepSeek API pilot (see §4b). The steps below remain for any future
+> non-waived run; they are **not executed** for this pilot.
+
 1. Keep the local evidence file (this repo) as the source of run telemetry.
 2. Do **not** let the agent open the billing account or scrape the portal; the owner
    pastes only the total amount, never the key or request payloads.
@@ -77,10 +81,19 @@ Approval record (owner fills): **GRANTED 2026-08-10 — owner confirmed use of e
 
 ## 4b. Verdict state
 
-Current verdict: **`STAGE_2A_DIRECT_API_PARTIAL`**. This holds until:
-- [ ] owner verifies `rate-table.json` against a confirmed official rate source and sets `verified: true`;
-- [ ] owner fills `billing_reconciliation.billed_usd` from provider billing (agent never accesses billing);
-- [ ] variance via `Test-CostBillingVariance` is within tolerance and recorded.
+Current verdict: **`STAGE_2A_DIRECT_API_PASS_WITH_BILLING_WAIVER`** — owner-approved
+waiver (2026-08-10) of billing reconciliation for this bounded Direct API pilot:
+
+- **Reason:** bounded low-cost pilot; cost caps and fail-closed preflight already verified.
+- **Scope:** Stage 2A Direct API only.
+- **Limitations:** not a provider-billed cost proof (`UNVERIFIED_RATE` stands); does not
+  cover Hermes/VPS.
+- **Waiver is explicit:** recorded as `billing_waiver` (`waived: true` + reason/scope/
+  limitations/approved_by/approved_at_utc) in the evidence files; default reconciliation
+  policy is unchanged — `Test-CostReconciliationReadiness` stays `BLOCKED` while the rate
+  is unverified or `billed_usd` is null, so the waiver is never a silent bypass.
+
+**Next gate:** Hermes local integration is a separate workstream.
 
 ## 4c. API-key validation + negative-test evidence (2026-08-10)
 

@@ -14,5 +14,16 @@
                   "total_tokens":  101
               },
     "note":  "synthetic AI-OS-internal request; no target-project data; no prompt/response/headers/credentials stored",
-    "timestamp_utc":  "2026-08-10T03:31:50Z"
+    "timestamp_utc":  "2026-08-10T03:31:50Z",
+    "billing_waiver":  {
+                           "waived":  true,
+                           "reason":  "bounded low-cost pilot; cost caps and fail-closed preflight already verified",
+                           "scope":  "Stage 2A Direct API only",
+                           "limitations":  [
+                                               "not provider-billed cost proof (rates stay UNVERIFIED_RATE)",
+                                               "does not cover Hermes/VPS"
+                                           ],
+                           "approved_by":  "owner",
+                           "approved_at_utc":  "2026-08-10T03:58:00Z"
+                       }
 }
