@@ -386,4 +386,76 @@ function Test-CostBillingVariance {
     }
 }
 
+# ---------------------------------------------------------------------------
+# Transport hook + invocation counter (negative-test proof, zero network)
+# ---------------------------------------------------------------------------
+
+$script:CostHttpInvocationCount = 0
+$script:CostHttpInvoker = $null      # test hook: scriptblock; if set, real network is NOT used
+
+function Reset-CostHttpInvocationCount {
+    $script:CostHttpInvocationCount = 0
+}
+
+function Get-CostHttpInvocationCount {
+    return [int]$script:CostHttpInvocationCount
+}
+
+function Set-CostHttpInvoker {
+    param([AllowNull()][scriptblock]$Invoker)
+    $script:CostHttpInvoker = $Invoker
+}
+
+function Invoke-CostHttpRequest {
+    param(
+        [Parameter(Mandatory)][string]$Uri,
+        [Parameter(Mandatory)][hashtable]$Headers,
+        [Parameter(Mandatory)][string]$Body,
+        [int]$TimeoutSec = 120
+    )
+    $script:CostHttpInvocationCount++
+    if ($null -ne $script:CostHttpInvoker) {
+        return (& $script:CostHttpInvoker -Uri $Uri -Headers $Headers -Body $Body -TimeoutSec $TimeoutSec)
+    }
+    $ProgressPreference = 'SilentlyContinue'
+    return (Invoke-RestMethod -Uri $Uri -Method Post -ContentType 'application/json' `
+        -Headers $Headers -Body $Body -TimeoutSec $TimeoutSec)
+}
+
+# ---------------------------------------------------------------------------
+# Preflight cost projection (blocks BEFORE any network request)
+# ---------------------------------------------------------------------------
+
+function Invoke-CostPreflightGuard {
+    param(
+        [Parameter(Mandatory)][AllowEmptyString()][string]$Prompt,
+        $RateTable = $null,
+        [double]$CapUsd = 0,
+        [long]$CapTokens = 0
+    )
+    if ($null -eq $RateTable) {
+        try { $RateTable = Get-CostRateTable } catch { $RateTable = $null }
+    }
+    # Conservative minimum: input = prompt chars/4, output = 1 token
+    $minInput = [int][Math]::Ceiling(($Prompt.Length + 4) / 4.0)
+    $minUsage = [ordered]@{
+        input_tokens      = $minInput
+        output_tokens     = 1
+        cache_read_tokens = 0
+        cache_write_tokens = 0
+        total_tokens      = $minInput + 1
+    }
+    $est = Invoke-CostEstimate -Usage $minUsage -RateTable $RateTable
+    $guard = Invoke-CostBudgetGuard -EstimatedCostUsd $est.estimated_cost_usd `
+        -TotalTokens ($minInput + 1) -CapUsd $CapUsd -CapTokens $CapTokens
+    return [ordered]@{
+        decision        = $guard.decision
+        stop_result     = $guard.stop_result
+        exceeded        = $guard.exceeded
+        min_input_tokens = $minInput
+        est             = $est
+        guard           = $guard
+    }
+}
+
 $script:CostTelemetryLoaded = $true

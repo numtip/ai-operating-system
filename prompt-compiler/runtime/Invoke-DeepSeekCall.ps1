@@ -30,6 +30,7 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
 . (Join-Path $PSScriptRoot 'Secret-Loader.ps1')
+. (Join-Path $PSScriptRoot 'Cost-Telemetry.ps1')
 
 function Out-CallResult {
     param([Parameter(Mandatory)][AllowEmptyString()][string]$Json)
@@ -54,8 +55,7 @@ $body = [ordered]@{
 
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 try {
-    $r = Invoke-RestMethod -Uri $uri -Method Post -ContentType 'application/json' `
-        -Headers @{ Authorization = ('Bearer ' + $key) } -Body $body -TimeoutSec 120
+    $r = Invoke-CostHttpRequest -Uri $uri -Headers @{ Authorization = ('Bearer ' + $key) } -Body $body -TimeoutSec 120
     $sw.Stop()
 
     # OpenAI-compatible usage: prompt_tokens/completion_tokens/total_tokens

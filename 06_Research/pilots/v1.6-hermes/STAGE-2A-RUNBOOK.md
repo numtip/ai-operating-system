@@ -1,6 +1,6 @@
 # STAGE 2A — Comparable-Run Protocol (Runbook)
 
-**Status:** MOCK evidence complete; LIVE run requires human confirmation
+**Status:** LIVE evidence complete; verdict **STAGE_2A_DIRECT_API_PARTIAL** until billing reconciliation passes
 **Date:** 2026-08-10
 **Branch:** `evidence/stage-2a-cost-controls`
 **Schema:** `schemas/run-evidence.schema.json`
@@ -60,6 +60,21 @@ A live run is allowed **only** when **all** hold:
 - [ ] Per-run caps are set; `BUDGET_EXCEEDED` stop behavior is exercised on run N.
 
 Approval record (owner fills): **GRANTED 2026-08-10 — owner confirmed use of existing DeepSeek key for the bounded 3-run live test. Live evidence: `STAGE-2A-LIVE-EVIDENCE.json` (3 runs, all ALLOW, under caps).**
+
+## 4b. Verdict state
+
+Current verdict: **`STAGE_2A_DIRECT_API_PARTIAL`**. This holds until:
+- [ ] owner verifies `rate-table.json` against a confirmed official rate source and sets `verified: true`;
+- [ ] owner fills `billing_reconciliation.billed_usd` from provider billing (agent never accesses billing);
+- [ ] variance via `Test-CostBillingVariance` is within tolerance and recorded.
+
+## 4c. API-key validation + negative-test evidence (2026-08-10)
+
+- `STAGE-2A-API-KEY-VALIDATION.json` — 1 synthetic minimal request, `API_KEY_VALID`, HTTP 2xx,
+  model `deepseek-v4-flash`, latency + token usage only. No key/prompt/headers/credentials stored.
+- `run-tests-stage2a-negative.ps1` — 11 tests proving preflight `BUDGET_EXCEEDED` fires BEFORE any
+  network request, via a mockable transport invocation counter (positive control included). Zero
+  network requests during the negative test (counter = 0, not inferred from absence of logs).
 
 If the confirmation is not granted, produce **MOCK evidence + this checklist** and the
 stage verdict is `STAGE_2A_PARTIAL` (done — see `STAGE-2A-MOCK-EVIDENCE.json`).

@@ -43,6 +43,14 @@ $task = 'Reply with the single token OK.'   # synthetic, AI-OS-internal; no targ
 $fp = Get-CostRunFingerprint -Prompt $task -ContextPaths @() -Model $cfg.model
 $child = Join-Path $PSScriptRoot 'Invoke-DeepSeekCall.ps1'
 
+# Preflight cost projection: block BEFORE any network request if the cap is below
+# the conservative minimum cost of the task.
+$preGuard = Invoke-CostPreflightGuard -Prompt $task -CapUsd ([double]$cfg.cap_usd) -CapTokens ([long]$cfg.cap_total_tokens)
+if ($preGuard.decision -eq 'BUDGET_EXCEEDED') {
+    throw ("preflight cost projection BLOCKED before any request: {0} (min_input_tokens={1})" -f `
+        $preGuard.stop_result, $preGuard.min_input_tokens)
+}
+
 Write-Host ("Stage 2A live run starting: runs={0} model={1} cap_usd={2} cap_tokens={3} max_out={4}" -f `
     $Runs, $cfg.model, $cfg.cap_usd, $cfg.cap_total_tokens, $cfg.max_output_tokens)
 
