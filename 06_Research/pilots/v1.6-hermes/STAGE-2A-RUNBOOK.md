@@ -32,8 +32,11 @@ that is itself a valid stop-behavior evidence).
 - Same task, same model, same fingerprint, same cap across all 3 runs.
 - Local-vs-provider-billing variance must stay within `tolerance_pct` (default 20%).
 - Token totals must be deterministic or within a documented noise band.
-- `stop_result == BUDGET_EXCEEDED` must appear when a cap is intentionally set below
-  the run's actual cost/tokens (stop-behavior proof).
+- `BUDGET_EXCEEDED` stop behavior is proven separately by the **zero-network negative
+  test** (`run-tests-stage2a-negative.ps1`: preflight blocks before any request,
+  counter = 0) or by an **intentional live run with a sub-cost cap**. Three comparable
+  runs under the cap ending in `ALLOW` do NOT themselves prove the stop path — they
+  only prove bounded operation under cap.
 
 ## 3. How to reconcile with provider billing
 
@@ -57,7 +60,9 @@ A live run is allowed **only** when **all** hold:
       from the external file when spawning the child process; never logged.
 - [ ] No sensitive/target-project data is sent; task is a synthetic or AI-OS-internal
       L0/L1 read-only task.
-- [ ] Per-run caps are set; `BUDGET_EXCEEDED` stop behavior is exercised on run N.
+- [ ] Per-run caps are set; `BUDGET_EXCEEDED` stop behavior is proven by the
+      zero-network negative test (`run-tests-stage2a-negative.ps1`) or an intentional
+      sub-cost run — not by the 3 comparable under-cap runs (which are expected ALLOW).
 
 Approval record (owner fills): **GRANTED 2026-08-10 — owner confirmed use of existing DeepSeek key for the bounded 3-run live test. Live evidence: `STAGE-2A-LIVE-EVIDENCE.json` (3 runs, all ALLOW, under caps).**
 

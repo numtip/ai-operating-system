@@ -8,10 +8,10 @@
         "schema_version": { "type": "string", "const": "1.0" },
         "protocol": {
             "type": "object",
-            "required": ["id", "task", "mode", "tolerance_pct"],
+            "required": ["id", "task_class", "mode", "tolerance_pct"],
             "properties": {
                 "id": { "type": "string", "const": "stage-2a-comparable-run-v1" },
-                "task": { "type": "string", "description": "identical task text across all 3 runs" },
+                "task_class": { "type": "string", "description": "non-prompt classification of the task (never the raw task/prompt text)" },
                 "mode": { "type": "string", "enum": ["LIVE", "MOCK"] },
                 "tolerance_pct": { "type": "number", "description": "accepted variance between local telemetry and provider billing (%)" }
             }
@@ -24,11 +24,15 @@
             "required": ["cap_usd", "cap_total_tokens"],
             "properties": {
                 "cap_usd": { "type": "number", "description": "per-run USD cap; 0 = disabled" },
-                "cap_total_tokens": { "type": "integer", "description": "per-run total-token cap; 0 = disabled" }
+                "cap_total_tokens": { "type": "integer", "description": "per-run total-token cap; 0 = disabled" },
+                "max_output_tokens": { "type": "integer", "description": "per-run max output tokens (LIVE runs)" }
             }
         },
         "rate_status": { "type": "string", "enum": ["UNVERIFIED_RATE", "VERIFIED"] },
         "rate_source": { "type": "string" },
+        "stopped_early": { "type": "boolean", "description": "true if the run loop stopped before 3 runs (cap stop or failure)" },
+        "stop_reason": { "type": "string", "description": "sanitized reason when stopped_early" },
+        "redaction": { "type": "string", "description": "statement of what was never stored (key, prompt, raw payload)" },
         "runs": {
             "type": "array",
             "minItems": 3,
@@ -57,8 +61,7 @@
                     "budget_decision": { "type": "string", "enum": ["ALLOW", "BUDGET_EXCEEDED"] },
                     "stop_result": { "type": ["string", "null"], "enum": ["BUDGET_EXCEEDED", null] },
                     "latency_seconds": { "type": "number" },
-                    "verdict": { "type": "string" },
-                    "redacted": { "type": "boolean", "const": true }
+                    "verdict": { "type": "string" }
                 }
             }
         },

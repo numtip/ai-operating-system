@@ -2,7 +2,7 @@
     "schema_version":  "1.0",
     "protocol":  {
                      "id":  "stage-2a-comparable-run-v1",
-                     "task":  "Audit AI-OS v1.6 Stage 2A telemetry contract (synthetic, read-only)",
+                     "task_class":  "synthetic_telemetry_contract",
                      "mode":  "MOCK",
                      "tolerance_pct":  20
                  },

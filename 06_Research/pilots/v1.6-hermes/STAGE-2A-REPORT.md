@@ -3,7 +3,7 @@
 **Date:** 2026-08-10
 **Branch:** `evidence/stage-2a-cost-controls`
 **Baseline:** `origin/main @ 7a05f709`
-**Verdict:** `STAGE_2A_PASS` (live 3-run evidence complete; billing reconciliation is owner-side)
+**Verdict:** `STAGE_2A_DIRECT_API_PARTIAL` (direct DeepSeek API evidence complete; exit gate not met — billing reconciliation pending owner)
 
 ---
 
@@ -74,13 +74,21 @@ cap_total_tokens `500000`, max_output_tokens `2000`. Rate status `UNVERIFIED_RAT
 | 2 | LIVE | DONE — ALLOW |
 | 3 | LIVE | DONE — ALLOW |
 
-## Billing reconciliation status
+## Billing reconciliation status — EXIT GATE NOT MET
 
-- Template + `Test-CostBillingVariance` ready; live evidence holds
-  `billing_reconciliation` with `billed_usd = null`.
-- **Owner TODO (outside agent scope):** copy real billed USD from DeepSeek billing,
-  verify `rate-table.json` (set `verified:true` with confirmed rate source), fill
-  `billing_reconciliation` and record variance. No billing figures were invented.
+The following exit-gate items are still missing and are **owner-side only** (agent
+never accesses billing accounts and does not guess amounts):
+
+1. **Provider-authoritative rate source + effective date** — `rate-table.json` stays
+   `verified:false` (`UNVERIFIED_RATE`); needs a confirmed official rate source with
+   its effective date before any estimate can be treated as billing-reconciled.
+2. **Owner-entered actual billing amount** — for the 3 comparable live runs AND the
+   API-key validation request, copied by the owner from DeepSeek billing into
+   `billing_reconciliation.billed_usd` (currently `null`).
+3. **`Test-CostBillingVariance` must pass within 20% tolerance** — variance between
+   local telemetry total and owner-entered billed amount must be ≤ 20% and recorded.
+
+Until all three hold, verdict remains `STAGE_2A_DIRECT_API_PARTIAL`.
 
 ## Gates
 
