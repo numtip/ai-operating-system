@@ -113,6 +113,24 @@ Assert-True '9b.variance_outside_tolerance' (-not $vBad.within_tolerance) "varia
 $vZero = Test-CostBillingVariance -LocalUsd 0 -BilledUsd 0.01 -TolerancePct 20
 Assert-True '9c.variance_unknown_when_no_local' ($null -eq $vZero.variance_pct -and -not $vZero.within_tolerance)
 
+# --- 10. reconciliation readiness: blocked until rate verified AND billed_usd entered ---
+$rcNull = Test-CostReconciliationReadiness -BilledUsd $null
+Assert-True '10a.reconciliation_blocked_when_billed_null' ($rcNull.decision -eq 'BLOCKED') "decision=$($rcNull.decision) reasons=$($rcNull.reasons -join '; ')"
+$rcUnverified = Test-CostReconciliationReadiness -RateTable $rates -BilledUsd 0.01
+Assert-True '10b.reconciliation_blocked_when_rate_unverified' ($rcUnverified.decision -eq 'BLOCKED') "decision=$($rcUnverified.decision) reasons=$($rcUnverified.reasons -join '; ')"
+$vNull = Test-CostBillingVariance -LocalUsd 0.01 -BilledUsd $null
+Assert-True '10c.variance_blocks_on_null_billed' ($vNull.decision -eq 'BLOCKED') "decision=$($vNull.decision)"
+# in-memory positive control: a fully verified rate + non-null billed -> READY / COMPLETED
+$verifiedFixture = [ordered]@{
+    verified = $true; rate_status = 'VERIFIED'; verification_status = 'VERIFIED';
+    rate_source = 'official page'; rate_source_date = '2026-08-01'; currency = 'USD'; price_basis = 'per_1M_tokens';
+    rates = [ordered]@{ input_per_mtok = 0.27; output_per_mtok = 1.10; cache_read_per_mtok = 0.07; cache_write_per_mtok = 0.27 }
+}
+$rcReady = Test-CostReconciliationReadiness -RateTable $verifiedFixture -BilledUsd 0.01
+Assert-True '10d.reconciliation_ready_when_verified_and_billed' ($rcReady.decision -eq 'READY') "decision=$($rcReady.decision) reasons=$($rcReady.reasons -join '; ')"
+$vReady = Test-CostBillingVariance -LocalUsd 0.010 -BilledUsd 0.011 -TolerancePct 20
+Assert-True '10e.variance_completes_with_values' ($vReady.decision -eq 'COMPLETED' -and $vReady.within_tolerance) "decision=$($vReady.decision)"
+
 Write-Host ''
 Write-Host ("STAGE-2A SUMMARY passed={0} failed={1}" -f $passed, $failed)
 if ($failed -gt 0) { exit 1 } else { exit 0 }

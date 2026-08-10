@@ -41,9 +41,18 @@ that is itself a valid stop-behavior evidence).
 ## 3. How to reconcile with provider billing
 
 1. Keep the local evidence file (this repo) as the source of run telemetry.
-2. Do **not** let the agent open the billing account or scrape the portal.
-3. A human copies the billed amount into `billing_reconciliation.billed_usd`.
-4. Run `Test-CostBillingVariance -LocalUsd <sum> -BilledUsd <human value> -TolerancePct 20`
+2. Do **not** let the agent open the billing account or scrape the portal; the owner
+   pastes only the total amount, never the key or request payloads.
+3. Owner: in DeepSeek billing, match the **4 requests** (3 comparable live runs +
+   the API-key validation request) by their UTC timestamps (see
+   `BILLING_RECONCILIATION_TEMPLATE.md` — the table lists all 4 with
+   `timestamp_utc`), and enter the **total billed USD for exactly those requests**
+   as `billing_reconciliation.billed_usd`, plus the matched `billing_period`
+   (`start_utc`/`end_utc`).
+4. Run the readiness gate first — `Test-CostReconciliationReadiness` must report
+   `READY` (rate table verified AND `billed_usd` entered); it stays `BLOCKED`
+   otherwise, so a premature variance computation cannot run.
+5. Only then run `Test-CostBillingVariance -LocalUsd <sum> -BilledUsd <human value> -TolerancePct 20`
    and record `variance_pct` + `within_tolerance` in the evidence file.
 
 ## 4. Live-run gate (human confirmation required)

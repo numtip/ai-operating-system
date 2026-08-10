@@ -30,6 +30,12 @@
         },
         "rate_status": { "type": "string", "enum": ["UNVERIFIED_RATE", "VERIFIED"] },
         "rate_source": { "type": "string" },
+        "verification_status": { "type": "string", "enum": ["UNVERIFIED", "VERIFIED"] },
+        "rate_source_url": { "type": ["string", "null"], "description": "canonical official pricing page; owner fills; agent never invents" },
+        "retrieved_at_utc": { "type": ["string", "null"], "format": "date-time" },
+        "currency": { "type": "string" },
+        "price_basis": { "type": "string" },
+        "effective_date": { "type": ["string", "null"], "format": "date-time", "description": "official rate effective date; null until confirmed" },
         "stopped_early": { "type": "boolean", "description": "true if the run loop stopped before 3 runs (cap stop or failure)" },
         "stop_reason": { "type": "string", "description": "sanitized reason when stopped_early" },
         "redaction": { "type": "string", "description": "statement of what was never stored (key, prompt, raw payload)" },
@@ -43,6 +49,7 @@
                 "properties": {
                     "run_id": { "type": "string" },
                     "timestamp_utc": { "type": "string", "format": "date-time" },
+                    "provider_request_id": { "type": ["string", "null"], "description": "provider-returned request ID, owner fills from billing line items; never the key/payload" },
                     "api_calls": { "type": "integer" },
                     "usage": {
                         "type": "object",
@@ -69,7 +76,15 @@
             "type": ["object", "null"],
             "description": "human-entered from provider billing; agent never accesses billing accounts",
             "properties": {
-                "billed_usd": { "type": "number" },
+                "billing_period": {
+                    "type": ["object", "null"],
+                    "description": "matched billing window for the reconciled requests",
+                    "properties": {
+                        "start_utc": { "type": ["string", "null"], "format": "date-time" },
+                        "end_utc": { "type": ["string", "null"], "format": "date-time" }
+                    }
+                },
+                "billed_usd": { "type": ["number", "null"] },
                 "variance_pct": { "type": ["number", "null"] },
                 "within_tolerance": { "type": ["boolean", "null"] },
                 "filled_by_human_at": { "type": ["string", "null"] }

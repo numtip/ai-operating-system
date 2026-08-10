@@ -80,13 +80,18 @@ The following exit-gate items are still missing and are **owner-side only** (age
 never accesses billing accounts and does not guess amounts):
 
 1. **Provider-authoritative rate source + effective date** — `rate-table.json` stays
-   `verified:false` (`UNVERIFIED_RATE`); needs a confirmed official rate source with
-   its effective date before any estimate can be treated as billing-reconciled.
-2. **Owner-entered actual billing amount** — for the 3 comparable live runs AND the
-   API-key validation request, copied by the owner from DeepSeek billing into
-   `billing_reconciliation.billed_usd` (currently `null`).
+   `verified:false` (`UNVERIFIED_RATE`, `verification_status: UNVERIFIED`); the new
+   provenance fields (`rate_source_url`, `retrieved_at_utc`, `currency`, `price_basis`,
+   `effective_date`) are placeholders until the owner confirms an official pricing page.
+2. **Owner-entered actual billing amount for the 4 requests** — the 3 comparable live
+   runs (`03:24:59Z`, `03:25:00Z`, `03:25:02Z`) plus the API-key validation
+   (`03:31:50Z`), copied from DeepSeek billing as a total into
+   `billing_reconciliation.billed_usd` with the matched `billing_period`
+   (currently `null`).
 3. **`Test-CostBillingVariance` must pass within 20% tolerance** — variance between
    local telemetry total and owner-entered billed amount must be ≤ 20% and recorded.
+   `Test-CostReconciliationReadiness` stays `BLOCKED` while the rate is unverified or
+   `billed_usd` is null, so a premature variance computation cannot run.
 
 Until all three hold, verdict remains `STAGE_2A_DIRECT_API_PARTIAL`.
 
@@ -96,7 +101,7 @@ Until all three hold, verdict remains `STAGE_2A_DIRECT_API_PARTIAL`.
 |------|--------|
 | `scripts/validate-indexes.ps1` | PASS |
 | `prompt-compiler/tests/run-tests.ps1` | PASS 53/53 |
-| `prompt-compiler/tests/run-tests-stage2a.ps1` | PASS 32/32 |
+| `prompt-compiler/tests/run-tests-stage2a.ps1` | PASS 37/37 |
 | `prompt-compiler/tests/run-tests-stage2a-hardening.ps1` | PASS 16/16 |
 | `scripts/check-bootstrap.ps1` | PASS 5/5 |
 | `git diff --check` | PASS |

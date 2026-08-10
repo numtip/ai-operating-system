@@ -362,12 +362,65 @@ function Invoke-CostBudgetGuard {
 # Billing reconciliation (human enters billed amounts; agent never touches billing)
 # ---------------------------------------------------------------------------
 
+function Test-CostReconciliationReadiness {
+    <#
+    .SYNOPSIS
+      Gate: reconciliation must NOT run while the rate table is unverified or
+      billed_usd is null/zero (deterministic; no network, no billing access).
+    #>
+    param(
+        $RateTable = $null,
+        [AllowNull()]$BilledUsd
+    )
+    if ($null -eq $RateTable) {
+        try { $RateTable = Get-CostRateTable } catch { $RateTable = $null }
+    }
+    if ($RateTable -is [System.Collections.IDictionary]) {
+        $RateTable = [pscustomobject]$RateTable
+    }
+    $reasons = New-Object System.Collections.Generic.List[string]
+    $rateVerified = $false
+    if ($RateTable -and $RateTable.PSObject.Properties.Name -contains 'verified') {
+        $rateVerified = [bool]$RateTable.verified
+    }
+    $verifStatus = ''
+    if ($RateTable -and $RateTable.PSObject.Properties.Name -contains 'verification_status') {
+        $verifStatus = [string]$RateTable.verification_status
+    }
+    if (-not $rateVerified -or $verifStatus -ne 'VERIFIED') {
+        $reasons.Add('rate table not verified (verification_status != VERIFIED); reconciliation must not run') | Out-Null
+    }
+    if ($null -eq $BilledUsd -or [double]$BilledUsd -le 0) {
+        $reasons.Add('billed_usd is null/zero: human must enter actual billed amount for the 4 requests') | Out-Null
+    }
+    $decision = 'READY'
+    if ($reasons.Count -gt 0) { $decision = 'BLOCKED' }
+    return [ordered]@{
+        decision            = $decision
+        rate_verified       = $rateVerified
+        verification_status = $verifStatus
+        billed_usd          = $BilledUsd
+        reasons             = @($reasons)
+    }
+}
+
 function Test-CostBillingVariance {
     param(
-        [double]$LocalUsd,
-        [double]$BilledUsd,
+        [AllowNull()][Nullable[double]]$LocalUsd,
+        [AllowNull()][Nullable[double]]$BilledUsd,
         [double]$TolerancePct = 20.0
     )
+    if ($null -eq $BilledUsd -or $null -eq $LocalUsd) {
+        return [ordered]@{
+            decision          = 'BLOCKED'
+            local_usd         = $LocalUsd
+            billed_usd        = $BilledUsd
+            variance_pct      = $null
+            tolerance_pct     = $TolerancePct
+            within_tolerance  = $null
+            reason            = 'reconciliation blocked: local_usd and billed_usd must both be non-null (billed_usd is human-entered)'
+        }
+    }
     $variancePct = $null
     if ($LocalUsd -gt 0) {
         $variancePct = [Math]::Round((($BilledUsd - $LocalUsd) / $LocalUsd) * 100.0, 2)
@@ -377,6 +430,7 @@ function Test-CostBillingVariance {
         $within = ([Math]::Abs([double]$variancePct) -le $TolerancePct)
     }
     return [ordered]@{
+        decision            = 'COMPLETED'
         local_usd           = $LocalUsd
         billed_usd          = $BilledUsd
         variance_pct        = $variancePct

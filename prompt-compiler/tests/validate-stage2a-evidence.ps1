@@ -48,6 +48,15 @@ Assert-True '0b.schema_does_not_require_task' ($protoReq -notcontains 'task') ("
 Assert-True '0c.schema_cap_has_max_output' ($schema.properties.cap.properties.PSObject.Properties.Name -contains 'max_output_tokens')
 Assert-True '0d.schema_declares_stopped_early' ($schema.properties.PSObject.Properties.Name -contains 'stopped_early')
 Assert-True '0e.schema_declares_redaction' ($schema.properties.PSObject.Properties.Name -contains 'redaction')
+Assert-True '0f.schema_declares_verification_status' ($schema.properties.PSObject.Properties.Name -contains 'verification_status')
+Assert-True '0g.schema_declares_rate_source_url' ($schema.properties.PSObject.Properties.Name -contains 'rate_source_url')
+Assert-True '0h.schema_declares_effective_date' ($schema.properties.PSObject.Properties.Name -contains 'effective_date')
+Assert-True '0i.schema_declares_billing_period' ($schema.properties.billing_reconciliation.properties.PSObject.Properties.Name -contains 'billing_period')
+Assert-True '0j.schema_declares_provider_request_id' ($schema.properties.runs.items.properties.PSObject.Properties.Name -contains 'provider_request_id')
+$rateTable = Get-Content (Join-Path $Root 'prompt-compiler/runtime/rate-table.json') -Raw | ConvertFrom-Json
+Assert-True '0k.rate_table_unverified' ($rateTable.verification_status -eq 'UNVERIFIED' -and $rateTable.verified -eq $false -and $rateTable.rate_status -eq 'UNVERIFIED_RATE') "vs=$($rateTable.verification_status)"
+Assert-True '0l.rate_table_has_provenance_fields' ($rateTable.PSObject.Properties.Name.Contains('rate_source_url') -and $rateTable.PSObject.Properties.Name.Contains('retrieved_at_utc') -and $rateTable.PSObject.Properties.Name.Contains('currency') -and $rateTable.PSObject.Properties.Name.Contains('price_basis') -and $rateTable.PSObject.Properties.Name.Contains('effective_date'))
+Assert-True '0m.rate_table_no_fabricated_url' ($null -eq $rateTable.rate_source_url -and $null -eq $rateTable.effective_date)
 
 # --- LIVE evidence ---
 $live = Read-Evidence 'STAGE-2A-LIVE-EVIDENCE.json'
