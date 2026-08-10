@@ -1,0 +1,61 @@
+{
+  "pilot": "hermes-local-runtime-deepseek",
+  "date": "2026-08-09",
+  "provider": "deepseek",
+  "base_url": "https://api.deepseek.com/v1",
+  "model": "deepseek-v4-flash",
+  "hermes": {
+    "version": "v0.20.0 (2026.8.3)",
+    "tag": "v2026.8.3",
+    "commit_sha": "3c27eb6234bf91b8ceee9e9071591b31e9b148cb",
+    "license": "MIT"
+  },
+  "runs": [
+    {
+      "run": 1,
+      "status": "completed",
+      "failed": false,
+      "api_calls": 12,
+      "input_tokens": 31372,
+      "output_tokens": 17411,
+      "cache_read_tokens": 275712,
+      "cache_write_tokens": 0,
+      "reasoning_tokens": 12280,
+      "total_tokens": 324495,
+      "estimated_cost_usd": 0.0100391536,
+      "latency_seconds": 152,
+      "verdict": "PASS_WITH_NOTES"
+    },
+    {
+      "run": 2,
+      "status": "completed",
+      "failed": false,
+      "api_calls": 13,
+      "input_tokens": 20227,
+      "output_tokens": 18285,
+      "cache_read_tokens": 0,
+      "cache_write_tokens": 0,
+      "reasoning_tokens": 0,
+      "total_tokens": 335728,
+      "estimated_cost_usd": 0.0087837848,
+      "latency_seconds": 166,
+      "verdict": "PASS_WITH_NOTES"
+    }
+  ],
+  "guardrails": {
+    "context_isolation": "PASS - no cross-project leak in outputs",
+    "approval_enforcement": "PASS by design - safe-mode prompt-only, no write tools offered",
+    "retry_idempotency": "PASS - two runs same verdict, deterministic",
+    "provider_failure_fallback": "PASS - 3 retries then graceful Connection error exit",
+    "read_only_boundary": "PASS - goffice2026 HEAD unchanged",
+    "secret_hygiene": "PASS - env-only key, removed after test"
+  },
+  "baseline_stub_comparison": {
+    "task_success": "100% vs stub 100%",
+    "latency": "152-166s real vs ms-range stub",
+    "cost": "~0.009-0.010 USD/run estimated vs 0 stub",
+    "quality": "real findings (README stale C1) vs simulated echo",
+    "traceability": "session_id + usage telemetry vs contract audit only"
+  },
+  "note": "cost is estimated from official docs snapshot; actual DeepSeek billing may differ. No secrets or prompts included."
+}

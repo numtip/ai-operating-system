@@ -644,7 +644,11 @@ function Select-CompilerContext {
 #   knowledge_index / adr_index = 400 + 10 per goal-token hit in path
 #   everything else = 300
 # Budgets: read from profile.context_budget (optional).
-#   max_files  : default = min(profile.context_limit_policy.max_context_refs, 10) else 10
+#   preferred_max_files : soft target for optional refs. Default =
+#     context_budget.max_files if present, else min(profile.context_limit_policy.max_context_refs, 10) else 10.
+#   hard_max_files      : absolute cap on total selected refs (required + optional).
+#     Default = preferred_max_files. Required refs are NEVER dropped; if required_count
+#     alone exceeds hard_max_files a warning is emitted (policy must be fixed by operator).
 #   max_tokens : default 0 = off; when > 0, budget_chars = max_tokens * 4 and
 #                optional entries cost (path.Length + source.Length + reason.Length + 16)
 # Required entries are NEVER dropped, regardless of budget.
@@ -733,16 +737,28 @@ function Optimize-CompilerContext {
     if ($profile -and ($profile.PSObject.Properties.Name -contains 'context_budget') -and $profile.context_budget) {
         $budgetCfg = $profile.context_budget
     }
-    $maxFiles = 10
+    # preferred (soft) limit for optional refs; required never dropped
+    $preferredMaxFiles = 10
     if ($profile -and $profile.context_limit_policy -and $profile.context_limit_policy.max_context_refs) {
         $parsed = 0
         if ([int]::TryParse([string]$profile.context_limit_policy.max_context_refs, [ref]$parsed)) {
-            $maxFiles = [Math]::Min($parsed, 10)
+            $preferredMaxFiles = [Math]::Min($parsed, 10)
         }
     }
-    if ($budgetCfg -and ($budgetCfg.PSObject.Properties.Name -contains 'max_files') -and $null -ne $budgetCfg.max_files) {
+    if ($budgetCfg -and ($budgetCfg.PSObject.Properties.Name -contains 'preferred_max_files') -and $null -ne $budgetCfg.preferred_max_files) {
         $parsed = 0
-        if ([int]::TryParse([string]$budgetCfg.max_files, [ref]$parsed)) { $maxFiles = $parsed }
+        if ([int]::TryParse([string]$budgetCfg.preferred_max_files, [ref]$parsed)) { $preferredMaxFiles = $parsed }
+    }
+    elseif ($budgetCfg -and ($budgetCfg.PSObject.Properties.Name -contains 'max_files') -and $null -ne $budgetCfg.max_files) {
+        # legacy single-limit field treated as the preferred limit
+        $parsed = 0
+        if ([int]::TryParse([string]$budgetCfg.max_files, [ref]$parsed)) { $preferredMaxFiles = $parsed }
+    }
+    # hard (absolute) cap on total selected refs; defaults to preferred
+    $hardMaxFiles = $preferredMaxFiles
+    if ($budgetCfg -and ($budgetCfg.PSObject.Properties.Name -contains 'hard_max_files') -and $null -ne $budgetCfg.hard_max_files) {
+        $parsed = 0
+        if ([int]::TryParse([string]$budgetCfg.hard_max_files, [ref]$parsed)) { if ($parsed -ge 1) { $hardMaxFiles = $parsed } }
     }
     $maxTokens = 0
     if ($budgetCfg -and ($budgetCfg.PSObject.Properties.Name -contains 'max_tokens') -and $null -ne $budgetCfg.max_tokens) {
@@ -775,7 +791,7 @@ function Optimize-CompilerContext {
     }
 
     $keptOptional = New-Object System.Collections.Generic.List[object]
-    $slotsLeft = $maxFiles - $requiredEntries.Count
+    $slotsLeft = $preferredMaxFiles - $requiredEntries.Count
     if ($slotsLeft -lt 0) { $slotsLeft = 0 }  # required overflow allowed; optional slots clamp to 0
     foreach ($o in $rankedOptional) {
         if ($null -eq $o) { continue }
@@ -803,13 +819,22 @@ function Optimize-CompilerContext {
         $final.Add($ko) | Out-Null
     }
 
+    # Hard cap enforcement (absolute; required never dropped — warn instead)
+    $hardCapBreached = $false
+    if ($hardMaxFiles -gt 0 -and $final.Count -gt $hardMaxFiles) {
+        $hardCapBreached = $true
+        $warnings.Add("hard_max_files=$hardMaxFiles < total_selected=$($final.Count); required refs kept (never dropped), optional dropped to 0; adjust policy if this persists")
+    }
+
     $budget = [ordered]@{
-        max_files       = $maxFiles
-        max_tokens      = $maxTokens
-        files_used      = $final.Count
-        files_rejected  = $rejected.Count
-        required_count  = $requiredEntries.Count
-        optional_kept   = $keptOptional.Count
+        preferred_max_files = $preferredMaxFiles
+        hard_max_files      = $hardMaxFiles
+        max_tokens          = $maxTokens
+        files_used          = $final.Count
+        files_rejected      = $rejected.Count
+        required_count      = $requiredEntries.Count
+        optional_kept       = $keptOptional.Count
+        hard_cap_breached   = $hardCapBreached
     }
 
     return [ordered]@{
@@ -1476,13 +1501,15 @@ function Invoke-PromptCompile {
             deterministic_hash       = $deterministicHash
             context_files_rejected   = $optRejected.Count
             optimization             = [ordered]@{
-                files_selected    = $contextPaths.Count
-                files_rejected    = $optRejected.Count
-                rejected          = @($optRejected)
-                budget_max_files  = $(if ($optBudget) { [int]$optBudget.max_files } else { 0 })
-                budget_max_tokens = $(if ($optBudget) { [int]$optBudget.max_tokens } else { 0 })
-                budget_files_used = $(if ($optBudget) { [int]$optBudget.files_used } else { 0 })
-                required_count    = $(if ($optBudget) { [int]$optBudget.required_count } else { 0 })
+                files_selected            = $contextPaths.Count
+                files_rejected            = $optRejected.Count
+                rejected                  = @($optRejected)
+                budget_preferred_max_files = $(if ($optBudget) { [int]$optBudget.preferred_max_files } else { 0 })
+                budget_hard_max_files      = $(if ($optBudget) { [int]$optBudget.hard_max_files } else { 0 })
+                budget_max_tokens          = $(if ($optBudget) { [int]$optBudget.max_tokens } else { 0 })
+                budget_files_used          = $(if ($optBudget) { [int]$optBudget.files_used } else { 0 })
+                required_count             = $(if ($optBudget) { [int]$optBudget.required_count } else { 0 })
+                hard_cap_breached          = $(if ($optBudget) { [bool]$optBudget.hard_cap_breached } else { $false })
             }
             quality_gate             = [ordered]@{
                 errors   = $gateErrorCount

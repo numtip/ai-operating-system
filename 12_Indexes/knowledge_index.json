@@ -39,6 +39,136 @@
                                  ]
                     },
                     {
+                        "id":  "blueprint-v4",
+                        "title":  "AI Operating System Blueprint v4.0 (accepted baseline)",
+                        "path":  "03_Architecture/AI_OPERATING_SYSTEM_BLUEPRINT_V4.md",
+                        "tags":  [
+                                     "canonical",
+                                     "architecture",
+                                     "v1.6",
+                                     "baseline"
+                                 ]
+                    },
+                    {
+                        "id":  "blueprint-v4.1",
+                        "title":  "AI Operating System Blueprint v4.1 (validated operating baseline)",
+                        "path":  "AI_OPERATING_SYSTEM_BLUEPRINT_V4.1_VALIDATED_OPERATING_BASELINE.md",
+                        "tags":  [
+                                     "canonical",
+                                     "architecture",
+                                     "v1.6",
+                                     "operating-baseline"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-design",
+                        "title":  "v1.6 Hermes Integration Design",
+                        "path":  "03_Architecture/GOFFICE2026_PILOT_DESIGN.md",
+                        "tags":  [
+                                     "architecture",
+                                     "v1.6",
+                                     "hermes",
+                                     "pilot"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-stage0-evidence",
+                        "title":  "GOFFICE2026 Pilot Stage 0 Evidence (read-only)",
+                        "path":  "06_Research/pilots/v1.6-hermes/goffice2026/STAGE-0-RESULTS.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "pilot",
+                                     "goffice2026",
+                                     "evidence",
+                                     "stage0"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-stage1-evidence",
+                        "title":  "GOFFICE2026 Pilot Stage 1 Evidence (stub, simulated)",
+                        "path":  "06_Research/pilots/v1.6-hermes/goffice2026/STAGE-1-RESULTS.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "pilot",
+                                     "goffice2026",
+                                     "evidence",
+                                     "stage1",
+                                     "stub",
+                                     "simulated"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-local-integration-validation",
+                        "title":  "Local Cross-Project Integration Validation Report",
+                        "path":  "06_Research/pilots/v1.6-hermes/LOCAL_INTEGRATION_VALIDATION_REPORT.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "integration",
+                                     "validation",
+                                     "readiness"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-hermes-preflight",
+                        "title":  "Hermes Preflight Report and Sandbox Design",
+                        "path":  "06_Research/pilots/v1.6-hermes/HERMES_PREFLIGHT_REPORT.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "preflight",
+                                     "sandbox"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-local-pilot-report",
+                        "title":  "Hermes Local Pilot Execution Report",
+                        "path":  "06_Research/pilots/v1.6-hermes/LOCAL_PILOT_REPORT.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "pilot",
+                                     "local",
+                                     "obsidian"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-local-runtime-report",
+                        "title":  "Hermes Local Runtime Pilot (DeepSeek) Report",
+                        "path":  "06_Research/pilots/v1.6-hermes/LOCAL_RUNTIME_REPORT.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "pilot",
+                                     "deepseek",
+                                     "runtime",
+                                     "evidence"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-full-audit-goffice2026",
+                        "title":  "GOFFICE2026 Full Read-Only Audit (2026-08-09)",
+                        "path":  "06_Research/pilots/v1.6-hermes/GOFFICE2026_FULL_READONLY_AUDIT_2026-08-09.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "goffice2026",
+                                     "audit",
+                                     "evidence"
+                                 ]
+                    },
+                    {
+                        "id":  "v1.6-full-audit-document-center",
+                        "title":  "Document Center Full Read-Only Audit (2026-08-09)",
+                        "path":  "06_Research/pilots/v1.6-hermes/DOCUMENT_CENTER_FULL_READONLY_AUDIT_2026-08-09.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "document-center",
+                                     "audit",
+                                     "evidence"
+                                 ]
+                    },
+                    {
                         "id":  "glossary",
                         "title":  "Glossary",
                         "path":  "02_Knowledge/GLOSSARY.md",

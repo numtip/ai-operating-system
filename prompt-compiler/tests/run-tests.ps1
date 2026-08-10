@@ -341,6 +341,31 @@ $unqHead = "# Head`n## Goal`nx`nUse api_key = abcdef1234567890 for the service c
 $g19b = Assert-PromptQualityGate -HeadPrompt $unqHead -Subagents $goodSub19 -Normalized $mockNorm19 -ProfileInfo $mockProf19
 Assert-True '19.unquoted_secret_error' (@($g19b.errors | Where-Object { $_ -match 'quality_gate' -and $_ -match 'secret' }).Count -ge 1) ($g19b.errors -join '; ')
 
+# --- 20. preferred/hard budget: required refs admissible up to hard_max_files ---
+$hardEntries = @()
+foreach ($p in @('07_Memory/OPERATING_RULES.md', '07_Memory/SYSTEM_MEMORY.md', '07_Memory/CURRENT_STATE.md', '12_Indexes/project_index.json', '12_Indexes/knowledge_index.json', '12_Indexes/adr_index.json', '01_Projects/goffice2026/ADAPTER.md', '03_Architecture/AI_OPERATING_SYSTEM_BLUEPRINT_V4.md')) {
+    $hardEntries += [ordered]@{ path = $p; source = 'bootstrap'; reason = 'required_doc'; required = $true }
+}
+$hardContext = [ordered]@{ selected = @($hardEntries); operating_rules = @(); index_hits = 0; warnings = @(); errors = @() }
+$mockNorm20 = [ordered]@{ goal = 'goffice2026 read-only audit'; constraints = @(); inferred_read_only = $true }
+$mockProf20 = [ordered]@{ profile = [pscustomobject]@{
+    context_limit_policy = [pscustomobject]@{ max_context_refs = 6 }
+    context_budget       = [pscustomobject]@{ preferred_max_files = 6; hard_max_files = 8; max_tokens = 0 }
+} }
+$opt20 = Optimize-CompilerContext -Context $hardContext -Normalized $mockNorm20 -ProfileInfo $mockProf20
+Assert-True '20.preferred_hard_all_required_kept' (@($opt20.selected).Count -eq 8) ("selected=$(@($opt20.selected).Count)")
+Assert-True '20.preferred_hard_no_breach' (-not $opt20.budget.hard_cap_breached) ("hard_cap_breached=$($opt20.budget.hard_cap_breached)")
+Assert-True '20.preferred_hard_reported' ($opt20.budget.preferred_max_files -eq 6 -and $opt20.budget.hard_max_files -eq 8) ("pref=$($opt20.budget.preferred_max_files) hard=$($opt20.budget.hard_max_files)")
+# hard cap breach path: required_count 9 > hard 8 -> warning, required kept
+$overEntries = @()
+foreach ($p in @('07_Memory/OPERATING_RULES.md', '07_Memory/SYSTEM_MEMORY.md', '07_Memory/CURRENT_STATE.md', '12_Indexes/project_index.json', '12_Indexes/knowledge_index.json', '12_Indexes/adr_index.json', '01_Projects/goffice2026/ADAPTER.md', '03_Architecture/AI_OPERATING_SYSTEM_BLUEPRINT_V4.md', '03_Architecture/ROADMAP.md')) {
+    $overEntries += [ordered]@{ path = $p; source = 'bootstrap'; reason = 'required_doc'; required = $true }
+}
+$overContext = [ordered]@{ selected = @($overEntries); operating_rules = @(); index_hits = 0; warnings = @(); errors = @() }
+$opt20b = Optimize-CompilerContext -Context $overContext -Normalized $mockNorm20 -ProfileInfo $mockProf20
+Assert-True '20.hard_cap_breach_warns' ($opt20b.budget.hard_cap_breached -and @($opt20b.warnings).Count -ge 1) ("breached=$($opt20b.budget.hard_cap_breached) warnings=$(@($opt20b.warnings).Count)")
+Assert-True '20.hard_cap_breach_required_kept' (@($opt20b.selected).Count -eq 9) ("selected=$(@($opt20b.selected).Count)")
+
 Write-Host ''
 Write-Host ("SUMMARY passed={0} failed={1} warnings_logged={2}" -f $passed, $failed, $warnings)
 if ($failed -gt 0) { exit 1 } else { exit 0 }

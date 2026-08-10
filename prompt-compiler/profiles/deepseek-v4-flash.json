@@ -8,7 +8,8 @@
     "omit_bodies": true
   },
   "context_budget": {
-    "max_files": 6,
+    "preferred_max_files": 6,
+    "hard_max_files": 8,
     "max_tokens": 0
   },
   "task_decomposition": "minimal-subagents; single-pass-when-possible",
