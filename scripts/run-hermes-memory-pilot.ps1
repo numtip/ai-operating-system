@@ -13,6 +13,9 @@
     triggers rollback of incomplete drafts.
   - Fail-closed: missing Hermes CLI, hash mismatch, secret leak, or out-of-allowlist
     write -> sanitized error code, draft rollback, exit non-zero (BLOCKED).
+  - Note materialization: Hermes generates the note; if the host's hermes write tools
+    are broken (known Windows/MSYS bash-wrapper issue), the orchestrator recovers the
+    complete note from Hermes's final response and writes it into 03_Memory/inbox/.
   - Retry: at most 1 retry after a non-zero Hermes exit (max 2 attempts total).
 .PARAMETER HermesCommand
   Hermes CLI command name or full path. Default: 'hermes'. If not found on PATH,
@@ -48,7 +51,12 @@ if (-not $ManifestPath) { $ManifestPath = Join-Path $PSScriptRoot 'hermes-memory
 $InboxDir = Join-Path $Root '03_Memory/inbox'
 $NotePath = Join-Path $InboxDir $NoteFilename
 $EvidencePath = Join-Path $Root '06_Research/pilots/v1.6-hermes/HERMES-MEMORY-PILOT-EVIDENCE.json'
-$ContextFile = Join-Path $env:TEMP ('hermes-memory-context-' + [guid]::NewGuid().ToString('N') + '.md')
+# Context file lives inside the (gitignored) .runtime/ dir of the repo so Hermes's
+# file toolset can resolve it relative to the worktree root (TEM P short paths
+# and out-of-worktree absolute paths proved unreadable in the live run).
+$RuntimeDir = Join-Path $Root '.runtime'
+$ContextFile = Join-Path $RuntimeDir ('hermes-memory-context-' + [guid]::NewGuid().ToString('N') + '.md')
+$ContextRel = '.runtime/' + [System.IO.Path]::GetFileName($ContextFile)
 
 $ExitOk = 0
 $ExitBlocked = 70
@@ -182,6 +190,33 @@ function Remove-DraftOutput {
     }
 }
 
+# Hermes -z prints the agent's final response to stdout. On this Windows host the
+# hermes write_file/patch tools are broken (bash wrapper emits a malformed command),
+# so when the note is not on disk we recover it from the final response (between the
+# frontmatter delimiters) and let the orchestrator materialize it. Fail-closed:
+# content is still validated (Test-NoteStructure + secret scan) before it counts.
+function Get-HermesNoteFromLog {
+    param([string]$LogPath)
+    if (-not (Test-Path -LiteralPath $LogPath -PathType Leaf)) { return '' }
+    $t = [System.IO.File]::ReadAllText($LogPath)
+    $start = $t.IndexOf("---`ntitle:")
+    if ($start -lt 0) {
+        $alt = $t.IndexOf("`ntitle:")
+        if ($alt -lt 0) { return '' }
+        $start = $t.LastIndexOf('---', $alt)
+        if ($start -lt 0) { $start = $alt + 1 }
+    }
+    $endMark = $t.IndexOf([string][char]0x26A0) # warning sign (verifier footer)
+    if ($endMark -lt 0) { $endMark = $t.IndexOf('File-mutation verifier') }
+    if ($endMark -lt 0) { $endMark = $t.Length }
+    $rel = $t.Substring($start, $endMark - $start)
+    $lines = @($rel -split "`n")
+    $lastSep = -1
+    for ($i = 0; $i -lt $lines.Count; $i++) { if ($lines[$i].Trim() -eq '---') { $lastSep = $i } }
+    if ($lastSep -gt 0) { $rel = ($lines[0..$lastSep] -join "`n") }
+    return $rel.Trim()
+}
+
 function Write-Evidence {
     param(
         [string]$Verdict,
@@ -190,8 +225,13 @@ function Write-Evidence {
         [int]$Attempts,
         [int]$LastExit,
         [string]$NotePath,
-        [string]$Invocation
+        [string]$Invocation,
+        [string]$UsageSummaryJson = ''
     )
+    $usageSummary = $null
+    if ($UsageSummaryJson) {
+        try { $usageSummary = ($UsageSummaryJson | ConvertFrom-Json) } catch { $usageSummary = $null }
+    }
     $ev = [ordered]@{
         schema_version    = '1.0'
         check             = 'hermes_obsidian_local_memory_pilot'
@@ -205,6 +245,18 @@ function Write-Evidence {
         note_path         = $NotePath
         timestamp_utc     = [DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ')
         note              = 'sanitized evidence; no key, no prompt transcript, no raw API payload stored'
+    }
+    if ($usageSummary) {
+        # numeric telemetry only (model, api_calls, token counts, estimated cost)
+        $ev.usage_summary = [ordered]@{
+            model            = [string]$usageSummary.model
+            api_calls        = $usageSummary.api_calls
+            input_tokens     = $usageSummary.input_tokens
+            output_tokens    = $usageSummary.output_tokens
+            cache_read_tokens = $usageSummary.cache_read_tokens
+            total_tokens     = $usageSummary.total_tokens
+            estimated_cost_usd = $usageSummary.estimated_cost_usd
+        }
     }
     $ev | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $EvidencePath -Encoding UTF8
 }
@@ -248,10 +300,15 @@ Write-Host 'PASS  deepseek_key_present_boolean_only'
 
 # Allowlist dir exists (create if missing - creation is the only allowed change here)
 New-Item -ItemType Directory -Path $InboxDir -Force | Out-Null
+# Runtime context dir (gitignored; Hermes read toolset resolves it within the worktree)
+New-Item -ItemType Directory -Path $RuntimeDir -Force | Out-Null
 $inboxBefore = Get-InboxState
-$gitBefore = (git.exe status --porcelain) -join "`n"
+$gitBefore = (git.exe status --porcelain -uall) -join "`n"
 
-# Build curated context (only manifest sources, never a repo crawl)
+# Build curated context (only manifest sources, never a repo crawl).
+# NOTE: Hermes file toolset on this Windows host cannot access G:\ paths at all
+# (read_file returns "File not found" even for .git\HEAD / README.md), so the
+# curated context is INLINED into the prompt (proven pattern from LOCAL_RUNTIME_REPORT).
 $contextLines = New-Object System.Collections.Generic.List[string]
 $contextLines.Add('# Curated Green Office context (AI-OS internal, read-only)') | Out-Null
 foreach ($s in @($manifest.source_files)) {
@@ -259,33 +316,38 @@ foreach ($s in @($manifest.source_files)) {
     $contextLines.Add("`n## SOURCE: $($s.path)  (sha256: $($s.sha256))") | Out-Null
     $contextLines.Add([System.IO.File]::ReadAllText($full)) | Out-Null
 }
-[System.IO.File]::WriteAllText($ContextFile, ($contextLines -join "`n"), [System.Text.Encoding]::UTF8)
-Write-Host "PASS  curated_context_built  $ContextFile ($((Get-Item -LiteralPath $ContextFile).Length) bytes)"
+$InlineContext = ($contextLines -join "`n")
+[System.IO.File]::WriteAllText($ContextFile, $InlineContext, [System.Text.Encoding]::UTF8)
+Write-Host "PASS  curated_context_built  inline ($($InlineContext.Length) chars)"
 
-# Hermes task instruction (kept separate from the context payload; never logged to repo)
+# Manifest-grounded sources block (paths + sha256) so the note's sources section
+# is verifiable even before Hermes parses the inline context.
+$SourcesBlock = (@($manifest.source_files) | ForEach-Object { $_.path + ' sha256=' + $_.sha256 }) -join '; '
+
+# Hermes task instruction. Single string, no double-quote characters (they break
+# native-argument marshalling); context + sources are inlined, no file reads needed.
 $PromptFile = Join-Path $env:TEMP ('hermes-memory-prompt-' + [guid]::NewGuid().ToString('N') + '.txt')
-$task = @"
-You are the Hermes execution runtime for the AI-OS local-memory pilot.
-Read the curated context file at: $ContextFile
-Write EXACTLY ONE new Markdown file into the Obsidian vault at:
-$NotePath
-The note must contain these sections (use these literal headers):
-- title: (one line)
-- date: (today UTC)
-- status: REVIEW_REQUIRED
-- verified_facts: (concise facts ONLY, each traceable to a manifest source; no invented claims)
-- open_decisions: (explicitly unresolved items)
-- next_actions: (concrete follow-ups)
-- sources: (list every manifest source path with its sha256)
-Rules: no secrets, no API keys, no raw prompt transcript, no raw API payload;
-only write the one file listed above; do not modify any other file.
-"@
+$UsageFile = [System.IO.Path]::GetFullPath((Join-Path $env:TEMP ('hermes-memory-usage-' + [guid]::NewGuid().ToString('N') + '.json')))
+$task = ("You are the Hermes execution runtime for the AI-OS local-memory pilot. " +
+    "Write EXACTLY ONE new Markdown file into the Obsidian vault at: " + $NotePath + " (relative: 03_Memory/inbox/" + $NoteFilename + ") . " +
+    "The note must contain these literal section headers: title: ; date: (today UTC); status: REVIEW_REQUIRED; " +
+    "verified_facts: (concise facts ONLY, each traceable to a manifest source; no invented claims); " +
+    "open_decisions: (explicitly unresolved items); next_actions: (concrete follow-ups); " +
+    "sources: (list every manifest source path with its sha256 - the authoritative manifest list is: " + $SourcesBlock + ") . " +
+    "CURATED CONTEXT (read it fully, it is your only factual input): " + $InlineContext + " . " +
+    "Rules: no secrets, no API keys, no raw prompt transcript, no raw API payload; " +
+    "only write the one file listed above; do not modify any other file. " +
+    "OUTPUT FORMAT: your FINAL response must be ONLY the complete Markdown note, " +
+    "starting with a line '---' then 'title: ...' and ending with the closing '---' after the sources: section; " +
+    "no preamble, no commentary, no code fences, no status report.")
+$task = $task -replace '"', "'"
 [System.IO.File]::WriteAllText($PromptFile, $task, [System.Text.Encoding]::UTF8)
 
 # ---------------------------------------------------------------------------
 # Hermes execution (exactly once; at most 1 retry)
 # ---------------------------------------------------------------------------
 $result = $null
+$Materialized = $false
 while ($Attempts -lt $MaxAttempts) {
     $Attempts++
     Write-Host ("ATTEMPT {0}/{1}  hermes run started" -f $Attempts, $MaxAttempts)
@@ -297,33 +359,82 @@ while ($Attempts -lt $MaxAttempts) {
         if ($parts.Count -gt 1) { $extra = $parts[1] }
         $args = @()
         if ($extra) { $args += $extra }
-        $args += @('-p', ('"' + $PromptFile + '"'))
-        $p = Start-Process -FilePath $exe -ArgumentList $args -NoNewWindow -Wait -PassThru `
-            -RedirectStandardOutput (Join-Path $env:TEMP 'hermes-memory-out.txt') `
-            -RedirectStandardError (Join-Path $env:TEMP 'hermes-memory-err.txt') -ErrorAction Stop
-        $LastExit = $p.ExitCode
+        # DeepSeek direct (bundled provider), pinned model, file-only toolset
+        # (read/write/patch/search - no terminal), usage telemetry.
+        # Direct invocation (not Start-Process): PowerShell's native-argument
+        # marshalling quotes the ~12 KB inlined prompt correctly.
+        $args += @(
+            '-z', $task,
+            '--provider', 'deepseek',
+            '--model', 'deepseek-v4-flash',
+            '--toolsets', 'file',
+            '--usage-file', $UsageFile,
+            '--cli'
+        )
+        $OutLog = Join-Path $env:TEMP ('hermes-memory-out-' + [guid]::NewGuid().ToString('N') + '.txt')
+        $ErrLog = Join-Path $env:TEMP ('hermes-memory-err-' + [guid]::NewGuid().ToString('N') + '.txt')
+        $lastOutLog = $OutLog
+        & $exe @args *> $OutLog
+        $LastExit = $LASTEXITCODE
     }
     catch {
         $SanitizedError = ($_.Exception.Message -replace 'sk-[a-zA-Z0-9]{10,}', '***' -replace 'Bearer\s+[a-zA-Z0-9._\-]{10,}', '***')
         $LastExit = 1
     }
     Write-Host ("ATTEMPT {0}  exit_code={1}" -f $Attempts, $LastExit)
-    if ($LastExit -eq 0) { break }
-    Write-Host "ATTEMPT $Attempts failed (exit=$LastExit); retrying once"
+    # Success = exit 0 AND the note exists on disk. Hermes cannot write files on
+    # this host (broken bash wrapper), so recover the note from its final response
+    # here and materialize it; this avoids a wasteful second attempt.
+    if ($LastExit -eq 0 -and -not (Test-Path -LiteralPath $NotePath -PathType Leaf)) {
+        $m = Get-HermesNoteFromLog -LogPath $OutLog
+        if ($m.Length -gt 0) {
+            [System.IO.File]::WriteAllText($NotePath, $m + "`n", [System.Text.Encoding]::UTF8)
+            $Materialized = $true
+            Write-Host 'PASS  note_materialized_from_hermes_response (hermes write_file broken on this host)'
+        }
+    }
+    if ($LastExit -eq 0 -and (Test-Path -LiteralPath $NotePath -PathType Leaf)) { break }
+    Write-Host "ATTEMPT $Attempts did not produce the note (exit=$LastExit); retrying once"
 }
 
 # ---------------------------------------------------------------------------
 # Post-run audit + validation
 # ---------------------------------------------------------------------------
-$gitAfter = (git.exe status --porcelain) -join "`n"
+# (Materialization of the note from Hermes's final response, when Hermes's own
+# write tools are broken on this Windows/MSYS host, happens inside the attempt
+# loop so a recovered note stops retries. Content provenance: Hermes. The note
+# is still validated and the write-allowlist audit still applies.)
+$gitAfter = (git.exe status --porcelain -uall) -join "`n"
 $inboxAfter = Get-InboxState
 $noteExists = Test-Path -LiteralPath $NotePath -PathType Leaf
 
-# Write allowlist audit: any change outside 03_Memory/inbox/ is a fail
-$allowedChanges = @()
+# Sanitized usage telemetry from --usage-file (numeric only; never prompt content)
+$UsageSummaryJson = ''
+if (Test-Path -LiteralPath $UsageFile -PathType Leaf) {
+    try {
+        $raw = [System.IO.File]::ReadAllText($UsageFile)
+        # keep only known-safe numeric/identifier fields
+        $u = $raw | ConvertFrom-Json
+        $UsageSummaryJson = ([ordered]@{
+            model            = [string]$u.model
+            api_calls        = $u.api_calls
+            input_tokens     = $u.input_tokens
+            output_tokens    = $u.output_tokens
+            cache_read_tokens = $u.cache_read_tokens
+            total_tokens     = $u.total_tokens
+            estimated_cost_usd = $u.estimated_cost_usd
+        } | ConvertTo-Json -Compress)
+    }
+    catch { $UsageSummaryJson = '' }
+}
+
+# Write allowlist audit: any change outside 03_Memory/inbox/ (and not already in the
+# baseline working tree before the run) is a fail.
 $violations = New-Object System.Collections.Generic.List[string]
+$baselineLines = @($gitBefore -split "`n" | Where-Object { $_ -ne '' })
 $gitLinesAfter = @($gitAfter -split "`n" | Where-Object { $_ -ne '' })
 foreach ($line in $gitLinesAfter) {
+    if ($baselineLines -contains $line) { continue }
     $pathPart = ($line -replace '^\?\? ', '' -replace '^[ MADRCU?!]{2} ', '')
     if ($pathPart -like '03_Memory/inbox/*') { continue }
     $violations.Add('out_of_allowlist: ' + $pathPart) | Out-Null
@@ -367,11 +478,12 @@ elseif ($violations.Count -gt 0) {
 if ($verdict -eq 'BLOCKED') {
     if ($noteExists) { Remove-DraftOutput }
     Write-Host ("BLOCKED  {0}  error_code={1}" -f $BlockedReason, $errorCode)
-    Write-Evidence -Verdict $verdict -Reason $BlockedReason -ErrorCode $errorCode -Attempts $Attempts -LastExit $LastExit -NotePath $NotePath -Invocation $HermesInvocation
+    Write-Evidence -Verdict $verdict -Reason $BlockedReason -ErrorCode $errorCode -Attempts $Attempts -LastExit $LastExit -NotePath $NotePath -Invocation $HermesInvocation -UsageSummaryJson $UsageSummaryJson
     exit $ExitBlocked
 }
 
 Write-Host "PASS  write_allowlist  only 03_Memory/inbox/ touched"
 Write-Host "PASS  note_created  $NotePath"
-Write-Evidence -Verdict $verdict -Reason 'complete' -ErrorCode '' -Attempts $Attempts -LastExit $LastExit -NotePath $NotePath -Invocation $HermesInvocation
+$passReason = if ($Materialized) { 'complete; note materialized by orchestrator from Hermes final response (hermes write_file broken on this Windows host)' } else { 'complete; note written by Hermes' }
+Write-Evidence -Verdict $verdict -Reason $passReason -ErrorCode '' -Attempts $Attempts -LastExit $LastExit -NotePath $NotePath -Invocation $HermesInvocation -UsageSummaryJson $UsageSummaryJson
 exit $ExitOk
