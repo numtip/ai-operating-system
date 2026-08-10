@@ -1,0 +1,14 @@
+﻿{
+    "schema_version":  "1.0",
+    "check":  "hermes_obsidian_local_memory_pilot",
+    "verdict":  "BLOCKED",
+    "reason":  "Hermes CLI not found and no existing install discovered (install is out of scope)",
+    "error_code":  "HERMES_CLI_NOT_FOUND",
+    "attempts":  0,
+    "last_exit_code":  0,
+    "hermes_invocation":  "hermes",
+    "allowlist_dir":  "03_Memory/inbox",
+    "note_path":  "G:\\projectAi\\ai-operating-system\\03_Memory\\inbox\\GOFFICE-OPERATIONAL-MEMORY-DRAFT.md",
+    "timestamp_utc":  "2026-08-10T04:08:16Z",
+    "note":  "sanitized evidence; no key, no prompt transcript, no raw API payload stored"
+}

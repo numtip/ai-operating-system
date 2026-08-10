@@ -1,0 +1,32 @@
+{
+    "schema_version": "1.0",
+    "purpose": "curated input manifest for the Hermes local-memory pilot (Green Office context, max 3 source files)",
+    "source_files": [
+        {
+            "path": "01_Projects/goffice2026/README.md",
+            "sha256": "ce0ad397f2338c5c65587b4779958b36cab8a3bf181ad26caf66dbef7672ddfb"
+        },
+        {
+            "path": "01_Projects/goffice2026/ADAPTER.md",
+            "sha256": "53a5d3b194616ad8ffd4003201b7872b51fc2fb6107e84bbf36ad6a235da5cae"
+        },
+        {
+            "path": "03_Architecture/GOFFICE2026_PILOT_DESIGN.md",
+            "sha256": "7e7a6de4222434b22fad2041c6349b44c6fd2d06e36e42a3d164376a3d5ffdc4"
+        }
+    ],
+    "output": {
+        "allowlist_dir": "03_Memory/inbox",
+        "max_notes": 1,
+        "note_required_fields": [
+            "title",
+            "date",
+            "status",
+            "verified_facts",
+            "open_decisions",
+            "next_actions",
+            "sources"
+        ],
+        "note_status": "REVIEW_REQUIRED"
+    }
+}
