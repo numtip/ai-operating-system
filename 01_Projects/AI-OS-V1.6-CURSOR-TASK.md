@@ -1,8 +1,8 @@
 # AI-OS v1.6 — Cursor Execution Brief
 
-**Mode:** token-efficient / evidence-first  
-**Branch:** `integration/v1.6-hermes-first`  
-**Goal:** Accept Blueprint v4 baseline, remove architecture drift, then prepare Hermes compatibility integration.  
+**Mode:** token-efficient / evidence-first
+**Branch:** `integration/v1.6-hermes-first`
+**Goal:** Accept Blueprint v4 baseline, remove architecture drift, then prepare Hermes compatibility integration.
 **STOP:** Do NOT install Hermes, change secrets, deploy, change DNS, or mutate production.
 
 ## Required read — only these first

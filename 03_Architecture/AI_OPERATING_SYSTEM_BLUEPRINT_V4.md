@@ -5,8 +5,8 @@
 **Status:** Architecture Baseline — Accepted for v1.6
 **Accepted:** 2026-08-09
 **Date:** 2026-08-09
-**Repository:** `numtip/ai-operating-system`  
-**Target:** AI-OS v1.6+  
+**Repository:** `numtip/ai-operating-system`
+**Target:** AI-OS v1.6+
 **Architecture direction:** Integration-first, vendor-neutral, governed digital workforce
 
 > **Mission**
