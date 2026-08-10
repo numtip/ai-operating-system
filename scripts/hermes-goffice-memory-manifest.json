@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "purpose": "curated input manifest for Hermes GOFFICE2026 operational memory briefing (read-only; external repo sources; max 5 source files; context sized under Windows command-line limit)",
+  "source_files": [
+    {
+      "path": "G:/ProjectAI/goffice2026/docs/handoff/GO-DASH-V2-HANDOFF-2026-08-07.md",
+      "sha256": "a1c1ae4baf683def77e135d76ec6e83721998a625825f82097828592d2c61dc2"
+    },
+    {
+      "path": "G:/ProjectAI/goffice2026/docs/handoff/GO-DASH-V2-PHASE-B-HANDOFF-2026-08-08.md",
+      "sha256": "846601ac23b6c1fee6497d32807898dd701a2e0319e6ca2518acee1cc398d1ad"
+    },
+    {
+      "path": "G:/ProjectAI/goffice2026/docs/context-packs/GREENOFFICE_2569_CONTEXT.md",
+      "sha256": "7fc38577e35e0eba0ab5bdcc62f536301441347f72a559433ae5a7a1283de7b8"
+    },
+    {
+      "path": "G:/ProjectAI/goffice2026/docs/data/GO-DATA-3-PHASE2-DESIGN.md",
+      "sha256": "998e436a25ee9c6521f1bc0f06163027f419d55ad0ccc035366e28934b99c579"
+    }
+  ],
+  "output": {
+    "allowlist_dir": "03_Memory/inbox",
+    "max_notes": 1,
+    "note_required_fields": [
+      "title",
+      "date",
+      "status",
+      "verified_facts",
+      "open_decisions",
+      "next_actions",
+      "sources"
+    ],
+    "note_status": "REVIEW_REQUIRED"
+  }
+}

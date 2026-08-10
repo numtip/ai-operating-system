@@ -28,6 +28,14 @@
   Per-attempt timeout for the Hermes call (default 300).
 .PARAMETER NoteFilename
   Fixed output filename inside 03_Memory/inbox/ (default GOFFICE-OPERATIONAL-MEMORY-DRAFT.md).
+.PARAMETER ExternalRepoPath
+  Optional absolute path of a read-only external repo (e.g. G:\ProjectAI\goffice2026).
+  When set, a git write-audit of that repo runs before/after the Hermes call and
+  its result is recorded; any tracked/untracked change outside the AI-OS inbox fails.
+.PARAMETER EvidencePath
+  Evidence JSON output. Default: 06_Research/pilots/v1.6-hermes/HERMES-MEMORY-PILOT-EVIDENCE.json.
+.PARAMETER PassVerdict
+  Verdict string recorded on success. Default: HERMES_OBSIDIAN_LOCAL_MEMORY_PASS.
 .EXAMPLE
   powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run-hermes-memory-pilot.ps1
 #>
@@ -37,7 +45,10 @@ param(
     [string]$ManifestPath = '',
     [int]$MaxAttempts = 2,
     [int]$TimeoutSec = 300,
-    [string]$NoteFilename = 'GOFFICE-OPERATIONAL-MEMORY-DRAFT.md'
+    [string]$NoteFilename = 'GOFFICE-OPERATIONAL-MEMORY-DRAFT.md',
+    [string]$ExternalRepoPath = '',
+    [string]$EvidencePath = '',
+    [string]$PassVerdict = 'HERMES_OBSIDIAN_LOCAL_MEMORY_PASS'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -48,9 +59,9 @@ $ProgressPreference = 'SilentlyContinue'
 # ---------------------------------------------------------------------------
 $Root = [string](Resolve-Path (Join-Path $PSScriptRoot '..'))
 if (-not $ManifestPath) { $ManifestPath = Join-Path $PSScriptRoot 'hermes-memory-pilot-manifest.json' }
+if (-not $EvidencePath) { $EvidencePath = Join-Path $Root '06_Research/pilots/v1.6-hermes/HERMES-MEMORY-PILOT-EVIDENCE.json' }
 $InboxDir = Join-Path $Root '03_Memory/inbox'
 $NotePath = Join-Path $InboxDir $NoteFilename
-$EvidencePath = Join-Path $Root '06_Research/pilots/v1.6-hermes/HERMES-MEMORY-PILOT-EVIDENCE.json'
 # Context file lives inside the (gitignored) .runtime/ dir of the repo so Hermes's
 # file toolset can resolve it relative to the worktree root (TEM P short paths
 # and out-of-worktree absolute paths proved unreadable in the live run).
@@ -74,17 +85,26 @@ function Write-Result {
 
 function Get-Manifest {
     $m = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
-    if (@($m.source_files).Count -lt 1 -or @($m.source_files).Count -gt 3) {
-        throw "manifest must pin between 1 and 3 source files (got $(@($m.source_files).Count))"
+    if (@($m.source_files).Count -lt 1 -or @($m.source_files).Count -gt 5) {
+        throw "manifest must pin between 1 and 5 source files (got $(@($m.source_files).Count))"
     }
     return $m
+}
+
+function Resolve-SourcePath {
+    param([string]$Path)
+    # Absolute paths (e.g. external repo G:\ProjectAI\goffice2026\...) are used
+    # as-is; relative paths resolve against the AI-OS repo root.
+    $isAbs = [System.IO.Path]::IsPathRooted($Path)
+    if ($isAbs) { return $Path }
+    return Join-Path $Root $Path
 }
 
 function Test-SourceIntegrity {
     param($Manifest)
     $ok = $true
     foreach ($s in @($Manifest.source_files)) {
-        $full = Join-Path $Root $s.path
+        $full = Resolve-SourcePath -Path $s.path
         if (-not (Test-Path -LiteralPath $full -PathType Leaf)) {
             Write-Host "FAIL  source_missing  $($s.path)"; $ok = $false; continue
         }
@@ -226,7 +246,9 @@ function Write-Evidence {
         [int]$LastExit,
         [string]$NotePath,
         [string]$Invocation,
-        [string]$UsageSummaryJson = ''
+        [string]$UsageSummaryJson = '',
+        [string]$ExternalRepo = '',
+        [string]$ExternalHead = ''
     )
     $usageSummary = $null
     if ($UsageSummaryJson) {
@@ -245,6 +267,13 @@ function Write-Evidence {
         note_path         = $NotePath
         timestamp_utc     = [DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ')
         note              = 'sanitized evidence; no key, no prompt transcript, no raw API payload stored'
+    }
+    if ($ExternalRepo) {
+        $ev.external_repo_write_audit = [ordered]@{
+            repo_path = $ExternalRepo
+            head      = $ExternalHead
+            result    = if ($externalViolations.Count -eq 0) { 'UNCHANGED' } else { 'CHANGED' }
+        }
     }
     if ($usageSummary) {
         # numeric telemetry only (model, api_calls, token counts, estimated cost)
@@ -305,6 +334,22 @@ New-Item -ItemType Directory -Path $RuntimeDir -Force | Out-Null
 $inboxBefore = Get-InboxState
 $gitBefore = (git.exe status --porcelain -uall) -join "`n"
 
+# External repo (read-only) write-audit baseline. When ExternalRepoPath is set,
+# its full git status is snapshotted; any delta after the run fails the pilot.
+$externalBefore = ''
+$externalAfter = ''
+$externalViolations = New-Object System.Collections.Generic.List[string]
+if ($ExternalRepoPath -and (Test-Path -LiteralPath $ExternalRepoPath -PathType Container)) {
+    Write-Host "EXTERNAL  audit baseline  $ExternalRepoPath"
+    Push-Location $ExternalRepoPath
+    try {
+        $externalBefore = (git.exe status --porcelain -uall 2>$null) -join "`n"
+        $externalHead = (git.exe rev-parse HEAD 2>$null)
+        Write-Host ("EXTERNAL  HEAD={0}  status_lines={1}  tracked_changes={2}" -f $externalHead, (@($externalBefore -split "`n" | Where-Object {$_ -ne ''}).Count), (@($externalBefore -split "`n" | Where-Object { $_ -match '^ M|^A |^D |^R |^C ' }).Count))
+    }
+    finally { Pop-Location }
+}
+
 # Build curated context (only manifest sources, never a repo crawl).
 # NOTE: Hermes file toolset on this Windows host cannot access G:\ paths at all
 # (read_file returns "File not found" even for .git\HEAD / README.md), so the
@@ -312,7 +357,7 @@ $gitBefore = (git.exe status --porcelain -uall) -join "`n"
 $contextLines = New-Object System.Collections.Generic.List[string]
 $contextLines.Add('# Curated Green Office context (AI-OS internal, read-only)') | Out-Null
 foreach ($s in @($manifest.source_files)) {
-    $full = Join-Path $Root $s.path
+    $full = Resolve-SourcePath -Path $s.path
     $contextLines.Add("`n## SOURCE: $($s.path)  (sha256: $($s.sha256))") | Out-Null
     $contextLines.Add([System.IO.File]::ReadAllText($full)) | Out-Null
 }
@@ -408,6 +453,28 @@ $gitAfter = (git.exe status --porcelain -uall) -join "`n"
 $inboxAfter = Get-InboxState
 $noteExists = Test-Path -LiteralPath $NotePath -PathType Leaf
 
+# External repo (read-only) write-audit after the run: HEAD must be unchanged and
+# the git status must be byte-identical to the baseline.
+if ($ExternalRepoPath -and (Test-Path -LiteralPath $ExternalRepoPath -PathType Container)) {
+    Push-Location $ExternalRepoPath
+    try {
+        $externalAfter = (git.exe status --porcelain -uall 2>$null) -join "`n"
+        $externalHeadAfter = (git.exe rev-parse HEAD 2>$null)
+        if ($externalAfter -ne $externalBefore) {
+            $externalViolations.Add('external_repo_git_status_changed') | Out-Null
+            Write-Host "FAIL  external_write_audit  goffice2026 git status changed (baseline diff)"
+        }
+        if ($externalHeadAfter -ne $externalHead) {
+            $externalViolations.Add('external_repo_head_changed') | Out-Null
+            Write-Host "FAIL  external_head_changed  $externalHead -> $externalHeadAfter"
+        }
+        else {
+            Write-Host "PASS  external_write_audit  HEAD unchanged $externalHeadAfter; status identical to baseline"
+        }
+    }
+    finally { Pop-Location }
+}
+
 # Sanitized usage telemetry from --usage-file (numeric only; never prompt content)
 $UsageSummaryJson = ''
 if (Test-Path -LiteralPath $UsageFile -PathType Leaf) {
@@ -457,7 +524,7 @@ else {
 # ---------------------------------------------------------------------------
 # Verdict
 # ---------------------------------------------------------------------------
-$verdict = 'HERMES_OBSIDIAN_LOCAL_MEMORY_PASS'
+$verdict = $PassVerdict
 $errorCode = ''
 if ($LastExit -ne 0) {
     $verdict = 'BLOCKED'
@@ -474,16 +541,21 @@ elseif ($violations.Count -gt 0) {
     $errorCode = 'WRITE_ALLOWLIST_VIOLATION'
     $BlockedReason = 'Hermes wrote outside 03_Memory/inbox/'
 }
+elseif ($externalViolations.Count -gt 0) {
+    $verdict = 'BLOCKED'
+    $errorCode = 'EXTERNAL_REPO_WRITE_VIOLATION'
+    $BlockedReason = 'external repo changed: ' + ($externalViolations -join '; ')
+}
 
 if ($verdict -eq 'BLOCKED') {
     if ($noteExists) { Remove-DraftOutput }
     Write-Host ("BLOCKED  {0}  error_code={1}" -f $BlockedReason, $errorCode)
-    Write-Evidence -Verdict $verdict -Reason $BlockedReason -ErrorCode $errorCode -Attempts $Attempts -LastExit $LastExit -NotePath $NotePath -Invocation $HermesInvocation -UsageSummaryJson $UsageSummaryJson
+    Write-Evidence -Verdict $verdict -Reason $BlockedReason -ErrorCode $errorCode -Attempts $Attempts -LastExit $LastExit -NotePath $NotePath -Invocation $HermesInvocation -UsageSummaryJson $UsageSummaryJson -ExternalRepo $ExternalRepoPath -ExternalHead $externalHead
     exit $ExitBlocked
 }
 
 Write-Host "PASS  write_allowlist  only 03_Memory/inbox/ touched"
 Write-Host "PASS  note_created  $NotePath"
 $passReason = if ($Materialized) { 'complete; note materialized by orchestrator from Hermes final response (hermes write_file broken on this Windows host)' } else { 'complete; note written by Hermes' }
-Write-Evidence -Verdict $verdict -Reason $passReason -ErrorCode '' -Attempts $Attempts -LastExit $LastExit -NotePath $NotePath -Invocation $HermesInvocation -UsageSummaryJson $UsageSummaryJson
+Write-Evidence -Verdict $verdict -Reason $passReason -ErrorCode '' -Attempts $Attempts -LastExit $LastExit -NotePath $NotePath -Invocation $HermesInvocation -UsageSummaryJson $UsageSummaryJson -ExternalRepo $ExternalRepoPath -ExternalHead $externalHead
 exit $ExitOk
