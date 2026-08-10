@@ -1,0 +1,76 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "AI-OS Stage 2A Comparable-Run Evidence",
+    "description": "Evidence schema for 3 comparable L0/L1 read-only runs. All cost figures are estimates and must be marked UNVERIFIED_RATE until a confirmed provider rate source exists.",
+    "type": "object",
+    "required": ["schema_version", "protocol", "provider", "model", "task_fingerprint", "cap", "runs"],
+    "properties": {
+        "schema_version": { "type": "string", "const": "1.0" },
+        "protocol": {
+            "type": "object",
+            "required": ["id", "task", "mode", "tolerance_pct"],
+            "properties": {
+                "id": { "type": "string", "const": "stage-2a-comparable-run-v1" },
+                "task": { "type": "string", "description": "identical task text across all 3 runs" },
+                "mode": { "type": "string", "enum": ["LIVE", "MOCK"] },
+                "tolerance_pct": { "type": "number", "description": "accepted variance between local telemetry and provider billing (%)" }
+            }
+        },
+        "provider": { "type": "string" },
+        "model": { "type": "string" },
+        "task_fingerprint": { "type": "string", "description": "deterministic SHA-256 of prompt + context paths + model" },
+        "cap": {
+            "type": "object",
+            "required": ["cap_usd", "cap_total_tokens"],
+            "properties": {
+                "cap_usd": { "type": "number", "description": "per-run USD cap; 0 = disabled" },
+                "cap_total_tokens": { "type": "integer", "description": "per-run total-token cap; 0 = disabled" }
+            }
+        },
+        "rate_status": { "type": "string", "enum": ["UNVERIFIED_RATE", "VERIFIED"] },
+        "rate_source": { "type": "string" },
+        "runs": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+                "type": "object",
+                "required": ["run_id", "timestamp_utc", "api_calls", "usage", "estimated_cost_usd", "budget_decision", "verdict"],
+                "properties": {
+                    "run_id": { "type": "string" },
+                    "timestamp_utc": { "type": "string", "format": "date-time" },
+                    "api_calls": { "type": "integer" },
+                    "usage": {
+                        "type": "object",
+                        "required": ["input_tokens", "output_tokens", "total_tokens"],
+                        "properties": {
+                            "input_tokens": { "type": "integer" },
+                            "output_tokens": { "type": "integer" },
+                            "cache_read_tokens": { "type": "integer" },
+                            "cache_write_tokens": { "type": "integer" },
+                            "reasoning_tokens": { "type": "integer" },
+                            "total_tokens": { "type": "integer" }
+                        }
+                    },
+                    "estimated_cost_usd": { "type": ["number", "null"] },
+                    "unverified_rate": { "type": "boolean" },
+                    "budget_decision": { "type": "string", "enum": ["ALLOW", "BUDGET_EXCEEDED"] },
+                    "stop_result": { "type": ["string", "null"], "enum": ["BUDGET_EXCEEDED", null] },
+                    "latency_seconds": { "type": "number" },
+                    "verdict": { "type": "string" },
+                    "redacted": { "type": "boolean", "const": true }
+                }
+            }
+        },
+        "billing_reconciliation": {
+            "type": ["object", "null"],
+            "description": "human-entered from provider billing; agent never accesses billing accounts",
+            "properties": {
+                "billed_usd": { "type": "number" },
+                "variance_pct": { "type": ["number", "null"] },
+                "within_tolerance": { "type": ["boolean", "null"] },
+                "filled_by_human_at": { "type": ["string", "null"] }
+            }
+        }
+    }
+}
