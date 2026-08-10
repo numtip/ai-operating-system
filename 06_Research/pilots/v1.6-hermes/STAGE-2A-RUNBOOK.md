@@ -47,9 +47,14 @@ that is itself a valid stop-behavior evidence).
 
 A live run is allowed **only** when **all** hold:
 
-- [ ] Existing configured Hermes + DeepSeek API key are present without creating or
-      editing any secret file (no `.env` creation, no new key).
-- [ ] Owner explicitly confirms the live run in a session (approval recorded below).
+- [ ] Preflight `Invoke-Stage2aPreflight` passes: external secret file
+      `%LOCALAPPDATA%\AI-OS\stage2a.env` exists, `DEEPSEEK_API_KEY` non-empty
+      (value never read/printed by AI), no key leak in repo/diff/evidence/logs,
+      run config (model `deepseek-v4-flash`, `cap_usd`, `cap_total_tokens`,
+      `max_output_tokens`) is set. Run with:
+      `powershell -NoProfile -ExecutionPolicy Bypass -File prompt-compiler/tests/run-tests-stage2a-hardening.ps1`
+- [ ] Secrets are loaded only via `prompt-compiler/runtime/Secret-Loader.ps1`
+      from the external file when spawning the child process; never logged.
 - [ ] No sensitive/target-project data is sent; task is a synthetic or AI-OS-internal
       L0/L1 read-only task.
 - [ ] Per-run caps are set; `BUDGET_EXCEEDED` stop behavior is exercised on run N.
