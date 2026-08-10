@@ -2,7 +2,7 @@
     "schema_version":  "1.0",
     "protocol":  {
                      "id":  "stage-2a-comparable-run-v1",
-                     "task":  "Reply with the single token OK.",
+                     "task_class":  "synthetic_api_key_validation",
                      "mode":  "LIVE",
                      "tolerance_pct":  20
                  },
