@@ -1,6 +1,6 @@
-<#
+﻿<#
 .SYNOPSIS
-  AI-OS Stage 2A Cost Telemetry + Budget Guard (v0.1) — no LLM, no network, no secrets.
+  AI-OS Stage 2A Cost Telemetry + Budget Guard (v0.1) -- no LLM, no network, no secrets.
 .DESCRIPTION
   Deterministic helpers for cost observability on governed L0/L1 read-only runs:
 
@@ -288,7 +288,7 @@ function New-CostRunRecord {
 }
 
 # ---------------------------------------------------------------------------
-# Budget guard — preflight + in-run
+# Budget guard -- preflight + in-run
 # ---------------------------------------------------------------------------
 
 function Invoke-CostBudgetPreflight {

@@ -1,6 +1,6 @@
-<#
+﻿<#
 .SYNOPSIS
-  AI-OS Stage 2A Secret Loader + Preflight (v0.1) — external-file only, no logging.
+  AI-OS Stage 2A Secret Loader + Preflight (v0.1) -- external-file only, no logging.
 .DESCRIPTION
   Secrets for the bounded live test are loaded ONLY from an owner-only file
   OUTSIDE the repository:  %LOCALAPPDATA%\AI-OS\stage2a.env
@@ -55,7 +55,7 @@ function Test-ExternalSecretFile {
 }
 
 # ---------------------------------------------------------------------------
-# Loader — read ONLY for child-process env construction; never log values
+# Loader -- read ONLY for child-process env construction; never log values
 # ---------------------------------------------------------------------------
 
 function Get-ExternalSecretEnv {
@@ -108,7 +108,7 @@ function Get-Stage2aRunConfig {
 }
 
 # ---------------------------------------------------------------------------
-# Leak scan — searches for the key VALUE without printing it
+# Leak scan -- searches for the key VALUE without printing it
 # ---------------------------------------------------------------------------
 
 function Test-KeyLeakedInRepo {
@@ -140,7 +140,7 @@ function Test-KeyLeakedInRepo {
     }
     catch { }
 
-    # untracked files (working tree) — catches planted leaks
+    # untracked files (working tree) -- catches planted leaks
     try {
         $untracked = & $git -C $RepoRoot ls-files --others --exclude-standard 2>$null
         foreach ($f in $untracked) {
@@ -179,7 +179,7 @@ function Test-KeyLeakedInRepo {
 }
 
 # ---------------------------------------------------------------------------
-# Preflight — value-safe (never returns the key)
+# Preflight -- value-safe (never returns the key)
 # ---------------------------------------------------------------------------
 
 function Invoke-Stage2aPreflight {
@@ -228,7 +228,7 @@ function Invoke-Stage2aPreflight {
         $leak = Test-KeyLeakedInRepo -KeyValue ([string]$map['DEEPSEEK_API_KEY']) -RepoRoot $RepoRoot
     }
     $c3Status = 'FAIL'
-    $c3Detail = 'KEY VALUE FOUND in tracked files/diff/evidence/logs — hard stop'
+    $c3Detail = 'KEY VALUE FOUND in tracked files/diff/evidence/logs -- hard stop'
     if (-not $leak) {
         $c3Status = 'PASS'
         $c3Detail = 'key value not found in tracked files, diff, evidence, or logs'

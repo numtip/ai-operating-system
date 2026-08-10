@@ -1,0 +1,129 @@
+{
+    "schema_version":  "1.0",
+    "protocol":  {
+                     "id":  "stage-2a-comparable-run-v1",
+                     "task":  "Reply with the single token OK.",
+                     "mode":  "LIVE",
+                     "tolerance_pct":  20
+                 },
+    "provider":  "deepseek",
+    "model":  "deepseek-v4-flash",
+    "task_fingerprint":  "9e131246eddf321a624516167ba3174307093bf1e56c572f22a6b831647ce3ef",
+    "cap":  {
+                "cap_usd":  0.02,
+                "cap_total_tokens":  500000,
+                "max_output_tokens":  2000
+            },
+    "rate_status":  "UNVERIFIED_RATE",
+    "rate_source":  "official pricing docs snapshot -- NOT confirmed by owner or provider billing; verify before any spend decision",
+    "runs":  [
+                 {
+                     "run_id":  "run-9d1a814765d407ef",
+                     "timestamp_utc":  "2026-08-10T03:24:59Z",
+                     "provider":  "deepseek",
+                     "model":  "deepseek-v4-flash",
+                     "api_calls":  1,
+                     "task_fingerprint":  "9e131246eddf321a624516167ba3174307093bf1e56c572f22a6b831647ce3ef",
+                     "usage":  {
+                                   "input_tokens":  90,
+                                   "output_tokens":  10,
+                                   "cache_read_tokens":  0,
+                                   "cache_write_tokens":  0,
+                                   "reasoning_tokens":  0,
+                                   "total_tokens":  100
+                               },
+                     "estimated_cost_usd":  3.53E-05,
+                     "unverified_rate":  true,
+                     "rate_status":  "UNVERIFIED_RATE",
+                     "rate_source":  "official pricing docs snapshot — NOT confirmed by owner or provider billing; verify before any spend decision",
+                     "assumptions":  [
+                                         "tokens are provider-reported usage fields (input/output/cache/reasoning)",
+                                         "cache_read_tokens billed at cache-read rate when provided; otherwise treated as input",
+                                         "estimate is a planning figure only and is NOT a billing fact",
+                                         "rate status = UNVERIFIED_RATE; verify rates against provider billing before any spend decision"
+                                     ],
+                     "budget_cap_usd":  0.02,
+                     "budget_cap_tokens":  500000,
+                     "budget_decision":  "ALLOW",
+                     "stop_result":  null,
+                     "verdict":  "ALLOW",
+                     "prompt_stored":  false,
+                     "raw_response_stored":  false
+                 },
+                 {
+                     "run_id":  "run-2f319a6468e77020",
+                     "timestamp_utc":  "2026-08-10T03:25:00Z",
+                     "provider":  "deepseek",
+                     "model":  "deepseek-v4-flash",
+                     "api_calls":  1,
+                     "task_fingerprint":  "9e131246eddf321a624516167ba3174307093bf1e56c572f22a6b831647ce3ef",
+                     "usage":  {
+                                   "input_tokens":  90,
+                                   "output_tokens":  11,
+                                   "cache_read_tokens":  0,
+                                   "cache_write_tokens":  0,
+                                   "reasoning_tokens":  0,
+                                   "total_tokens":  101
+                               },
+                     "estimated_cost_usd":  3.64E-05,
+                     "unverified_rate":  true,
+                     "rate_status":  "UNVERIFIED_RATE",
+                     "rate_source":  "official pricing docs snapshot — NOT confirmed by owner or provider billing; verify before any spend decision",
+                     "assumptions":  [
+                                         "tokens are provider-reported usage fields (input/output/cache/reasoning)",
+                                         "cache_read_tokens billed at cache-read rate when provided; otherwise treated as input",
+                                         "estimate is a planning figure only and is NOT a billing fact",
+                                         "rate status = UNVERIFIED_RATE; verify rates against provider billing before any spend decision"
+                                     ],
+                     "budget_cap_usd":  0.02,
+                     "budget_cap_tokens":  500000,
+                     "budget_decision":  "ALLOW",
+                     "stop_result":  null,
+                     "verdict":  "ALLOW",
+                     "prompt_stored":  false,
+                     "raw_response_stored":  false
+                 },
+                 {
+                     "run_id":  "run-52779501816467c7",
+                     "timestamp_utc":  "2026-08-10T03:25:02Z",
+                     "provider":  "deepseek",
+                     "model":  "deepseek-v4-flash",
+                     "api_calls":  1,
+                     "task_fingerprint":  "9e131246eddf321a624516167ba3174307093bf1e56c572f22a6b831647ce3ef",
+                     "usage":  {
+                                   "input_tokens":  90,
+                                   "output_tokens":  19,
+                                   "cache_read_tokens":  0,
+                                   "cache_write_tokens":  0,
+                                   "reasoning_tokens":  0,
+                                   "total_tokens":  109
+                               },
+                     "estimated_cost_usd":  4.52E-05,
+                     "unverified_rate":  true,
+                     "rate_status":  "UNVERIFIED_RATE",
+                     "rate_source":  "official pricing docs snapshot — NOT confirmed by owner or provider billing; verify before any spend decision",
+                     "assumptions":  [
+                                         "tokens are provider-reported usage fields (input/output/cache/reasoning)",
+                                         "cache_read_tokens billed at cache-read rate when provided; otherwise treated as input",
+                                         "estimate is a planning figure only and is NOT a billing fact",
+                                         "rate status = UNVERIFIED_RATE; verify rates against provider billing before any spend decision"
+                                     ],
+                     "budget_cap_usd":  0.02,
+                     "budget_cap_tokens":  500000,
+                     "budget_decision":  "ALLOW",
+                     "stop_result":  null,
+                     "verdict":  "ALLOW",
+                     "prompt_stored":  false,
+                     "raw_response_stored":  false
+                 }
+             ],
+    "stopped_early":  false,
+    "stop_reason":  "",
+    "billing_reconciliation":  {
+                                   "billed_usd":  null,
+                                   "variance_pct":  null,
+                                   "within_tolerance":  null,
+                                   "filled_by_human_at":  null
+                               },
+    "redaction":  "no key, no prompt content, no raw payload stored"
+}

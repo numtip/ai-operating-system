@@ -59,7 +59,7 @@ A live run is allowed **only** when **all** hold:
       L0/L1 read-only task.
 - [ ] Per-run caps are set; `BUDGET_EXCEEDED` stop behavior is exercised on run N.
 
-Approval record (owner fills): ____________________________
+Approval record (owner fills): **GRANTED 2026-08-10 — owner confirmed use of existing DeepSeek key for the bounded 3-run live test. Live evidence: `STAGE-2A-LIVE-EVIDENCE.json` (3 runs, all ALLOW, under caps).**
 
 If the confirmation is not granted, produce **MOCK evidence + this checklist** and the
 stage verdict is `STAGE_2A_PARTIAL` (done — see `STAGE-2A-MOCK-EVIDENCE.json`).
