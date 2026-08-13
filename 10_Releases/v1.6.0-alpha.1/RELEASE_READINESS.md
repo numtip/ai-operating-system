@@ -26,7 +26,7 @@ The machine-readable source of truth is
 - [x] Bootstrap gate and 33 bootstrap assertions
 - [x] Cross-repo Hermes project lookup without target-repository changes
 - [x] Obsidian process opened against native Hermes home on the validation host
-- [x] GitHub Actions on PR #4 — `check-bootstrap + tests` PASS ([run 31728693832](https://github.com/numtip/ai-operating-system/actions/runs/31728693832))
+- [x] GitHub Actions on PR #4 after native-skill correction — `check-bootstrap + tests` PASS ([run 31729635856](https://github.com/numtip/ai-operating-system/actions/runs/31729635856))
 - [ ] Release tag after merge
 
 ## Portability boundary
