@@ -47,6 +47,14 @@ Assert-True ($plan.codex_home -eq 'D:\PortableData\codex') 'plan.codex_home'
 Assert-True ($plan.launcher_directory -eq 'D:\PortableBin') 'plan.launcher_directory'
 Assert-True ($plan.hermes_commit -eq $lock.hermes.commit) 'plan.pin_matches_lock'
 Assert-True ($plan.install_obsidian -and $plan.open_obsidian) 'plan.obsidian_flags'
+Assert-True ($plan.seed_bundled_skills) 'plan.bundled_skills_default_on'
+
+$installerContent = Get-Content -Raw -LiteralPath $installer
+Assert-True ($installerContent -match 'skills opt-in --sync') 'installer.native_skill_sync'
+Assert-True ($installerContent -match 'autonomous-ai-agents\\hermes-agent\\SKILL\.md') 'installer.hermes_agent_skill_check'
+Assert-True ($installerContent -match 'note-taking\\obsidian\\SKILL\.md') 'installer.obsidian_skill_check'
+$configHelperContent = Get-Content -Raw -LiteralPath (Join-Path $repoRoot 'scripts\configure-hermes-memory.py')
+Assert-True ($configHelperContent -match 'OBSIDIAN_VAULT_PATH') 'config.obsidian_vault_path'
 
 $portableFiles = @(
     'scripts\Install-HermesObsidianMemory.ps1',

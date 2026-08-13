@@ -13,7 +13,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Install-HermesObsidi
 
 | Script | Purpose |
 |---|---|
-| `Install-HermesObsidianMemory.ps1` | Portable Windows installer; verifies the immutable Hermes pin, configures native memory, Obsidian, Codex MCP, launcher and project registry. |
+| `Install-HermesObsidianMemory.ps1` | Portable Windows installer; verifies the immutable Hermes pin, seeds bundled `SKILL.md` files, and configures native memory, Obsidian, Codex MCP, launcher and project registry. |
 | `hermes-install.lock.json` | Machine-readable AI-OS/Hermes version and commit lock. |
 | `configure-hermes-memory.py` | Safely merges required native-memory settings and backs up an existing Hermes config. |
 | `hermes-global.ps1` | Global Windows launcher; preserves the active repo working directory and reads per-machine paths from Hermes home. |
@@ -22,6 +22,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Install-HermesObsidi
 | `enable-hermes-codex-mcp.py` | Adds the native Hermes tool server and memory bridge to the Codex MCP managed block. |
 | `seed-hermes-memory.py` | Seeds the owner's confirmed operating decision through Hermes' native memory tool. |
 | `tests/test-hermes-memory-mcp.py` | Protocol-level MCP test: initialize, list tools, and read native memory. |
+| `tests/test-hermes-skills-mcp.py` | Manual protocol test: list skills and load the native Hermes Agent and Obsidian `SKILL.md` files. It is not run automatically because native tool discovery may perform provider availability probes. |
 | `tests/test-hermes-portable-install.ps1` | Validates release pins, path portability and installer plan output without changing the machine. |
 
 Defaults are derived from the current user and clone location: Hermes home is
@@ -29,6 +30,13 @@ Defaults are derived from the current user and clone location: Hermes home is
 `%CODEX_HOME%` or `%USERPROFILE%\.codex`, and the launcher is installed in
 `%USERPROFILE%\.local\bin`. Obsidian opens the Hermes home directly. Restart
 Codex once after installation.
+
+Bundled skills are enabled by default through Hermes' native
+`hermes skills opt-in --sync` command. Use `-SkipBundledSkills` only when a
+machine intentionally needs a blank skill catalog.
+The installer also sets `OBSIDIAN_VAULT_PATH` in Hermes' local `.env` while
+preserving and backing up any existing entries; the `.env` file is never
+copied into Git.
 
 ## validate-structure
 

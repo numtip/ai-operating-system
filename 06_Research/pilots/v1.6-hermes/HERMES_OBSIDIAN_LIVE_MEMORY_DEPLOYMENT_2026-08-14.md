@@ -19,6 +19,7 @@
 - Obsidian vault config and index note installed directly in the shared Hermes home.
 - Codex global instructions installed at `C:\Users\prinya\.codex\AGENTS.md`; this applies in every repository.
 - Codex MCP config contains `hermes-memory` and native `hermes-tools`, both enabled.
+- Hermes bundled `SKILL.md` files are seeded into the shared home through the native skill sync; `hermes-tools` exposes `skills_list` and `skill_view` to Codex.
 
 ## Portable release
 
@@ -59,6 +60,7 @@ This bridge adds no separate memory format, store, index or search engine.
 | Obsidian vault | PASS — valid JSON and vault index present; desktop process opened against `C:\Users\prinya\AppData\Local\hermes` and remained running |
 | Portable installer plan tests | PASS — 24/24 assertions |
 | Portable installer live end-to-end | PASS — source pin, config merge, 28 projects, Codex MCP, launcher and native-memory protocol |
+| Bundled Hermes skills | PASS — 71 native `SKILL.md` files seeded; `hermes-agent` and `obsidian` loaded through Codex MCP `skills_list` / `skill_view` |
 
 ## Dependencies and safety
 

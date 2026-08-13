@@ -14,6 +14,7 @@ All notable changes to AI Operating System are documented here.
 - Native Hermes memory and FTS5 session-search MCP tools for Codex
 - Recursive, idempotent Hermes project registration with no target-repository file writes
 - Obsidian vault configuration over the same native Hermes home
+- Native bundled skill sync into Hermes home, including `hermes-agent/SKILL.md` and `obsidian/SKILL.md`, exposed to Codex through `skills_list` and `skill_view`
 - Protocol and portable-installer tests plus deployment evidence
 
 ### Changed

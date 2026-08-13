@@ -12,7 +12,9 @@ Local-first knowledge, memory, and context foundation for human + agent work.
 The installer pins Hermes Agent `v2026.8.3` (`v0.20.0`) to commit
 `3c27eb6234bf91b8ceee9e9071591b31e9b148cb`, enables its native memory and
 FTS5 session search, registers repositories, configures the same directory as
-an Obsidian vault, and connects Codex through MCP.
+an Obsidian vault, seeds Hermes' bundled `SKILL.md` catalog into the shared
+home, and connects Codex through MCP. This includes the native Hermes Agent
+and Obsidian skills.
 
 ```powershell
 git clone https://github.com/numtip/ai-operating-system.git

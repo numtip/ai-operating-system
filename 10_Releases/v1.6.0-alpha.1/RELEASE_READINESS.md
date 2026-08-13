@@ -19,6 +19,7 @@ The machine-readable source of truth is
 - [x] PowerShell syntax parse
 - [x] Python compile
 - [x] MCP protocol initialization, tool listing and native memory read
+- [x] Bundled `SKILL.md` sync — 71 native skills seeded; Hermes Agent and Obsidian skills verified through `skills_list` / `skill_view`
 - [x] Portable installer plan test (24/24)
 - [x] Live end-to-end reinstall using the published installer
 - [x] AI-OS structure and index validation

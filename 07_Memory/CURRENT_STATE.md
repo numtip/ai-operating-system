@@ -20,7 +20,7 @@ Handoff: [sessions/2026/2026-08-01-v1.5-agent-bootstrap-automation.md](sessions/
 
 - **LIVE MEMORY DEPLOYED 2026-08-14:** Hermes home `C:\Users\prinya\AppData\Local\hermes` is the active shared memory for all local project repos; native `MEMORY.md`/`USER.md`, FTS5 sessions and project registry are enabled. Obsidian opens the same home. Global `hermes` launcher and Codex MCP tools `hermes_memory` + `hermes_session_search` passed protocol smoke testing. Evidence: `06_Research/pilots/v1.6-hermes/HERMES_OBSIDIAN_LIVE_MEMORY_DEPLOYMENT_2026-08-14.md`.
 - **Operating correction:** AI-OS must not build a competing memory, session-search or orchestration system. It remains a thin policy/evidence/integration layer around Hermes + Obsidian and canonical project systems.
-- **Portable release:** `scripts/Install-HermesObsidianMemory.ps1` derives per-machine paths, verifies the immutable Hermes commit, preserves existing config, and passed 24 portability assertions plus a live end-to-end reinstall on the validation host.
+- **Portable release:** `scripts/Install-HermesObsidianMemory.ps1` derives per-machine paths, verifies the immutable Hermes commit, preserves existing config, seeds 71 native `SKILL.md` files, configures the shared Obsidian vault path, and passed portability plus live end-to-end validation.
 - Optional: create GitHub Release UI for `v1.5.0-alpha.1` (tag already on origin)
 - v1.6 design gates complete: Blueprint V4 baseline accepted, adapter contract, capability matrix, rollback plan and GOFFICE2026 pilot design (ADR-0013); local installation gate passed, while VPS/production remains approval-gated
 - GOFFICE2026 Pilot **Stage 0 (read-only)** executed 2026-08-09 — PASS_WITH_NOTES; evidence in `06_Research/pilots/v1.6-hermes/goffice2026/`

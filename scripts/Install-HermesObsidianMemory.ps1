@@ -9,6 +9,7 @@ param(
     [switch]$InstallObsidian,
     [switch]$OpenObsidian,
     [switch]$SkipCodex,
+    [switch]$SkipBundledSkills,
     [switch]$SkipProjectRegistration,
     [switch]$PlanOnly
 )
@@ -55,6 +56,7 @@ $plan = [ordered]@{
     install_obsidian = [bool]$InstallObsidian
     open_obsidian = [bool]$OpenObsidian
     configure_codex = -not [bool]$SkipCodex
+    seed_bundled_skills = -not [bool]$SkipBundledSkills
     register_projects = -not [bool]$SkipProjectRegistration
 }
 
@@ -149,6 +151,22 @@ if (Test-Path -LiteralPath $integrationPath) {
     hermes_commit = [string]$lock.hermes.commit
 } | ConvertTo-Json | Set-Content -LiteralPath $integrationPath -Encoding UTF8
 
+if (-not $SkipBundledSkills) {
+    & $hermesExe skills opt-in --sync
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Hermes bundled-skill seeding failed.'
+    }
+    $requiredSkillFiles = @(
+        (Join-Path $HermesHome 'skills\autonomous-ai-agents\hermes-agent\SKILL.md'),
+        (Join-Path $HermesHome 'skills\note-taking\obsidian\SKILL.md')
+    )
+    foreach ($skillFile in $requiredSkillFiles) {
+        if (-not (Test-Path -LiteralPath $skillFile -PathType Leaf)) {
+            throw "Required Hermes SKILL.md was not seeded: $skillFile"
+        }
+    }
+}
+
 $obsidianTemplate = Join-Path $repoRoot '06_Research\pilots\v1.6-hermes\obsidian-vault'
 $obsidianConfigTarget = Join-Path $HermesHome '.obsidian'
 New-Item -ItemType Directory -Path $obsidianConfigTarget -Force | Out-Null
@@ -224,6 +242,7 @@ if (-not $SkipCodex) {
     if ($LASTEXITCODE -ne 0) {
         throw 'Hermes MCP protocol verification failed.'
     }
+
 }
 
 $obsidianExe = Join-Path $localAppData 'Programs\Obsidian\Obsidian.exe'
@@ -257,5 +276,6 @@ if ($LASTEXITCODE -ne 0) {
     ProjectRoot = [System.IO.Path]::GetFullPath($ProjectRoot)
     Launcher = [System.IO.Path]::GetFullPath($launcherPath)
     CodexRestartRequired = -not [bool]$SkipCodex
+    BundledSkillsSeeded = -not [bool]$SkipBundledSkills
     ObsidianVault = [System.IO.Path]::GetFullPath($HermesHome)
 }

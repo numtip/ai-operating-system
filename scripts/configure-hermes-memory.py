@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import json
 from pathlib import Path
+import re
 import shutil
 
 from ruamel.yaml import YAML
@@ -28,7 +30,7 @@ def main() -> int:
             if not isinstance(loaded, dict):
                 raise ValueError("Hermes config.yaml root must be a mapping")
             data = loaded
-        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         shutil.copy2(config_path, config_path.with_name(f"config.yaml.{stamp}.bak"))
 
     memory = data.setdefault("memory", {})
@@ -45,6 +47,30 @@ def main() -> int:
     with temp_path.open("w", encoding="utf-8", newline="\n") as handle:
         yaml.dump(data, handle)
     temp_path.replace(config_path)
+
+    env_path = home / ".env"
+    env_lines: list[str] = []
+    if env_path.exists():
+        env_lines = env_path.read_text(encoding="utf-8").splitlines()
+        stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+        shutil.copy2(env_path, env_path.with_name(f".env.{stamp}.bak"))
+
+    vault_line = f"OBSIDIAN_VAULT_PATH={json.dumps(str(home))}"
+    pattern = re.compile(r"^\s*OBSIDIAN_VAULT_PATH\s*=")
+    replaced = False
+    updated_lines: list[str] = []
+    for line in env_lines:
+        if pattern.match(line) and not replaced:
+            updated_lines.append(vault_line)
+            replaced = True
+        elif not pattern.match(line):
+            updated_lines.append(line)
+    if not replaced:
+        updated_lines.append(vault_line)
+    env_temp = env_path.with_name(".env.tmp")
+    env_temp.write_text("\n".join(updated_lines) + "\n", encoding="utf-8")
+    env_temp.replace(env_path)
+
     print(config_path)
     return 0
 
