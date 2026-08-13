@@ -1,5 +1,35 @@
 # Scripts
 
+## Hermes shared-memory integration
+
+Hermes owns the memory backend. These scripts only install or expose its native capabilities; they do not implement a parallel memory store.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Install-HermesObsidianMemory.ps1 `
+  -ProjectRoot D:\Projects `
+  -InstallObsidian `
+  -OpenObsidian
+```
+
+| Script | Purpose |
+|---|---|
+| `Install-HermesObsidianMemory.ps1` | Portable Windows installer; verifies the immutable Hermes pin, configures native memory, Obsidian, Codex MCP, launcher and project registry. |
+| `hermes-install.lock.json` | Machine-readable AI-OS/Hermes version and commit lock. |
+| `configure-hermes-memory.py` | Safely merges required native-memory settings and backs up an existing Hermes config. |
+| `hermes-global.ps1` | Global Windows launcher; preserves the active repo working directory and reads per-machine paths from Hermes home. |
+| `Register-HermesProjects.ps1` | Recursively registers Git repositories below a configurable project root in Hermes' native project registry; changes no repo files. |
+| `hermes-memory-mcp-server.py` | Thin MCP bridge to Hermes `MemoryStore` and native FTS5 `session_search`. |
+| `enable-hermes-codex-mcp.py` | Adds the native Hermes tool server and memory bridge to the Codex MCP managed block. |
+| `seed-hermes-memory.py` | Seeds the owner's confirmed operating decision through Hermes' native memory tool. |
+| `tests/test-hermes-memory-mcp.py` | Protocol-level MCP test: initialize, list tools, and read native memory. |
+| `tests/test-hermes-portable-install.ps1` | Validates release pins, path portability and installer plan output without changing the machine. |
+
+Defaults are derived from the current user and clone location: Hermes home is
+`%LOCALAPPDATA%\hermes`, the runtime is `.runtime\hermes-agent`, Codex home is
+`%CODEX_HOME%` or `%USERPROFILE%\.codex`, and the launcher is installed in
+`%USERPROFILE%\.local\bin`. Obsidian opens the Hermes home directly. Restart
+Codex once after installation.
+
 ## validate-structure
 
 Verifies required top-level folders and required memory/governance/template files.

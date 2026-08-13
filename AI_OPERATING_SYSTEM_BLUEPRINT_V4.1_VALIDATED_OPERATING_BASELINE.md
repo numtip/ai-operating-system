@@ -29,13 +29,13 @@ This is not a production-readiness declaration. It turns the proven parts into d
 
 | Plane | Authoritative owner | Purpose | Must not become |
 |---|---|---|---|
-| Knowledge/Data | Obsidian, Git, SharePoint/M365, approved databases | Durable, reviewable organizational and project memory | A hidden runtime cache or prompt-log archive |
-| Control | AI-OS | Context selection, policy, task contracts, validation, evidence and approval routing | A duplicate workflow engine |
-| Execution | Hermes | Workflow state, retries, agent/tool coordination and bounded task execution | The owner of long-term memory, policy, source data or production approval |
+| Knowledge/Data | Hermes native bounded memory + FTS5 sessions, Obsidian, Git, SharePoint/M365, approved databases | Shared operational recall plus durable, reviewable organizational and project knowledge | Parallel memory stores that repeat Hermes capabilities |
+| Control | AI-OS | Thin policy, validation, evidence and approval routing around installed tools | A duplicate workflow, memory, search or orchestration engine |
+| Execution | Hermes | Workflow state, retries, agent/tool coordination, native memory and bounded task execution | The authority for policy, source data or production approval |
 | Intelligence | Approved model providers | Reasoning within the supplied contract | The authority for risk acceptance or canonical fact storage |
 | Accountability | Project owner / authorized human | Approval, exception handling, release decisions | An automated afterthought |
 
-**Rule:** Hermes working state is disposable. Any fact worth retaining must be validated, classified and promoted to a canonical Markdown record, repository, SharePoint location or database through an approved write path.
+**Rule:** Hermes native `MEMORY.md`, `USER.md`, skills and FTS5 session history are the active shared agent-memory layer. Obsidian opens the same Hermes home for human review. AI-OS must not recreate these capabilities; durable project artifacts that belong in Git, SharePoint or a database remain in those canonical systems.
 
 ---
 
@@ -46,7 +46,8 @@ This is not a production-readiness declaration. It turns the proven parts into d
 | Read-only, multi-step, cross-project audit | `VALIDATED` | Allowed at L0/L1 with a project adapter and an evidence destination. |
 | Curated-context execution through Hermes + DeepSeek | `VALIDATED` | Allowed only after context and prompt gates pass. |
 | Evidence capture in AI-OS integration branch | `VALIDATED` | Evidence-only commits; never mutate the target project. |
-| Knowledge promotion to Obsidian/canonical systems | `DESIGNED_NOT_YET_PROVEN` | Human review and write-path test required. |
+| Hermes native persistent memory + Obsidian review | `VALIDATED_LOCAL` | Shared Hermes home, bounded memory, FTS5 recall, 28 registered repositories and Codex MCP bridge verified 2026-08-14. |
+| Knowledge promotion to project canonical systems | `DESIGNED_NOT_YET_PROVEN` | Human review and project-specific write-path test required. |
 | Target-project file writes | `NOT_YET_PROVEN` | Human-approved L2 pilot only; separate from read-only mode. |
 | Publish, deploy, external-system mutation | `NOT_YET_PROVEN` | L3; human approval and independent validation required. |
 | Secrets, destructive or access-control change | `NOT_AUTHORIZED_BY_PILOT` | L4; explicit owner approval plus dedicated procedure. |
@@ -206,13 +207,13 @@ The current authorized position is **Stage 1 complete; Stage 2 next; Stages 3–
 
 ## 10. Immediate operating standard
 
-1. Use Obsidian and canonical repositories as the durable knowledge layer; do not duplicate them inside Hermes.
-2. Use AI-OS to compile a small, source-grounded context set and enforce task boundaries.
-3. Use Hermes + DeepSeek for bounded L0/L1 workflows where traceability outweighs orchestration overhead.
-4. Store audit evidence in the AI-OS evidence path/branch only, unless an approved write-path task says otherwise.
-5. Treat a discovered defect as a project remediation item, not a Hermes failure.
-6. Do not authorize write, publish, deployment or production automation from the read-only pilot results.
-7. Make provider-billing reconciliation and budget-stop testing the next gate before broadening adoption.
+1. Use Hermes native bounded memory, skills and FTS5 session search as the shared operational memory for every project repo.
+2. Use Obsidian as the human interface over the same Hermes home; use Git, SharePoint and databases for their natural canonical artifacts.
+3. Use the global `hermes` launcher and Codex `hermes-memory` MCP bridge; do not build a second memory or session-search engine.
+4. Keep AI-OS thin: policy, evidence and integration pointers only where the installed tools do not already provide the capability.
+5. Store audit evidence in the approved project/evidence path; do not silently promote guesses or secrets into memory.
+6. Treat a discovered defect as a project remediation item, not a Hermes failure.
+7. Keep write, publish, deployment and production automation separately approval-gated.
 
 ---
 
@@ -226,4 +227,4 @@ The current authorized position is **Stage 1 complete; Stage 2 next; Stages 3–
 
 ## Final operating statement
 
-> **Memory is canonical knowledge plus governed retrieval—not a larger prompt and not a runtime cache. Hermes is now approved for bounded read-only orchestration; expansion requires measured cost control and separately proven approval-gated write paths.**
+> **Hermes supplies the shared bounded agent memory, skills, session history and orchestration. Obsidian is the human view of that same memory. AI-OS integrates and governs these tools; it does not compete with them.**

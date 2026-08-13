@@ -3,9 +3,37 @@
 Local-first knowledge, memory, and context foundation for human + agent work.
 
 **Repo:** https://github.com/numtip/ai-operating-system  
-**Track:** v1.5 — Agent Bootstrap Automation (alpha)  
+**Track:** v1.6 — Hermes + Obsidian Shared Memory (alpha)
 **Manifesto:** [AI_OS_MANIFESTO.md](AI_OS_MANIFESTO.md)  
-**Release:** [10_Releases/v1.5.0-alpha.1/](10_Releases/v1.5.0-alpha.1/)
+**Release:** [10_Releases/v1.6.0-alpha.1/](10_Releases/v1.6.0-alpha.1/)
+
+## Install Hermes + Obsidian shared memory on Windows
+
+The installer pins Hermes Agent `v2026.8.3` (`v0.20.0`) to commit
+`3c27eb6234bf91b8ceee9e9071591b31e9b148cb`, enables its native memory and
+FTS5 session search, registers repositories, configures the same directory as
+an Obsidian vault, and connects Codex through MCP.
+
+```powershell
+git clone https://github.com/numtip/ai-operating-system.git
+cd ai-operating-system
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Install-HermesObsidianMemory.ps1 `
+  -ProjectRoot D:\Projects `
+  -InstallObsidian `
+  -OpenObsidian
+```
+
+Review the computed paths without changing the machine:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Install-HermesObsidianMemory.ps1 `
+  -ProjectRoot D:\Projects `
+  -PlanOnly
+```
+
+Restart Codex once after installation so it loads the global Hermes workflow
+and the `hermes_memory` / `hermes_session_search` MCP tools. No credentials or
+model-provider keys are installed or copied by this workflow.
 
 ## Vault tree
 
@@ -46,7 +74,8 @@ scripts/          # validation helpers
 
 ## Constraints
 
-- No Hermes install or orchestration runtime (until v1.6 / approval)
+- Hermes native memory, FTS5 session search and skills remain the memory backend; AI-OS does not replace them
+- Obsidian is the human interface over the same Hermes home
 - No VPS / production deploy without approval
 - No secrets in the vault; no vector DB
 - Prompt Compiler runtime is local/file-based (no model API calls)

@@ -1,4 +1,4 @@
-# AI-OS v1.5 — enforce bootstrap gate on push/PR (ADR-0012)
+# AI-OS v1.6 — enforce bootstrap and portable Hermes release checks
 name: Bootstrap Gate
 
 on:
@@ -34,3 +34,7 @@ jobs:
       - name: Bootstrap gate unit tests
         run: |
           powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tests/test-check-bootstrap.ps1
+
+      - name: Hermes portable installer plan tests
+        run: |
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts/tests/test-hermes-portable-install.ps1

@@ -4,6 +4,28 @@ All notable changes to AI Operating System are documented here.
 
 ## [Unreleased]
 
+## [v1.6.0-alpha.1] — 2026-08-14
+
+### Added
+
+- Portable Windows installer for Hermes + Obsidian shared memory across a configurable project root
+- Immutable install manifest pinning Hermes Agent `v2026.8.3` / `v0.20.0` / commit `3c27eb6234bf91b8ceee9e9071591b31e9b148cb`
+- Global `hermes` launcher backed by per-machine integration metadata instead of user-specific paths
+- Native Hermes memory and FTS5 session-search MCP tools for Codex
+- Recursive, idempotent Hermes project registration with no target-repository file writes
+- Obsidian vault configuration over the same native Hermes home
+- Protocol and portable-installer tests plus deployment evidence
+
+### Changed
+
+- AI-OS v1.6 is explicitly an integration/governance layer around Hermes + Obsidian, not a competing memory system
+- README, roadmap, system memory and validated operating baseline aligned to the live v1.6 system
+
+### Security
+
+- Installer does not copy or create provider credentials, tokens or `.env` files
+- Existing Hermes and Codex configuration files are merged or backed up before managed changes
+
 ## [v1.5.0-alpha.1] — 2026-08-01
 
 ### Added

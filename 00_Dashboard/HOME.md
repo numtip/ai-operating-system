@@ -1,7 +1,7 @@
 # AI-OS Dashboard
 
-**Current phase:** v1.5 — Agent Bootstrap Automation (alpha)  
-**Status:** Bootstrap gate + ADR-0012; pack under `10_Releases/v1.5.0-alpha.1/`
+**Current phase:** v1.6 — Hermes + Obsidian Shared Memory (alpha)
+**Status:** Portable installer + live native memory; pack under `10_Releases/v1.6.0-alpha.1/`
 
 ## Start here
 
@@ -29,4 +29,4 @@
 
 ## Out of scope (until approved)
 
-- Hermes install, VPS deploy, vector DB, secrets in vault
+- VPS/production deploy, vector DB, secrets in vault, parallel memory backends
