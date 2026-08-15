@@ -1,0 +1,8 @@
+{
+    "schema_version": "1.0",
+    "model": "deepseek-v4-flash",
+    "cap_usd": 0.02,
+    "cap_total_tokens": 500000,
+    "max_output_tokens": 2000,
+    "notes": "Per-run bounds for the Stage 2A bounded live test. cap_usd is a planning cap applied to estimated cost; actual billing reconciliation is human-entered."
+}

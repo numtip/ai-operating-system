@@ -1,0 +1,28 @@
+﻿{
+    "schema_version":  "1.0",
+    "check":  "hermes_obsidian_local_memory_pilot",
+    "verdict":  "HERMES_GOFFICE_MEMORY_PASS",
+    "reason":  "complete; note materialized by orchestrator from Hermes final response (hermes write_file broken on this Windows host)",
+    "error_code":  "",
+    "attempts":  1,
+    "last_exit_code":  0,
+    "hermes_invocation":  "G:\\projectAi\\ai-operating-system\\.runtime\\hermes-agent\\Scripts\\hermes.exe",
+    "allowlist_dir":  "03_Memory/inbox",
+    "note_path":  "G:\\projectAi\\ai-operating-system\\03_Memory\\inbox\\GOFFICE2026-OPERATIONAL-MEMORY-DRAFT.md",
+    "timestamp_utc":  "2026-08-10T05:32:42Z",
+    "note":  "sanitized evidence; no key, no prompt transcript, no raw API payload stored",
+    "external_repo_write_audit":  {
+                                      "repo_path":  "G:\\ProjectAI\\goffice2026",
+                                      "head":  "7b44c5d66d7193eb1b05dde8a445b09032a88799",
+                                      "result":  "UNCHANGED"
+                                  },
+    "usage_summary":  {
+                          "model":  "deepseek-v4-flash",
+                          "api_calls":  7,
+                          "input_tokens":  21115,
+                          "output_tokens":  29470,
+                          "cache_read_tokens":  182784,
+                          "total_tokens":  233369,
+                          "estimated_cost_usd":  0.011719495199999999
+                      }
+}
