@@ -1,5 +1,46 @@
 # Scripts
 
+## Hermes shared-memory integration
+
+Hermes owns the memory backend. These scripts only install or expose its native capabilities; they do not implement a parallel memory store.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Install-HermesObsidianMemory.ps1 `
+  -ProjectRoot D:\Projects `
+  -InstallObsidian `
+  -OpenObsidian
+```
+
+| Script | Purpose |
+|---|---|
+| `Install-HermesObsidianMemory.ps1` | Portable Windows installer; verifies the immutable Hermes pin, seeds bundled `SKILL.md` files, and configures native memory, Obsidian, Codex/Cursor/VS Code MCP, launcher and project registry. |
+| `hermes-install.lock.json` | Machine-readable AI-OS/Hermes version and commit lock. |
+| `configure-hermes-memory.py` | Safely merges required native-memory settings and backs up an existing Hermes config. |
+| `hermes-global.ps1` | Global Windows launcher; preserves the active repo working directory and reads per-machine paths from Hermes home. |
+| `Register-HermesProjects.ps1` | Recursively registers Git repositories below a configurable project root in Hermes' native project registry; changes no repo files. |
+| `hermes-memory-mcp-server.py` | Thin MCP bridge to Hermes `MemoryStore` and native FTS5 `session_search`. |
+| `enable-hermes-codex-mcp.py` | Adds the native Hermes tool server and memory bridge to the Codex MCP managed block. |
+| `enable-hermes-ide-mcp.py` | Merges Hermes MCP into existing Cursor/VS Code user configs and installs the Cursor local plugin plus VS Code worker instructions. |
+| `seed-hermes-memory.py` | Seeds the owner's confirmed operating decision through Hermes' native memory tool. |
+| `tests/test-hermes-memory-mcp.py` | Protocol-level MCP test: initialize, list tools, and read native memory. |
+| `tests/test-hermes-skills-mcp.py` | Offline protocol smoke with a Python stdlib socket guard (`sitecustomize`). Runs `--self-test` before live smoke. Fails if `deny.log` is non-empty, logs contain `PAID lane` / `provider auth` / `external request`, or runner/server guard is inactive. Does not block subprocesses that bypass the guard. |
+| `tests/test-hermes-ide-mcp.py` | Portable Cursor/VS Code schema, merge, plugin-version, and legacy-rule tests. Does not write user configs. |
+| `tests/test-hermes-portable-install.ps1` | Validates release pins, path portability and installer plan output without changing the machine. |
+
+Defaults are derived from the current user and clone location: Hermes home is
+`%LOCALAPPDATA%\hermes`, the runtime is `.runtime\hermes-agent`, Codex home is
+`%CODEX_HOME%` or `%USERPROFILE%\.codex`, and the launcher is installed in
+`%USERPROFILE%\.local\bin`. Obsidian opens the Hermes home directly. Restart
+Codex once after installation.
+
+Bundled skills are enabled by default through Hermes' native
+`hermes skills opt-in --sync` command. Use `-SkipBundledSkills` only when a
+machine intentionally needs a blank skill catalog.
+The installer may read and back up existing local Hermes/Codex/Cursor/VS Code
+config, including files that contain credentials. It must not print, export,
+or commit credentials, tokens, API keys, or `.env` contents. It sets
+`OBSIDIAN_VAULT_PATH` in Hermes' local `.env` while preserving other entries.
+
 ## validate-structure
 
 Verifies required top-level folders and required memory/governance/template files.

@@ -6,10 +6,13 @@ AI-OS v1 separates cognition (knowledge/memory) from execution. Governance is ow
 Human
   ↓ goals / approval
 Agents (Head + specialists)
-  ↓ read / write
-Knowledge  ← Obsidian UI + GitHub SoT
-  ↓ governed task contract (v1.6)
-Execution  ← Hermes runtime adapter [integration-first; install approval-gated]
+  ↓ native memory / governed work
+Memory     ← Hermes MEMORY.md + USER.md + FTS5 sessions
+  ↔ review
+Obsidian   ← human UI over the same Hermes home
+  ↓ canonical artifacts
+Knowledge  ← GitHub / approved project systems
+Execution  ← Hermes runtime + thin client integrations
 ```
 
 ## Layers
@@ -18,16 +21,17 @@ Execution  ← Hermes runtime adapter [integration-first; install approval-gated
 |-------|------|--------|
 | Human | Goals, approvals, prod gates | Active |
 | Agents | Plan, edit vault, validate | Active |
-| Knowledge | Obsidian notes + Git history | Active |
-| Control Plane | Context, bootstrap, quality gates, governance | Active (v1.0-v1.5) |
-| Execution | Hermes runtime via adapter contract | In progress (v1.6 design-only) |
+| Memory | Hermes native bounded memory, skills and FTS5 sessions | Active (v1.6) |
+| Knowledge | Obsidian review + Git/project systems | Active |
+| Control Plane | Thin policy, bootstrap, quality gates and evidence | Active |
+| Execution | Hermes runtime + Codex MCP integration | Active locally (v1.6 alpha) |
 
 ## Phase boundary
 
 - **v1.0:** local-first vault, memory, ADRs, templates
 - **v1.1:** Context Engine, bootstrap SOP, indexes, prompt-compiler spec, compression
 - **v1.5:** Agent bootstrap automation + CI gate
-- **v1.6 (current):** Integration-first Hermes runtime — adapter contract + capability spike; no install without approval ([ADR-0013](../04_ADR/ADR-0013-integration-first-hermes-runtime.md), [Blueprint V4](AI_OPERATING_SYSTEM_BLUEPRINT_V4.md))
+- **v1.6 (current):** live Hermes + Obsidian shared memory with a portable Windows installer and Codex MCP integration; VPS/production remains separately approval-gated ([ADR-0013](../04_ADR/ADR-0013-integration-first-hermes-runtime.md), [Blueprint V4.1](../AI_OPERATING_SYSTEM_BLUEPRINT_V4.1_VALIDATED_OPERATING_BASELINE.md))
 
 ## Decision records
 

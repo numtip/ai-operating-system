@@ -4,6 +4,44 @@ All notable changes to AI Operating System are documented here.
 
 ## [Unreleased]
 
+## [v1.6.0-alpha.2]
+
+### Added
+
+- Cursor and VS Code Hermes MCP adapters in the existing Windows installer, merging `hermes-memory` and `hermes-tools` into user MCP configs without replacing Magnific or other servers
+- Global Cursor worker rule as a local plugin under `plugins/local/ai-os-hermes-worker`
+- Cursor/VS Code worker instructions that never write durable Hermes memory and send `memory_candidates` to GPT/Codex for approval
+- Offline/zero-network skills protocol smoke that fails on paid-lane or provider-auth logs
+- Portable schema/merge tests plus `-SkipCursor` / `-SkipVSCode` installer flags
+
+### Changed
+
+- MCP and instruction writes are compare-before-write; backups occur only when content changes
+- Installer credential wording: local config may be read and backed up, but credentials are not printed, exported, or committed
+
+## [v1.6.0-alpha.1] — 2026-08-14
+
+### Added
+
+- Portable Windows installer for Hermes + Obsidian shared memory across a configurable project root
+- Immutable install manifest pinning Hermes Agent `v2026.8.3` / `v0.20.0` / commit `3c27eb6234bf91b8ceee9e9071591b31e9b148cb`
+- Global `hermes` launcher backed by per-machine integration metadata instead of user-specific paths
+- Native Hermes memory and FTS5 session-search MCP tools for Codex
+- Recursive, idempotent Hermes project registration with no target-repository file writes
+- Obsidian vault configuration over the same native Hermes home
+- Native bundled skill sync into Hermes home, including `hermes-agent/SKILL.md` and `obsidian/SKILL.md`, exposed to Codex through `skills_list` and `skill_view`
+- Protocol and portable-installer tests plus deployment evidence
+
+### Changed
+
+- AI-OS v1.6 is explicitly an integration/governance layer around Hermes + Obsidian, not a competing memory system
+- README, roadmap, system memory and validated operating baseline aligned to the live v1.6 system
+
+### Security
+
+- Installer does not copy or create provider credentials, tokens or `.env` files
+- Existing Hermes and Codex configuration files are merged or backed up before managed changes
+
 ## [v1.5.0-alpha.1] — 2026-08-01
 
 ### Added

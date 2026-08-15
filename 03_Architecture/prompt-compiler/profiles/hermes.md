@@ -1,25 +1,26 @@
 # Profile: Hermes
 
 **profile_id:** `hermes`
-**Status:** Deferred — v1.6 design-only (ADR-0013); not installed
-**Phase:** 2 (v1.6 integration-first)
+**Status:** Active locally — v1.6 alpha (ADR-0013/ADR-0014)
+**Phase:** v1.6 shared memory and bounded runtime integration
 
 ## Fit
 
-- Orchestration / runtime execution (not available in Phase 1)
-- Future Head→runtime task handoff
+- Native memory, skills and FTS5 session recall
+- Orchestration / bounded runtime execution
+- Head-to-runtime task handoff through approved client surfaces
 
 ## Prompt biases
 
-- TBD in Phase 2
-- Until then, compiler MUST set `deferred=true`
+- Prefer native Hermes retrieval before adding prompt context
+- Keep task boundaries, approvals and canonical-source pointers explicit
 
 ## Capability affinity
 
-`tool_use`, `planning` (provisional)
+`memory`, `session_search`, `tool_use`, `planning`
 
 ## Compiler notes
 
-- Phase 1: emit placeholder brief only; do not imply live Hermes execution
-- No API, Telegram, or VPS binding in this profile yet
-- Replace this file when Phase 2 routing is specified
+- Local memory/session integration is live and version-pinned
+- Model-provider use still requires separately configured credentials
+- No Telegram, VPS, deployment or production binding is implied

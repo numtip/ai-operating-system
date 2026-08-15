@@ -9,7 +9,7 @@ Durable facts for AI Operating System. Update only when the system itself change
 | Repo path | `F:\projectAi\ai-operating-system` |
 | GitHub | https://github.com/numtip/ai-operating-system |
 | Product | AI Operating System |
-| Current version track | v1.6 Integration-First Hermes Runtime (design-only) |
+| Current version track | v1.6.0-alpha.1 Live Hermes + Obsidian Shared Memory |
 
 ## Phase / version model
 
@@ -21,20 +21,21 @@ Durable facts for AI Operating System. Update only when the system itself change
 | **v1.3** | Complete (MVP) | Prompt Compiler runtime (no LLM); model profiles; dual pilots |
 | **v1.4** | Complete (alpha) | Context Optimizer + Prompt Quality Gate; deterministic budget/ranking |
 | **v1.5** | Complete (alpha) | Agent Bootstrap Automation (`check-bootstrap.ps1` + ADR-0012 + CI); tag `v1.5.0-alpha.1` |
-| **v1.6** | In progress (real runtime PASS) | Integration-First Hermes Runtime: Blueprint V4 baseline accepted; adapter contract + capability matrix + rollback plan + GOFFICE2026 pilot design; Stage 0 read-only + Stage 1 stub (13/13 SIMULATED) + **real DeepSeek pilot PASS (LOCAL_RUNTIME_PASS, 2026-08-09)**; Obsidian vault set up; Hermes sandbox removed (rollback proven); install approval-gated (ADR-0013) |
+| **v1.6** | Alpha release (live shared memory) | Hermes Agent v0.20.0; native bounded memory, FTS5 session recall, skills and project registry; Obsidian opens the same home; global launcher and Codex MCP bridge. Portable Windows installer pins commit `3c27eb6234bf91b8ceee9e9071591b31e9b148cb`; validated 2026-08-14. |
 
 See [ROADMAP](../03_Architecture/ROADMAP.md).
 
 ## Constraints (current)
 
-- Local-first; Obsidian as primary interface
+- Local-first; Hermes native memory is the shared agent-memory backend and Obsidian is its human interface
+- AI-OS must not duplicate Hermes memory, session search, skills or orchestration
 - Git / GitHub as source of truth
 - File-based indexes (no vector DB)
 - Project Adapters link external repos; do not duplicate docs
 - Prompt Compiler runtime is local/file-based (no model API)
   - Spec/contracts: `03_Architecture/prompt-compiler/`
   - Runtime: repo-root `prompt-compiler/` (ADR-0011)
-- No Hermes install / VPS without human approval (ADR-0013)
+- Local Hermes installation and cross-repo memory rollout approved 2026-08-14; VPS/production mutations still require separate approval
 - Session compression threshold default: 25
 
 ## First pilot

@@ -145,6 +145,31 @@
                                  ]
                     },
                     {
+                        "id":  "v1.6-hermes-obsidian-live-memory",
+                        "title":  "Hermes and Obsidian Live Shared-Memory Deployment (2026-08-14)",
+                        "path":  "06_Research/pilots/v1.6-hermes/HERMES_OBSIDIAN_LIVE_MEMORY_DEPLOYMENT_2026-08-14.md",
+                        "tags":  [
+                                     "v1.6",
+                                     "hermes",
+                                     "obsidian",
+                                     "memory",
+                                     "live",
+                                     "evidence"
+                                 ]
+                    },
+                    {
+                        "id":  "release-v1.6.0-alpha.1",
+                        "title":  "v1.6.0-alpha.1 Hermes and Obsidian Shared Memory Release",
+                        "path":  "10_Releases/v1.6.0-alpha.1/README.md",
+                        "tags":  [
+                                     "release",
+                                     "v1.6",
+                                     "hermes",
+                                     "obsidian",
+                                     "portable-installer"
+                                 ]
+                    },
+                    {
                         "id":  "v1.6-full-audit-goffice2026",
                         "title":  "GOFFICE2026 Full Read-Only Audit (2026-08-09)",
                         "path":  "06_Research/pilots/v1.6-hermes/GOFFICE2026_FULL_READONLY_AUDIT_2026-08-09.md",
