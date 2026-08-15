@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import asyncio
 import json
 import os
@@ -13,9 +14,6 @@ import subprocess
 import sys
 import tempfile
 import unittest
-
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
 
 FORBIDDEN_LOGS = ("PAID lane", "provider auth", "external request")
 SITECUSTOMIZE_SRC = Path(__file__).resolve().parent / "offline_sitecustomize.py"
@@ -79,6 +77,18 @@ if hasattr(socket.socket, "sendmsg"):
             "socket.socket(socket.AF_INET, socket.SOCK_DGRAM).sendmsg([b'x'], [], 0, ('example.com', 53))",
         ),
     )
+
+
+def load_mcp_client():
+    """Import MCP client pieces only for the live protocol path."""
+    try:
+        from mcp import ClientSession, StdioServerParameters
+        from mcp.client.stdio import stdio_client
+    except ImportError as exc:
+        raise SystemExit(
+            "The mcp package is required for live skills protocol smoke."
+        ) from exc
+    return ClientSession, StdioServerParameters, stdio_client
 
 
 def first_text(result) -> str:
@@ -218,6 +228,7 @@ async def run(python_exe: Path, hermes_home: Path, pythonpath: Path, deny_log: P
         )
         return 1
 
+    ClientSession, StdioServerParameters, stdio_client = load_mcp_client()
     params = StdioServerParameters(
         command=str(python_exe),
         args=["-m", "agent.transports.hermes_tools_mcp_server"],
@@ -430,6 +441,23 @@ class HermesSkillsOfflineTests(unittest.TestCase):
     def test_network_guard_blocks_socket_dns_and_udp_without_request(self) -> None:
         python_exe = Path(sys.executable)
         self.assertEqual(run_deny_probe(python_exe), 0)
+
+    def test_mcp_is_not_imported_at_module_level(self) -> None:
+        tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+        for node in tree.body:
+            if isinstance(node, ast.Import):
+                self.assertFalse(
+                    any(
+                        alias.name == "mcp" or alias.name.startswith("mcp.")
+                        for alias in node.names
+                    ),
+                    "mcp must not be imported at module load",
+                )
+            if isinstance(node, ast.ImportFrom):
+                self.assertFalse(
+                    (node.module or "").startswith("mcp"),
+                    "mcp must not be imported at module load",
+                )
 
     def test_smoke_fails_when_deny_log_not_empty(self) -> None:
         site_dir = Path(tempfile.mkdtemp(prefix="hermes-smoke-denyfail-"))
