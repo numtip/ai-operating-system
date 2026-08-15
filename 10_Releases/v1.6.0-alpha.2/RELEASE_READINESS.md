@@ -64,13 +64,18 @@ Phase 1 did not independently re-execute those live writes.
 
 ### Reserved gates
 
-- [x] Codex Pre-Deploy QA (independent; PASSED 2026-08-15 on `0881a30`)
+- [x] Codex Pre-Deploy QA (independent; final PASS 2026-08-15 on `3aca96b`)
 - [ ] Release tag after merge
 
 ## Codex Pre-Deploy QA (2026-08-15)
 
-Independent Codex gate on worker commit `0881a30f7571ba9a30cfb176d5ea460cfbc577c9`.
-This is distinct from worker validation and from live installer/deploy.
+Final independent Codex gate on CI-green head
+`3aca96b91c8b0100897fed112f78659c81da29c3`.
+That commit is the publication head for PR #4. It includes the lazy `mcp`
+import so skills `--self-test` runs on GitHub `windows-latest`.
+
+An earlier Codex pass on `0881a30` remains valid for the worker pack and is
+superseded as the release head by `3aca96b`.
 
 | Check | Result |
 |---|---|
@@ -78,6 +83,7 @@ This is distinct from worker validation and from live installer/deploy.
 | `git diff --check` | PASS |
 | Portable installer plan | **53/53 PASS** |
 | Cursor/VS Code schema tests | **10/10 PASS** |
+| PR #4 CI | **success** ([run 31864700472](https://github.com/numtip/ai-operating-system/actions/runs/31864700472)) |
 | Verdict | **PASSED** |
 
 Product Owner approved completing publication (push / PR #4 / merge / tag).
