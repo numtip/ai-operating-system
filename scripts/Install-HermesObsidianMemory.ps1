@@ -4,11 +4,15 @@ param(
     [string]$HermesInstallRoot,
     [string]$HermesHome,
     [string]$CodexHome,
+    [string]$CursorHome,
+    [string]$VSCodeUserDir,
     [string]$LauncherDirectory,
     [string]$PythonExecutable,
     [switch]$InstallObsidian,
     [switch]$OpenObsidian,
     [switch]$SkipCodex,
+    [switch]$SkipCursor,
+    [switch]$SkipVSCode,
     [switch]$SkipBundledSkills,
     [switch]$SkipProjectRegistration,
     [switch]$PlanOnly
@@ -21,6 +25,7 @@ $lock = Get-Content -Raw -LiteralPath $lockPath | ConvertFrom-Json
 
 $userProfile = [Environment]::GetFolderPath('UserProfile')
 $localAppData = [Environment]::GetFolderPath('LocalApplicationData')
+$appData = [Environment]::GetFolderPath('ApplicationData')
 if ([string]::IsNullOrWhiteSpace($ProjectRoot)) {
     $ProjectRoot = Split-Path -Parent $repoRoot
 }
@@ -41,6 +46,17 @@ if ([string]::IsNullOrWhiteSpace($CodexHome)) {
 if ([string]::IsNullOrWhiteSpace($LauncherDirectory)) {
     $LauncherDirectory = Join-Path $userProfile '.local\bin'
 }
+if ([string]::IsNullOrWhiteSpace($CursorHome)) {
+    $CursorHome = Join-Path $userProfile '.cursor'
+}
+if ([string]::IsNullOrWhiteSpace($VSCodeUserDir)) {
+    $VSCodeUserDir = Join-Path $appData 'Code\User'
+}
+
+$cursorMcpPath = Join-Path $CursorHome 'mcp.json'
+$vscodeMcpPath = Join-Path $VSCodeUserDir 'mcp.json'
+$cursorPluginRoot = Join-Path $CursorHome 'plugins\local\ai-os-hermes-worker'
+$vscodeInstructionsPath = Join-Path $VSCodeUserDir 'prompts\hermes-worker.instructions.md'
 
 $plan = [ordered]@{
     ai_os_release = [string]$lock.ai_os_release
@@ -48,6 +64,11 @@ $plan = [ordered]@{
     hermes_install_root = [System.IO.Path]::GetFullPath($HermesInstallRoot)
     hermes_home = [System.IO.Path]::GetFullPath($HermesHome)
     codex_home = [System.IO.Path]::GetFullPath($CodexHome)
+    cursor_home = [System.IO.Path]::GetFullPath($CursorHome)
+    vscode_user_dir = [System.IO.Path]::GetFullPath($VSCodeUserDir)
+    cursor_mcp = [System.IO.Path]::GetFullPath($cursorMcpPath)
+    cursor_plugin = [System.IO.Path]::GetFullPath($cursorPluginRoot)
+    vscode_mcp = [System.IO.Path]::GetFullPath($vscodeMcpPath)
     launcher_directory = [System.IO.Path]::GetFullPath($LauncherDirectory)
     hermes_repository = [string]$lock.hermes.repository
     hermes_tag = [string]$lock.hermes.tag
@@ -56,6 +77,8 @@ $plan = [ordered]@{
     install_obsidian = [bool]$InstallObsidian
     open_obsidian = [bool]$OpenObsidian
     configure_codex = -not [bool]$SkipCodex
+    configure_cursor = -not [bool]$SkipCursor
+    configure_vscode = -not [bool]$SkipVSCode
     seed_bundled_skills = -not [bool]$SkipBundledSkills
     register_projects = -not [bool]$SkipProjectRegistration
 }
@@ -220,6 +243,35 @@ if (-not $SkipCodex) {
     }
 }
 
+if (-not $SkipCursor -or -not $SkipVSCode) {
+    $ideArgs = @(
+        (Join-Path $PSScriptRoot 'enable-hermes-ide-mcp.py'),
+        '--hermes-home', $HermesHome,
+        '--memory-server', (Join-Path $PSScriptRoot 'hermes-memory-mcp-server.py'),
+        '--worker-template', (Join-Path $obsidianTemplate 'GLOBAL_AGENTS_HERMES_WORKER.md')
+    )
+    if ($SkipCursor) {
+        $ideArgs += '--skip-cursor'
+    }
+    else {
+        $ideArgs += @(
+            '--cursor-mcp', $cursorMcpPath,
+            '--cursor-home', $CursorHome,
+            '--cursor-plugin-root', $cursorPluginRoot
+        )
+    }
+    if ($SkipVSCode) {
+        $ideArgs += '--skip-vscode'
+    }
+    else {
+        $ideArgs += @('--vscode-mcp', $vscodeMcpPath, '--vscode-instructions', $vscodeInstructionsPath)
+    }
+    & $venvPython @ideArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Cursor/VS Code MCP configuration failed.'
+    }
+}
+
 if (-not $SkipProjectRegistration) {
     & (Join-Path $PSScriptRoot 'Register-HermesProjects.ps1') `
         -ProjectRoot $ProjectRoot `
@@ -234,7 +286,7 @@ if ($LASTEXITCODE -ne 0) {
     throw 'Hermes memory seed failed.'
 }
 
-if (-not $SkipCodex) {
+if (-not $SkipCodex -or -not $SkipCursor -or -not $SkipVSCode) {
     & $venvPython (Join-Path $PSScriptRoot 'tests\test-hermes-memory-mcp.py') `
         --python $venvPython `
         --server (Join-Path $PSScriptRoot 'hermes-memory-mcp-server.py') `
@@ -242,7 +294,16 @@ if (-not $SkipCodex) {
     if ($LASTEXITCODE -ne 0) {
         throw 'Hermes MCP protocol verification failed.'
     }
-
+    & $venvPython (Join-Path $PSScriptRoot 'tests\test-hermes-skills-mcp.py') --self-test
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Hermes skills offline self-test failed.'
+    }
+    & $venvPython (Join-Path $PSScriptRoot 'tests\test-hermes-skills-mcp.py') `
+        --python $venvPython `
+        --hermes-home $HermesHome
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Hermes skills MCP protocol verification failed.'
+    }
 }
 
 $obsidianExe = Join-Path $localAppData 'Programs\Obsidian\Obsidian.exe'
@@ -276,6 +337,8 @@ if ($LASTEXITCODE -ne 0) {
     ProjectRoot = [System.IO.Path]::GetFullPath($ProjectRoot)
     Launcher = [System.IO.Path]::GetFullPath($launcherPath)
     CodexRestartRequired = -not [bool]$SkipCodex
+    CursorReloadRequired = -not [bool]$SkipCursor
+    VSCodeReloadRequired = -not [bool]$SkipVSCode
     BundledSkillsSeeded = -not [bool]$SkipBundledSkills
     ObsidianVault = [System.IO.Path]::GetFullPath($HermesHome)
 }

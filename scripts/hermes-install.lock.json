@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "ai_os_release": "v1.6.0-alpha.1",
+  "ai_os_release": "v1.6.0-alpha.2",
   "hermes": {
     "repository": "https://github.com/NousResearch/hermes-agent.git",
     "tag": "v2026.8.3",

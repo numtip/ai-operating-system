@@ -4,6 +4,21 @@ All notable changes to AI Operating System are documented here.
 
 ## [Unreleased]
 
+## [v1.6.0-alpha.2]
+
+### Added
+
+- Cursor and VS Code Hermes MCP adapters in the existing Windows installer, merging `hermes-memory` and `hermes-tools` into user MCP configs without replacing Magnific or other servers
+- Global Cursor worker rule as a local plugin under `plugins/local/ai-os-hermes-worker`
+- Cursor/VS Code worker instructions that never write durable Hermes memory and send `memory_candidates` to GPT/Codex for approval
+- Offline/zero-network skills protocol smoke that fails on paid-lane or provider-auth logs
+- Portable schema/merge tests plus `-SkipCursor` / `-SkipVSCode` installer flags
+
+### Changed
+
+- MCP and instruction writes are compare-before-write; backups occur only when content changes
+- Installer credential wording: local config may be read and backed up, but credentials are not printed, exported, or committed
+
 ## [v1.6.0-alpha.1] — 2026-08-14
 
 ### Added
