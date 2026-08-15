@@ -34,5 +34,9 @@ The installer pins Hermes Agent `v2026.8.3` (`v0.20.0`) to commit
 | Worker instructions | Workers send `memory_candidates` to GPT/Codex; they never write durable memory |
 | Project registry | Discovers and registers Git repos without modifying them |
 
+Published as GitHub pre-release
+[`v1.6.0-alpha.2`](https://github.com/numtip/ai-operating-system/releases/tag/v1.6.0-alpha.2)
+on merge commit `cc3363a`. Live installer re-run remains deferred.
+
 See [RELEASE_NOTES.md](RELEASE_NOTES.md) and
 [RELEASE_READINESS.md](RELEASE_READINESS.md).
