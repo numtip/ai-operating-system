@@ -4,7 +4,7 @@ All notable changes to AI Operating System are documented here.
 
 ## [Unreleased]
 
-## [v1.6.0-alpha.2]
+## [v1.6.0-alpha.2] — 2026-08-15
 
 ### Added
 

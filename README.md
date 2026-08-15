@@ -5,7 +5,7 @@ Local-first knowledge, memory, and context foundation for human + agent work.
 **Repo:** https://github.com/numtip/ai-operating-system  
 **Track:** v1.6 — Hermes + Obsidian Shared Memory (alpha)
 **Manifesto:** [AI_OS_MANIFESTO.md](AI_OS_MANIFESTO.md)  
-**Release:** [10_Releases/v1.6.0-alpha.2/](10_Releases/v1.6.0-alpha.2/) (in progress; prior pack [v1.6.0-alpha.1](10_Releases/v1.6.0-alpha.1/))
+**Release:** [10_Releases/v1.6.0-alpha.2/](10_Releases/v1.6.0-alpha.2/) ([tag](https://github.com/numtip/ai-operating-system/releases/tag/v1.6.0-alpha.2); prior pack [v1.6.0-alpha.1](10_Releases/v1.6.0-alpha.1/))
 
 ## Install Hermes + Obsidian shared memory on Windows
 

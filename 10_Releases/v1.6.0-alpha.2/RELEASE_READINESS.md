@@ -62,10 +62,10 @@ Phase 1 did not independently re-execute those live writes.
 - [x] Prior live Cursor/VS Code reapply (2026-08-14): second apply wrote nothing; backup count and mtime unchanged
 - [x] Prior Cursor local plugin discovery (2026-08-14): `loadUserLocalPlugin ai-os-hermes-worker loaded`; `Plugins reload completed: 1 plugins loaded`
 
-### Reserved gates
+### Publication gates
 
 - [x] Codex Pre-Deploy QA (independent; final PASS 2026-08-15 on `3aca96b`)
-- [ ] Release tag after merge
+- [x] Release tag after merge — `v1.6.0-alpha.2` → `cc3363a`
 
 ## Codex Pre-Deploy QA (2026-08-15)
 
@@ -88,6 +88,22 @@ superseded as the release head by `3aca96b`.
 
 Product Owner approved completing publication (push / PR #4 / merge / tag).
 Live installer re-run and integration-metadata refresh remain deferred.
+
+## Publication (2026-08-15)
+
+| Item | Value |
+|---|---|
+| Pull request | [#4](https://github.com/numtip/ai-operating-system/pull/4) merged 2026-08-15T04:36:32Z |
+| Merge commit | `cc3363ab3049ceffdb45b4c60b5ff7ee5a472848` |
+| Annotated tag | `v1.6.0-alpha.2` → `cc3363a` (tag object `02a8cbd`) |
+| GitHub pre-release | [v1.6.0-alpha.2 - Cursor and VS Code Hermes adapters](https://github.com/numtip/ai-operating-system/releases/tag/v1.6.0-alpha.2) |
+| QA/CI-green pack head | `3aca96b91c8b0100897fed112f78659c81da29c3` |
+| PR CI on `3aca96b` | **success** ([run 31864700472](https://github.com/numtip/ai-operating-system/actions/runs/31864700472)) |
+| Docs-head CI on `977eb0c` | **success** ([run 31864808540](https://github.com/numtip/ai-operating-system/actions/runs/31864808540)) |
+| Main merge CI | **success** ([run 31864845082](https://github.com/numtip/ai-operating-system/actions/runs/31864845082)) |
+
+This follow-up records the published tag and release. It does not move the tag.
+Live installer re-run remains deferred.
 
 ## Portability boundary
 
