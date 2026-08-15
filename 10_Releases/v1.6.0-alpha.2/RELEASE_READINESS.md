@@ -64,8 +64,24 @@ Phase 1 did not independently re-execute those live writes.
 
 ### Reserved gates
 
-- [ ] Codex Pre-Deploy QA (independent; not started)
+- [x] Codex Pre-Deploy QA (independent; PASSED 2026-08-15 on `0881a30`)
 - [ ] Release tag after merge
+
+## Codex Pre-Deploy QA (2026-08-15)
+
+Independent Codex gate on worker commit `0881a30f7571ba9a30cfb176d5ea460cfbc577c9`.
+This is distinct from worker validation and from live installer/deploy.
+
+| Check | Result |
+|---|---|
+| Clean working tree | PASS |
+| `git diff --check` | PASS |
+| Portable installer plan | **53/53 PASS** |
+| Cursor/VS Code schema tests | **10/10 PASS** |
+| Verdict | **PASSED** |
+
+Product Owner approved completing publication (push / PR #4 / merge / tag).
+Live installer re-run and integration-metadata refresh remain deferred.
 
 ## Portability boundary
 
