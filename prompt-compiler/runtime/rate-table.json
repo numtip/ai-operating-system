@@ -1,0 +1,22 @@
+{
+    "schema_version": "1.0",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "verified": false,
+    "rate_status": "UNVERIFIED_RATE",
+    "verification_status": "UNVERIFIED",
+    "rate_source": "official pricing docs snapshot -- NOT confirmed by owner or provider billing; verify before any spend decision",
+    "rate_source_url": null,
+    "retrieved_at_utc": null,
+    "currency": "USD",
+    "price_basis": "per_1M_tokens",
+    "effective_date": null,
+    "rate_source_date": null,
+    "notes": "Placeholder per-MTok rates used ONLY for deterministic estimates and tests. These are NOT billing facts. If no verifiable rate source exists, every estimate stays UNVERIFIED_RATE. verification_status stays UNVERIFIED until numbers are confirmed against an official pricing page (owner fills rate_source_url/retrieved_at_utc/effective_date; agent never invents prices).",
+    "rates": {
+        "input_per_mtok": 0.27,
+        "output_per_mtok": 1.10,
+        "cache_read_per_mtok": 0.07,
+        "cache_write_per_mtok": 0.27
+    }
+}

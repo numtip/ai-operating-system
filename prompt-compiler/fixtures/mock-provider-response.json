@@ -1,0 +1,20 @@
+{
+    "fixture": "mock-provider-response",
+    "description": "Synthetic provider response used ONLY by deterministic Stage 2A tests and mock evidence. No real provider call, no real credentials.",
+    "provider": "deepseek",
+    "model": "deepseek-v4-flash",
+    "usage": {
+        "input_tokens": 31372,
+        "output_tokens": 17411,
+        "cache_read_tokens": 275712,
+        "cache_write_tokens": 0,
+        "reasoning_tokens": 12280,
+        "total_tokens": 324495
+    },
+    "response": {
+        "text": "MOCK OUTPUT — fixture only, not a real model response",
+        "verdict": "PASS_WITH_NOTES",
+        "api_calls": 12,
+        "latency_seconds": 152
+    }
+}

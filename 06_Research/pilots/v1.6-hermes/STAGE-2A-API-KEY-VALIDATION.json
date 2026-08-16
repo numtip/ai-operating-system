@@ -1,0 +1,29 @@
+{
+    "schema_version":  "1.0",
+    "check":  "api_key_validation",
+    "api_key_valid":  true,
+    "http_outcome_class":  "2xx",
+    "error_code":  null,
+    "provider":  "deepseek",
+    "model":  "deepseek-v4-flash",
+    "latency_seconds":  1.2,
+    "usage":  {
+                  "input_tokens":  90,
+                  "output_tokens":  11,
+                  "cache_read_tokens":  0,
+                  "total_tokens":  101
+              },
+    "note":  "synthetic AI-OS-internal request; no target-project data; no prompt/response/headers/credentials stored",
+    "timestamp_utc":  "2026-08-10T03:31:50Z",
+    "billing_waiver":  {
+                           "waived":  true,
+                           "reason":  "bounded low-cost pilot; cost caps and fail-closed preflight already verified",
+                           "scope":  "Stage 2A Direct API only",
+                           "limitations":  [
+                                               "not provider-billed cost proof (rates stay UNVERIFIED_RATE)",
+                                               "does not cover Hermes/VPS"
+                                           ],
+                           "approved_by":  "owner",
+                           "approved_at_utc":  "2026-08-10T03:58:00Z"
+                       }
+}
